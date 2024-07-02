@@ -20,12 +20,14 @@ void display_cell_load(Cell_Load *cell_load) {
     printf("Connected UEs: %d\n", cell_load->connected_ues);
 }
 
+// function used to free dynamically allocated memory
 void free_memory(Cell_Load *cell_load) {
     free(cell_load->cell_name);
     free(cell_load);
 }
 
 int main() {
+    // This can be used as a parameter to read multiple data with respect to cell load
     Cell_Load *cell1 = create_cell_load("Cell_A", 50);
     Cell_Load *cell2 = create_cell_load("Cell_B", 30);
 
