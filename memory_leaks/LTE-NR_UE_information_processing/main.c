@@ -23,6 +23,7 @@ void display_ue_info(UE_Info *ue_info) {
     printf("Connected Cell: %s\n", ue_info->connected_cell);
 }
 
+// This funciton is for freeing the dynamic allocated memory
 void free_memory(UE_Info *ue_info) {
     free(ue_info->connected_cell);
     free(ue_info);
