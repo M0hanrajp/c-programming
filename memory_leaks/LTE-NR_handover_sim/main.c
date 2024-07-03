@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* For example lets say we call in the initiate_handover function
+ * further the dummy data needs to be implemented using random funciton in c
+ * further if there is a cell change we need to report cell change confrimed.
+ */
+
 typedef struct {
     int ue_id;
     char *current_cell;
@@ -21,12 +26,14 @@ void display_handover_info(Handover_Info *handover_info) {
     printf("Current Cell: %s\n", handover_info->current_cell);
 }
 
+// this funciton deallocates the memory allocated to respective services
 void free_memory(Handover_Info* handover_info) {
     free(handover_info->current_cell);
     free(handover_info);
 }
 
 int main() {
+    // Need to add this inside a loop so that we can have extra implementation regarding cell change.	
     Handover_Info *handover_info = initiate_handover(101, "Cell_A", "Cell_B");
 
     display_handover_info(handover_info);
