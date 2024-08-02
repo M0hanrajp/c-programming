@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* further enhancements would be to develop a c program to calculate the throughput 
+ * in ideal conditions as specified by the spec */
+
 typedef struct {
     char *cell_name;
     double data_received; // in MB
