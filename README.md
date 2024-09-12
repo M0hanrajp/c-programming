@@ -15,6 +15,8 @@ Below references are taken from https://github.com/jwasham/c-note
 - The GNU C Reference Manual: http://www.gnu.org/software/gnu-c-manual/gnu-c-manual.html
 - ACM: The C Reference Guide - https://www-s.acm.illinois.edu/webmonkeys/book/c_guide/
 - MSDN: C Language Reference - https://msdn.microsoft.com/en-us/library/fw5abdx6.aspx
+- C Programming Notes, Tips & Tricks - https://github.com/lore-conti/c-programming/blob/master/CProgramming.pdf
+- Excercise set C-Programming [Learning Materials]
 
 ### Books
 
