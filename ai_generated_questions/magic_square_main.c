@@ -26,13 +26,15 @@ int main() {
         printf("Please enter the element at index %d = ", i);
         scanf("%d", &userInputArray[i]);
         if(userInputArray[i] <= 9 && userInputArray[i] >= 1) {
-            printf("Entered number ok!\n");
+            int count = 0;
             for (int elementCheck = 0; elementCheck < SIZE; elementCheck++) {
-                int elementStore = userInputArray[elementCheck];
-                if(userInputArray[elementCheck] == elementStore) {
-                    printf("Element already entered !, please enter a different element\n");
-                    i--;
-                    continue;
+                if(userInputArray[elementCheck] == userInputArray[i]) {
+                    count++;
+                    if(userInputArray[elementCheck] == userInputArray[i] && count > 1) {
+                        printf("Element already entered !, please enter a different element\n");
+                        i--;
+                        continue;
+                    }
                 }
             }
         }
@@ -60,6 +62,7 @@ void checkMagicSqaure(int array[SIZE]) {
     int diagonalTwo = array[2] + array[4] + array[6];
 
     // display the array in 3x3 format
+    printf("\nDisplaying the entered array in 3x3 format::\n");
     for(int i = 0; i < SIZE; i++) {
         printf("Index = %d & element = %d  ", i, array[i]);
         if(i == 2 || i == 5 || i == 8)
