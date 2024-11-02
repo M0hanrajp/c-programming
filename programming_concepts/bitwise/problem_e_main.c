@@ -8,15 +8,15 @@ int exchangeBitsOfNumber(unsigned short int userInput);
 
 int main(void) {
 
-    printf("Value: %d\n", exchangeBitsOfNumber(1234));
+    printf("Value: %x\n", exchangeBitsOfNumber(4660));
     return 0;
 }
 
 int exchangeBitsOfNumber(unsigned short int userInput) {
     int firstHalf = userInput >> 8;
-    printf("FH: %d & UI: %d\n", firstHalf, userInput);
+    printf("FH: %x\n", firstHalf);
     int secondHalf = userInput << 8;
-    printf("SH: %d\n", secondHalf);
+    printf("SH: %x\n", secondHalf);
     int result = firstHalf | secondHalf;
     return result;
 }
