@@ -4,19 +4,17 @@
  */
 #include <stdio.h>
 
-int exchangeBitsOfNumber(unsigned short int userInput);
+unsigned short int exchangeBitsOfNumber(unsigned short int userInput);
 
 int main(void) {
 
-    printf("Value: %x\n", exchangeBitsOfNumber(4660));
+    printf("Value: %x\n", exchangeBitsOfNumber(0xffff));
     return 0;
 }
 
-int exchangeBitsOfNumber(unsigned short int userInput) {
-    int firstHalf = userInput >> 8;
-    printf("FH: %x\n", firstHalf);
-    int secondHalf = userInput << 8;
-    printf("SH: %x\n", secondHalf);
-    int result = firstHalf | secondHalf;
+unsigned short int exchangeBitsOfNumber(unsigned short int userInput) {
+    unsigned short int firstHalf = userInput >> 8;
+    unsigned short int secondHalf = userInput << 8;
+    unsigned short int result = firstHalf | secondHalf;
     return result;
 }
