@@ -27,6 +27,7 @@ Requirements:
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <assert.h>
 
 // function declarations
 void displayBinary(uint32_t field);
@@ -39,16 +40,91 @@ uint32_t get_pressure(uint32_t field);
 void update_warning_flags(uint32_t* field);
 bool is_any_warning_active(uint32_t field);
 
+// Run below test cases
+void run_tests(void) {
+    uint32_t field = 0;
+    
+    // Test Case 1: Basic Setting and Getting
+    printf("[Test Case 1]: Basic Setting and Getting::\n");
+    set_temperature(&field, 25);  // Normal temperature
+    set_humidity(&field, 50);     // Normal humidity
+    set_pressure(&field, 150);    // Normal pressure
+    
+    assert(get_temperature(field) == 25);
+    assert(get_humidity(field) == 50);
+    assert(get_pressure(field) == 150);
+    assert(is_any_warning_active(field) == 0);
+    printf("[Test Case 1]: PASSED\n");
+    
+    // Test Case 2: Warning Conditions
+    printf("[Test Case 2]: Warning Conditions\n");
+    field = 0;
+    set_temperature(&field, 31);  // Should trigger temperature warning
+    set_humidity(&field, 81);     // Should trigger humidity warning
+    set_pressure(&field, 201);    // Should trigger pressure warning
+    
+    assert(get_temperature(field) == 31);
+    assert(get_humidity(field) == 81);
+    assert(get_pressure(field) == 201);
+    assert(is_any_warning_active(field) == 1);
+    printf("[Test Case 2]: PASSED\n");
+    
+    // Test Case 3: Boundary Values
+    printf("[Test Case 3]: Boundary Values\n");
+    field = 0;
+    set_temperature(&field, 255); // Max temperature
+    set_humidity(&field, 100);    // Max humidity
+    set_pressure(&field, 255);    // Max pressure
+    
+    assert(get_temperature(field) == 255);
+    assert(get_humidity(field) == 100);
+    assert(get_pressure(field) == 255);
+    assert(is_any_warning_active(field) == 1);
+    printf("[Test Case 3]: PASSED\n");
+    
+    // Test Case 4: Field Independence
+    printf("[Test Case 4]: Field Independence\n");
+    field = 0;
+    set_temperature(&field, 20);
+    assert(get_humidity(field) == 0);  // Humidity should still be 0
+    assert(get_pressure(field) == 0);  // Pressure should still be 0
+    
+    set_humidity(&field, 60);
+    assert(get_temperature(field) == 20);  // Temperature should remain unchanged
+    assert(get_pressure(field) == 0);      // Pressure should still be 0
+    
+    set_pressure(&field, 140);
+    assert(get_temperature(field) == 20);  // Temperature should remain unchanged
+    assert(get_humidity(field) == 60);     // Humidity should remain unchanged
+    printf("[Test Case 4]: PASSED\n");
+    
+    // Test Case 5: Warning Flag Updates
+    printf("[Test Case 5]: Warning Flag Updates\n");
+    field = 0;
+    set_temperature(&field, 29);  // No warning
+    assert(is_any_warning_active(field) == 0);
+    
+    set_temperature(&field, 31);  // Should trigger warning
+    assert(is_any_warning_active(field) == 1);
+    
+    set_temperature(&field, 25);  // Should clear warning
+    assert(is_any_warning_active(field) == 0);
+    printf("[Test Case 5]: PASSED\n");
+    
+    printf("\nFinal Result: PASSED\n");
+}
+
 int main(void) {
-    uint32_t sensor_field = 0;
-    set_temperature(&sensor_field, 30);
-    printf("Temperature :: %u\n", get_temperature(sensor_field));
-    set_humidity(&sensor_field, 45);
-    printf("Humidity :: %u %%\n", get_humidity(sensor_field));
-    set_pressure(&sensor_field, 63);
-    printf("Humidity :: %u units\n", get_pressure(sensor_field));
-    printf("Warnings Active: %s\n", is_any_warning_active(sensor_field) ? "Yes" : "No");
-    displayBinary(sensor_field);
+    // uint32_t sensor_field = 0;
+    // set_temperature(&sensor_field, 30);
+    // printf("Temperature :: %u\n", get_temperature(sensor_field));
+    // set_humidity(&sensor_field, 45);
+    // printf("Humidity :: %u %%\n", get_humidity(sensor_field));
+    // set_pressure(&sensor_field, 63);
+    // printf("Pressure :: %u units\n", get_pressure(sensor_field));
+    // printf("Warnings Active: %s\n", is_any_warning_active(sensor_field) ? "Yes" : "No");
+    // displayBinary(sensor_field);
+    run_tests();
     return 0;
 }
 
@@ -105,7 +181,7 @@ uint32_t get_humidity(uint32_t field) {
 
 void set_pressure(uint32_t* field, uint8_t pressure) {
     uint8_t andResult = 0, bitValue = 0;
-    *field &= ~(0xff << 10); // clear the previous set bits
+    *field &= ~(0xff << 16); // clear the previous set bits
     for(int bitPosition = 7; bitPosition >= 0; bitPosition--) {
         andResult = pressure & (1 << bitPosition);
         bitValue = (andResult) ? 1 : 0;
