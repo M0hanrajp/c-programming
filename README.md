@@ -55,3 +55,9 @@ Below references are taken from https://github.com/jwasham/c-note
 - http://www.sanfoundry.com/c-programming-examples-numerical-problems-algorithms/
 - https://github.com/fragglet/c-algorithms/tree/master/src
 - https://github.com/fragglet/c-algorithms/releases
+
+### Practice
+
+- [GeeksForGeeks](https://www.geeksforgeeks.org/c-programming-language/)
+- [Code wars](https://www.codewars.com/)
+- [Exercism](https://exercism.org/tracks/c/)
