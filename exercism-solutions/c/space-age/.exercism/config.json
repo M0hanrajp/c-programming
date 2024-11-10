@@ -1,0 +1,30 @@
+{
+  "authors": [
+    "Guntau"
+  ],
+  "contributors": [
+    "bcc32",
+    "Gamecock",
+    "h-3-0",
+    "patricksjackson",
+    "QLaille",
+    "ryanplusplus",
+    "wolf99"
+  ],
+  "files": {
+    "solution": [
+      "space_age.c",
+      "space_age.h"
+    ],
+    "test": [
+      "test_space_age.c"
+    ],
+    "example": [
+      ".meta/example.c",
+      ".meta/example.h"
+    ]
+  },
+  "blurb": "Given an age in seconds, calculate how old someone is in terms of a given planet's solar years.",
+  "source": "Partially inspired by Chapter 1 in Chris Pine's online Learn to Program tutorial.",
+  "source_url": "https://pine.fm/LearnToProgram/?Chapter=01"
+}
