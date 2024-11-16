@@ -10,6 +10,12 @@ Below references are taken from https://github.com/jwasham/c-note
 
 ### C Language
 
+Index - Open standard: https://www.open-std.org/
+Index - C Reference: https://en.cppreference.com/w/c
+
+The primary output of WG14 is ISO/IEC 9899, the C Standard:https://www.open-std.org/JTC1/SC22/WG14/www/projects.html
+![image](https://github.com/user-attachments/assets/ced52623-3b2f-4c48-b5da-d35cec97dbcf)
+
 - http://c-faq.com/index.html
 - [Safety](safety.md) for string-safe functions
 - The GNU C Reference Manual: http://www.gnu.org/software/gnu-c-manual/gnu-c-manual.html
