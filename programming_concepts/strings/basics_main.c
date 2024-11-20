@@ -1,4 +1,5 @@
 /* Program to learn basics of strings */
+#include <stdint.h>
 #include <stdio.h>
 
 void displayString(char *input);
@@ -33,7 +34,7 @@ int main(void) {
 
 void displayString(char *input) {
     for(int i = 0; input[i] != '\0' ; i++) {
-        printf("%c", input[i]);
+        printf("%c & address of element %2d is %p\n", input[i], i, (void *)&input[i]);
     }
     printf("\n");
 }
