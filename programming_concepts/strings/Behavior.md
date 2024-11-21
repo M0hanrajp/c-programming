@@ -61,6 +61,7 @@ intermediate_basics_main.c:13:10: error: assignment to expression with array typ
 ```
 - From intermediate_basics_main.c, we cannot directly assign arrays.
 
+### What is the meaning of string literal
 No, `char word[] = "something";` is **not** called a **string literal**. It's a **character array** initialized with a string literal.
 
 Here’s the distinction:
@@ -95,6 +96,6 @@ So, the string literal `"something"` is stored in memory, and the array `word` w
     - copy is a character array (of size 20), and word is also a character array.
     - In C, arrays are not assignable. You cannot assign one array to another directly like this because arrays in C are not pointers (even though they behave like pointers in certain contexts). Why This Fails:
     - Arrays are fixed memory locations, and their address is immutable. The compiler doesn't allow you to reassign the base address of copy to the base address of word.
-    - he base address of an array (e.g., word) cannot be changed after declaration. Reassigning the array’s base address like word = "computer"; is invalid in C.
+    - The base address of an array (e.g., word) cannot be changed after declaration. Reassigning the array’s base address like word = "computer"; is invalid in C.
 - Pointers can be reassigned to point to another string.
 - Pointers can be reassigned to point to the same memory location of the desired variable.
