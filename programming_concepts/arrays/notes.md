@@ -2,7 +2,9 @@
 
 ### Questions 
 
-- [Q: Why array index starts from 0 instead of 1 in C ?]()
+- [Q: Why array index starts from 0 instead of 1 in C ?](https://github.com/M0hanrajp/c-programming/blob/b385257def2cde2da15f299ab0e7f1750288469f/programming_concepts/arrays/notes.md?plain=1#L7)
+
+---
 
 **Q: Why array index starts from 0 instead of 1 in C ?**
 
