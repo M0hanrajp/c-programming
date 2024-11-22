@@ -99,3 +99,142 @@ So, the string literal `"something"` is stored in memory, and the array `word` w
     - The base address of an array (e.g., word) cannot be changed after declaration. Reassigning the array’s base address like word = "computer"; is invalid in C.
 - Pointers can be reassigned to point to another string.
 - Pointers can be reassigned to point to the same memory location of the desired variable.
+
+Error 4: While using strcat
+- The size of target string should be greater than total amount of characters combined in target string and source string.
+```bash
+# the reason
+~/c-programming/programming_concepts/strings$ gcc -g -Wall -o stringfunc string_functions_main.c
+string_functions_main.c: In function ‘main’:
+string_functions_main.c:17:5: warning: ‘__builtin_memcpy’ writing 4 bytes into a region of size 2 overflows the destination [-Wstringop-overflow=]
+   17 |     printf("After string concatenation: %s\n", strcat("A", "T&T"));
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+- If you increase the size of the input string as shown below, then program exits as segmetation fault.
+```bash
+// This program uses built in string functions to check their behavior
+#include <stdio.h>
+#include <string.h>
+
+int main(void) {
+    char str[500] = "Happy Coding!", tar[500];
+
+    // How to find length of a string
+    printf("Length of a string :: %s is :: %ld\n", str, strlen(str));
+
+    // How to copy a string
+    printf("Source string: %s & target string: %s\n", str, strcpy(tar, str));
+    /* format of strcpy(char *, const char *)
+     * the soruce string is to be treated as constant so that there is no modification when the program is running */
+
+    // Using string concatenation
+    printf("After string concatenation: %s\n", strcat("ABCDE", "T&T"));
+    return 0;
+}
+# Below is the result:::
+~/c-programming/programming_concepts/strings$ ./stringfunc
+Length of a string :: Happy Coding! is :: 13
+Source string: Happy Coding! & target string: Happy Coding!
+Segmentation fault (core dumped)
+```
+**Why the Segmentation Fault?**
+- When you pass `"ABCDE"` as the first argument to `strcat()`, it tries to append `"T&T"` to `"A"`. This operation attempts to modify the read-only memory, leading to a segmentation fault.
+- The segmentation fault occurs because `strcat()` expects the destination string (the first argument) to be modifiable and have enough space to accommodate the concatenated result. However, `"A"` is a string literal, which is stored in read-only memory, and modifying it is undefined behavior.
+- Function prototype of strcat `strcat(char *restrict dest, const char *restrict src)`
+    - Here dest must be a writable array of characters.
+    - dest must have enough space to hold the combined string (original dest plus src).
+
+**Learning:**
+- In C, string literals (like "A") are typically stored in read-only memory, so attempting to modify them leads to a segmentation fault.
+
+Error 5: Corssing out of bound and reading strings from adjacent memory locations
+- While writing custom strcat function encountered the following behavior
+```bash
+~/c-programming/programming_concepts/strings$ ./customfunc
+Size of string : 41
+Input string: Happy Coding, something else, playground. & copied string: Happy Coding, something else, playground.
+[DEBUG]:: Silicon Happy Coding, something else, playground.
+[DEBUG]:: Silicon cappy Coding, something else, playground.
+[DEBUG]:: Silicon chppy Coding, something else, playground.
+[DEBUG]:: Silicon chipy Coding, something else, playground.
+[DEBUG]:: Silicon chipy Coding, something else, playground.
+After string concat: Silicon chip
+# notice how the " Chip" is being concatenated, but few other strings are also being read simultaneously
+```
+- Why this happened ?
+The issue arises because of how memory is being handled in the `customStrcat` function. Specifically:
+```c
+// main function
+    // String concatenation
+    char a[] = "Silicon";
+    char b[] = " chip";
+    printf("After string concat: %s\n", customStrcat(a, b));
+// the custom funciton
+char *customStrcat(char *srcString, char *tarString) {
+    int srcStringEndIndex = customStrlen(srcString);
+    while (*tarString != '\0') {
+        *(srcString + srcStringEndIndex) = *tarString;
+        printf("[DEBUG]:: %s\n", srcString);
+        srcStringEndIndex++;
+        tarString++;
+    }
+    srcString[srcStringEndIndex] = '\0';
+    return srcString;
+}
+```
+1. **Memory Overlap in `customStrcat`:**
+   - In the `main()` function, the array `a` has been declared as:
+     ```c
+     char a[] = "Silicon";
+     ```
+     The array `a` has just enough space for the characters `"Silicon"` plus the null terminator (`'\0'`), totaling 8 bytes. There’s no extra space allocated in the array to hold the concatenated result.
+
+   - When you attempt to concatenate `" chip"` (which has 6 characters including the space) to `"Silicon"`, the function writes beyond the allocated memory of `a`. This causes **undefined behavior** because it overwrites adjacent memory that may contain other data.
+
+2. **Memory Layout:**
+   - Variables like `a`, `b`, and others in the `main` function are often stored contiguously in memory. So, when `customStrcat` writes beyond the bounds of `a`, it’s inadvertently writing into memory that belongs to other variables, such as `str` or `copy`.
+
+3. **Debug Print Output:**
+   - This is why, during the concatenation process, the `[DEBUG]` output shows remnants of `"Happy Coding, something else, playground."` appearing after `"Silicon chip"`. The overwritten memory affects other variables’ data, which is then displayed in the debug print.
+```bash
+# See how the address overalps
+mpunix@LIN-5CG3350MRD:~/c-programming/programming_concepts/strings$ ./customfunc
+Size of string : 41 & base address: 931343920 # here the string starts at 20 and ends at 61
+Input string: Happy Coding, something else, playground. & copied string: Happy Coding, something else, playground.
+# Observe srcString starts from 12 and is stored till 19, from 19 to 23 is where strcat starts storing target string
+# something like
+# a: S   I  L  I  C  O  N '\0'
+#    12 13 14 15 16 17 18  19
+# b:                       ' '  C   H   I   P
+#                          19  20  21  22  23
+# thats why after strcat completed till address 23, we can see "Silicon chipy Coding, something else, playground"
+# Where chip-24(y) is the start of overalpping
+Base address of *srcString = 931343912 & base address of tarString = 931343906
+[DEBUG]:: Silicon Happy Coding, something else, playground. & 931343919
+[DEBUG]:: Silicon cappy Coding, something else, playground. & 931343920
+[DEBUG]:: Silicon chppy Coding, something else, playground. & 931343921
+[DEBUG]:: Silicon chipy Coding, something else, playground. & 931343922
+[DEBUG]:: Silicon chipy Coding, something else, playground. & 931343923
+After string concat: Silicon chip
+```
+#### Solution:
+To fix this issue, you need to allocate enough memory in `a` to hold both `"Silicon"` and `" chip"` concatenated, plus the null terminator. For example:
+
+```c
+char a[20] = "Silicon";  // Allocate enough space for the concatenated result
+```
+So now we can see that there is no address overlap
+```bash
+# b starts at 654 and ends at 664
+# a starts at 664 and ends at 684
+# str starts at 696 and ends at 737 >> there is no overlap
+Size of string : 41 & base address: 2768403696
+Input string: Happy Coding, something else, playground. & copied string: Happy Coding, something else, playground.
+Base address of *srcString = 2768403664 & base address of tarString = 2768403654
+[DEBUG]:: Silicon  & 2768403671
+[DEBUG]:: Silicon c & 2768403672
+[DEBUG]:: Silicon ch & 2768403673
+[DEBUG]:: Silicon chi & 2768403674
+[DEBUG]:: Silicon chip & 2768403675
+After string concat: Silicon chip
+```
