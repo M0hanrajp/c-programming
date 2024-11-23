@@ -238,3 +238,29 @@ Base address of *srcString = 2768403664 & base address of tarString = 2768403654
 [DEBUG]:: Silicon chip & 2768403675
 After string concat: Silicon chip
 ```
+Error 6: Difference between ||, && conditions
+
+- While traversing through a string, your requirement is to stop at a point if you encounter NULL, space or hiphen.
+- In such condition, my mistake was using `||` condition saying if meets any NULL, space or hiphen.
+- But this is where I was wrong because, in `for (int i = position - 1; string[i] != '\0' || string[i] != ' ' || string[i] != '-'; i++)`
+    - When combined with ||, the loop continues if any one of these conditions is true. However, this logic is flawed:
+    - At least one condition will always be true because, for example, even if the character is ' ', it is not '\0', so the loop won't stop when it should.At least one condition will always be true because, for example, even if the character is ' ', it is not '\0', so the loop won't stop when it should.
+- This is why && correctly controls the loop to extract until one of the stop conditions is met.
+- if not program results in segementation fault.
+
+Error 7: attempting to use increment operator over static variable.
+```bash
+char *extractFromPosition(int position, const char *string) {
+    static char userOutput[SIZE];
+    for (int i = position - 1; string[i] != '\0' || string[i] != ' ' || string[i] != '-'; i++) {
+        *userOutput = string[i];
+        userOutput++; # Error point
+    }
+    return userOutput;
+} I want problem_c.c: In function ‘extractFromPosition’:
+problem_c.c:18:19: error: lvalue required as increment operand
+   18 |         userOutput++;
+      |
+```
+- The error you're encountering (lvalue required as increment operand) is due to attempting to increment the userOutput pointer, which points to a statically declared array. Since userOutput is statically allocated, modifying the pointer itself doesn't affect the static array correctly, and this causes undefined behavior.
+- Learn the difference of why you cannot incerment here ?
