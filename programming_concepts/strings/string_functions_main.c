@@ -3,7 +3,7 @@
 #include <string.h>
 
 int main(void) {
-    char str[500] = "Happy Coding!", tar[500];
+    char str[500] = "Sappy Coding!", tar[500];
 
     // How to find length of a string
     printf("Length of a string :: %s is :: %ld\n", str, strlen(str));
@@ -15,5 +15,8 @@ int main(void) {
 
     // Using string concatenation
     printf("After string concatenation: %s\n", strcat(str, "T&T"));
+
+    // String compare
+    printf("Comapre strings:: %d\n", strcmp(str, " "));
     return 0;
 }

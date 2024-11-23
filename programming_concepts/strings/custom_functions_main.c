@@ -4,6 +4,7 @@
 
 // function declarations
 int customStrlen(char *inputString);
+int customStrcmp(const char *sourceString, const char *targetString);
 char *customStrcpy(char *sourceString, char *targetString);
 char *customStrcat(char *srcString, char *tarString);
 
@@ -19,6 +20,9 @@ int main(void) {
     char a[20] = "Silicon";
     char b[10] = " chip";
     printf("After string concat: %s\n", customStrcat(a, b));
+
+    // String compare
+    printf("Compare strings:: %d\n", customStrcmp("Jerry", "Jerry Boy"));
     return 0;
 }
 
@@ -50,4 +54,13 @@ char *customStrcat(char *srcString, char *tarString) {
     }
     srcString[srcStringEndIndex] = '\0';
     return srcString;
+}
+
+int customStrcmp(const char *sourceString, const char *targetString) {
+    for(int i = 0; targetString[i] != '\0' || sourceString[i] != '\0'; i++) {
+        if(sourceString[i] != targetString[i]) {
+            return (sourceString[i] - targetString[i]);
+        }
+    }
+    return 0;
 }
