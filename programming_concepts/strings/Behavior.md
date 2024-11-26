@@ -264,3 +264,183 @@ problem_c.c:18:19: error: lvalue required as increment operand
 ```
 - The error you're encountering (lvalue required as increment operand) is due to attempting to increment the userOutput pointer, which points to a statically declared array. Since userOutput is statically allocated, modifying the pointer itself doesn't affect the static array correctly, and this causes undefined behavior.
 - Learn the difference of why you cannot incerment here ?
+
+Error 8: For segemenatation fault in string programs
+```bash
+(gdb) n
+
+Program received signal SIGSEGV, Segmentation fault.
+__strcpy_evex () at ../sysdeps/x86_64/multiarch/strcpy-evex.S:553
+553     ../sysdeps/x86_64/multiarch/strcpy-evex.S: No such file or directory.
+(gdb) q
+A debugging session is active.
+
+        Inferior 1 [process 52043] will be killed.
+```
+- Check if memory allocated to a string is enough to handle operations during strcat, strcpy etc..
+
+Error 9: strcpy(str[0], f0);  // is Invalid
+
+No, this line is **not valid** in C:
+
+```c
+strcpy(str[0], f0);  // Invalid
+```
+Here's why:
+
+#### Problem Breakdown:
+1. **`str[0]`:**  
+   `str` is declared as a **character array** (`char str[20];`), so `str[0]` refers to the **first element** of this array. Since each element of the array is a single `char`, `str[0]` is of type `char`, not `char *` (a pointer to a character string).  
+   
+   Therefore, `str[0]` is just a **single character** (like `'A'`), not a place to hold an entire string.
+
+2. **`strcpy` Function:**  
+   The `strcpy` function is used to **copy a string** from one location to another. Its signature is:
+   ```c
+   char *strcpy(char *destination, const char *source);
+   ```
+   Both `destination` and `source` need to be **pointers to character arrays** (or strings).
+
+#### Correct Usage:
+If you want to copy the string `f0` into the `str` array, you should provide the **address** of the starting element (`str` itself):
+
+```c
+strcpy(str, f0);  // Valid
+```
+
+### Explanation:
+- **`str`:** When you use the name of the array (`str`) without an index, it decays to a **pointer to the first element** (`&str[0]`).
+- **`f0`:** This is assumed to be a `const char *`, representing a string.
+
+How can we avoid this problem ? >> need to explore it using 2D arrays.
+
+Error 10: char *tempf1 = 0 is not a good idea because it does not point to any valid memory location.
+```bash
+14          char *tempf1 = 0;
+(gdb) n
+15          char *tempf0 = 0;
+```
+- tempf0 doesn't point to any valid memory location. When you call strcpy(tempf0, f0);, the function attempts to write to the location pointed to by tempf0, which is null, causing a segmentation fault.
+- Either use malloc to dynamically allocate the memory, or declare it as array of some x size.
+    - Uninitialized pointers or null pointers cannot be used with functions like strcpy.
+    - Always ensure that pointers point to valid, allocated memory before writing to them.
+
+Error 11: argumemt mismatch bound (warning)
+```bash
+mpunix@LIN-5CG3350MRD:~/c-programming/programming_concepts/strings/ypk_problems$ gcc -g -Wall -o e problem_e.c
+problem_e.c:12:26: warning: argument 1 of type ‘char[10]’ with mismatched bound [-Warray-parameter=]
+   12 | void printFibonacci(char f0[10], char f1[10], int order) {
+      |                     ~~~~~^~~~~~
+problem_e.c:5:21: note: previously declared as ‘char *’
+    5 | void printFibonacci(char *, char *, int);
+      |                     ^~~~~~
+problem_e.c:12:39: warning: argument 2 of type ‘char[10]’ with mismatched bound [-Warray-parameter=]
+   12 | void printFibonacci(char f0[10], char f1[10], int order) {
+      |                                  ~~~~~^~~~~~
+problem_e.c:5:29: note: previously declared as ‘char *’
+    5 | void printFibonacci(char *, char *, int);
+      |                             ^~~~~~
+```
+- Compiler warning when function prototype is declared as char * (argument).
+- In C, when you declare a function parameter like char f0[10], it's actually interpreted as char *f0. This is because arrays decay into pointers when passed to functions.
+- However, the compiler warning is triggered because the declared size [10] doesn’t match the implicit pointer behavior.
+- The compiler warns that the declared size (10) is ignored in the parameter list, which might lead to confusion or incorrect assumptions about the array bounds.
+    - Here when I was writing the program I wanted, f0 and f1 to have 10 bytes initially which is not possible to declare it this way.
+
+Error 12: Do not use Malloc/calloc for the arguments of function because function arguments get input prior to function call.
+```bash
+Breakpoint 1, main () at problem_e.c:9
+9           printFibonacci("a", "b", 5);
+(gdb) s
+# here function arguments already have inputs a & b
+printFibonacci (f0=0x555555556006 "a", f1=0x555555556004 "b", order=5) at problem_e.c:13
+13      void printFibonacci(char *f0, char *f1, int order) {
+(gdb) n
+14          int term = 0;
+(gdb) n
+
+# I used malloc to allocate size
+15          f0 = (char *)malloc(10 * sizeof(char));
+(gdb) n
+16          f1 = (char *)malloc(10 * sizeof(char));
+(gdb) n
+18          if (f0 == NULL || f1 == NULL) {
+
+# here we can see the allocated memory points to different location causing the 
+# data to be lost
+(gdb) p f0
+# 
+$1 = 0x5555555592a0 ""
+(gdb) q
+A debugging session is active.
+
+        Inferior 1 [process 52778] will be killed.
+
+Quit anyway? (y or n) t
+Please answer y or n.
+A debugging session is active.
+
+        Inferior 1 [process 52778] will be killed.
+```
+
+Error 13: function accessing 10 bytes in a reigon of size 2
+```bash
+mpunix@LIN-5CG3350MRD:~/c-programming/programming_concepts/strings/ypk_problems$ gcc -g -Wall -o e problem_e.c
+problem_e.c: In function ‘main’:
+problem_e.c:8:5: warning: ‘printFibonacci’ accessing 10 bytes in a region of size 2 [-Wstringop-overflow=]
+    8 |     printFibonacci("a", "b", 5);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+problem_e.c:8:5: note: referencing argument 1 of type ‘char *’
+problem_e.c:8:5: warning: ‘printFibonacci’ accessing 10 bytes in a region of size 2 [-Wstringop-overflow=]
+problem_e.c:8:5: note: referencing argument 2 of type ‘char *’
+problem_e.c:12:6: note: in a call to function ‘printFibonacci’
+   12 | void printFibonacci(char f0[10], char f1[10], int order) {
+      |      ^~~~~~~~~~~~~~
+```
+#### **Understanding the Warning in Detail:**
+
+This warning relates to how **string literals** and **arrays** interact in C, especially in terms of **memory access and safety**.
+
+---
+
+#### **The Key Issue:**
+
+1. **String Literals and Memory Size:**
+   - When you pass `"a"` and `"b"` to `printFibonacci`, these are **string literals**:
+     - `"a"` is **2 bytes**: one for `'a'` and one for the **null terminator** (`'\0'`).
+     - `"b"` is also **2 bytes**.
+
+2. **Function Parameter Declaration:**
+   ```c
+   void printFibonacci(char f0[10], char f1[10], int order);
+   ```
+   - Although `f0` and `f1` are declared as `char f0[10]` and `char f1[10]`, when passed to the function, they **decay** to pointers (`char *`).
+   - The function has **no information** about the actual size of the memory being passed (only the address of the first character).
+
+3. **Why the Warning?**
+   - Inside the function, if you attempt to copy or access up to **10 bytes** (as suggested by the `char f0[10]` declaration), you’ll exceed the memory allocated for the string literals (`"a"` and `"b"`)—which only have **2 bytes**.
+   - This results in **undefined behavior** and potential **buffer overflow**.
+
+---
+
+#### **Memory Layout Example:**
+
+- `"a"` is stored in memory like this:
+  ```
+  | 'a' | '\0' |
+  ```
+  - Total size: **2 bytes**
+- If you attempt to copy **10 bytes** from `"a"`, you'll read past the `'\0'` into **unallocated memory**.
+
+---
+
+#### **Why Does This Matter?**
+
+- **Buffer Overflow Risk:** Accessing memory beyond what’s allocated can:
+  - **Corrupt data** in nearby memory.
+  - Cause **segmentation faults**.
+  - Lead to **security vulnerabilities**.
+
+- **Size Mismatch:** The compiler is warning you because it detects that the function expects larger data (`10 bytes`), but only a small region (`2 bytes`) is being provided.
+- The warning is about trying to access **more memory** than is available.
+- **Solution:** Allocate sufficient memory for the strings and handle them carefully within the function.
