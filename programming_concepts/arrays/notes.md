@@ -1,4 +1,32 @@
 ### Notes
+- Increment the element at the 0th index `array[0]++;`
+    - The array remains unchanged for other indices.
+    - This is a common approach in scenarios like counting occurrences of characters. For example, you can map `'a'` to index 0, `'b'` to index 1, and so on, using:
+```c
+int array[26] = {0}; // Initialize all to 0
+char ch = 'a';
+array[ch - 'a']++; // Increment the index corresponding to the character
+```
+- int array[26] = {0};  // All 26 elements are initialized to 0
+    - When you provide an initializer list with only one 0, the compiler sets the rest of the elements to 0 as well.
+- **Using `memset`:** You can use the `memset` function from the `<string.h>` library to set all elements to `0` (or any byte value).
+```c
+#include <string.h>  // Required for memset
+int array[26];
+memset(array, 0, sizeof(array));  // Sets all bytes of the array to 0
+```
+**Note:**  
+This approach works best for zero-initializing arrays of basic types (like `int`, `char`, etc.) because it fills the memory with zeroes.
+#### Important Points:
+- **Static arrays**: If you declare an array as `static`, all its elements are automatically initialized to `0` by default:
+  ```c
+  static int array[26];  // All elements are initialized to 0
+  ```
+- **Global arrays**: Arrays declared globally (outside of any function) are also initialized to `0` by default:
+  ```c
+  int array[26];  // Global declaration, elements are all 0
+
+---
 
 ### Questions 
 
