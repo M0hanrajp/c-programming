@@ -1,0 +1,32 @@
+{
+  "authors": [
+    "RealBarrettBrown"
+  ],
+  "contributors": [
+    "bcc32",
+    "Gamecock",
+    "gea-migration",
+    "h-3-0",
+    "PakkuDon",
+    "patricksjackson",
+    "QLaille",
+    "ryanplusplus",
+    "Vitorvgc",
+    "wolf99"
+  ],
+  "files": {
+    "solution": [
+      "pangram.c",
+      "pangram.h"
+    ],
+    "test": [
+      "test_pangram.c"
+    ],
+    "example": [
+      ".meta/example.c"
+    ]
+  },
+  "blurb": "Determine if a sentence is a pangram.",
+  "source": "Wikipedia",
+  "source_url": "https://en.wikipedia.org/wiki/Pangram"
+}
