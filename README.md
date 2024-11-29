@@ -63,6 +63,8 @@ Below references are taken from https://github.com/jwasham/c-note
 - https://github.com/fragglet/c-algorithms/tree/master/src
 - https://github.com/fragglet/c-algorithms/releases
 
+Above references are taken from https://github.com/jwasham/c-note
+
 ### Practice
 
 - [GeeksForGeeks](https://www.geeksforgeeks.org/c-programming-language/)
