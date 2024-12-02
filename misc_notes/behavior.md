@@ -2,6 +2,7 @@
 
 - [Usage of Address sanitizer for identifying buffer overflow](https://github.com/M0hanrajp/c-programming/blob/3f9dfff9e48001f90862218aa9ce74961c014bf9/compilation_process/quiz.md?plain=1#L55)
 - [Identifying linker errors with gcc commands](https://github.com/M0hanrajp/c-programming/blob/3f9dfff9e48001f90862218aa9ce74961c014bf9/compilation_process/quiz.md?plain=1#L178)
+- [How to extract digits (individually) from an integer](https://github.com/M0hanrajp/c-programming/blob/master/misc_notes/How%20to%20dervice%20digits%20from%20a%20int%20number.md#extract-digits-from-right-to-left).
 
 ### Errors
 - [Computation error during bit manipulation of 64 bit integer](https://github.com/M0hanrajp/c-programming/blob/3f9dfff9e48001f90862218aa9ce74961c014bf9/ai_generated_questions/number_properties_analyzer_main.c#L54)
