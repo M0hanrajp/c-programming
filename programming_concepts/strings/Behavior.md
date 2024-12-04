@@ -444,3 +444,183 @@ This warning relates to how **string literals** and **arrays** interact in C, es
 - **Size Mismatch:** The compiler is warning you because it detects that the function expects larger data (`10 bytes`), but only a small region (`2 bytes`) is being provided.
 - The warning is about trying to access **more memory** than is available.
 - **Solution:** Allocate sufficient memory for the strings and handle them carefully within the function.
+
+Error 14: Allocation of memeory to a char array (string)
+```bash
+~/c-programming/programming_concepts/strings$ gcc -g -Wall -o debug rough.c -lm
+rough.c: In function ‘main’:
+rough.c:6:5: warning: ‘str’ is used uninitialized [-Wuninitialized]
+    6 |     printf("Length of string %lu\n", strlen(str));
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from rough.c:3:
+/usr/include/string.h:407:15: note: by argument 1 of type ‘const char *’ to ‘strlen’ declared here
+  407 | extern size_t strlen (const char *__s)
+      |               ^~~~~~
+
+## The program
+~/c-programming/programming_concepts/strings$ cat rough.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+int main(void) {
+    char *str = (char *)malloc(20 * sizeof(char));
+    printf("Length of string %lu\n", strlen(str));
+
+    return 0;
+}
+```
+The warning you're encountering:
+
+```
+‘str’ is used uninitialized [-Wuninitialized]
+```
+indicates that you are trying to use the variable `str` without initializing the memory it points to.
+
+### **Understanding the Issue:**
+- **`malloc()` allocates memory**: It reserves space in the heap but does **not initialize** the memory. This means the contents of the allocated memory are **undefined**.
+- **`strlen(str)`**: This function calculates the length of a string by counting characters until it encounters a null terminator (`'\0'`). If `str` is not initialized, `strlen` will access **garbage values**, which can cause undefined behavior or even segmentation faults.
+
+### **Solution:**
+You need to **initialize** the allocated memory or assign a valid string to `str` before using `strlen`.
+
+### **Explanation:**
+1. **Check for `NULL`**: Always check if `malloc` returns `NULL` to handle memory allocation failures gracefully.
+2. **Initialize the string**: Use functions like `strcpy()` or `memset()` to set the contents of the allocated memory.
+3. **Avoid using uninitialized values**: Accessing uninitialized memory leads to unpredictable results, which is why you received the warning.
+
+### **Alternative Initialization Methods:**
+If you want to initialize the memory to all zeros (null characters):
+```c
+memset(str, 0, 20);  // Set all 20 bytes to '\0'
+```
+### **Why This Matters:**
+- **Undefined behavior**: Reading from uninitialized memory can cause your program to behave unpredictably or crash.
+- **Security risk**: Uninitialized memory might contain sensitive data, leading to potential leaks or vulnerabilities.
+Great question! Let's break down the behavior of **`malloc`** and **`calloc`** in C, how they work, and why `calloc` might seem to behave differently when it comes to storage and initialization.
+
+---
+
+#### **`malloc()` vs. `calloc()`**
+
+### **Key Differences:**
+
+| Aspect                | `malloc()`                            | `calloc()`                             |
+|-----------------------|---------------------------------------|----------------------------------------|
+| **Initialization**     | Does **not initialize** the memory. Contains **garbage values**. | Initializes memory to **zero**.        |
+| **Syntax**             | `malloc(size_in_bytes)`               | `calloc(number_of_elements, size_of_each_element)`  |
+| **Use Case**           | Use when you don’t need zero-initialized memory. | Use when you need zero-initialized memory (e.g., arrays). |
+| **Performance**        | Faster because it doesn’t initialize memory. | Slightly slower because it initializes memory to zero. |
+
+---
+
+### **How Storage Works Internally:**
+
+#### **Heap Memory:**
+- Both `malloc()` and `calloc()` allocate memory from the **heap**.
+- The heap is a **region of memory** used for dynamic allocation, separate from the stack (used for local variables).
+- **When you allocate memory**:
+  - The system reserves space in the heap.
+  - The **pointer** returned by `malloc()` or `calloc()` points to the first byte of this allocated block.
+
+### **`calloc` and String Length:**
+If you use `calloc()` and check the length of the allocated block with functions like `strlen()`, it might return `0` because the block is initialized with **null characters (`'\0'`)**:
+```c
+char *str = (char *)calloc(20, sizeof(char));  // All 20 bytes are set to '\0'
+printf("%lu\n", strlen(str));  // Output: 0
+```
+- **`strlen` stops at the first `'\0'` character**, so it sees the string as empty.
+
+Error 17: Segementation fault - during allocation of dynamic memory and string literal
+```bash
+# Error:
+Breakpoint 1, main () at rough.c:5
+5           char *str = (char *)malloc(40 * sizeof(char));
+(gdb) n
+6           str = "found the needle at position";
+(gdb) p str
+$1 = 0x5555555592a0 ""
+(gdb) n
+7           printf("Length of string %lu & value of string : %s\n", strlen(str), str);
+(gdb) n
+Length of string 28 & value of string : found the needle at position
+8           strcat(str, " 5");
+(gdb) s
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00005555555551e7 in main () at rough.c:8
+8           strcat(str, " 5");
+(gdb) qy
+Undefined command: "qy".  Try "help".
+(gdb) q
+A debugging session is active.
+
+        Inferior 1 [process 21959] will be killed.
+
+Quit anyway? (y or n) y
+mpunix@LIN-5CG3350MRD:~/c-programming/programming_concepts/strings$ cat rough.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+int main(void) {
+    char *str = (char *)malloc(40 * sizeof(char));
+    str = "found the needle at position";
+    printf("Length of string %lu & value of string : %s\n", strlen(str), str);
+    strcat(str, " 5");
+    printf("Length of string %lu & value of string : %s\n", strlen(str), str);
+    str[31] = '\0';
+    return 0;
+}
+```
+#### Understanding the Segmentation Fault
+
+In this code, the segmentation fault occurs because you're trying to modify a **string literal**, which is read-only. Let's analyze this step by step:
+
+1. **Memory Allocation:**
+   ```c
+   char *str = (char *)malloc(40 * sizeof(char));
+   ```
+   - This allocates 40 bytes of memory on the heap, but the pointer `str` is **reassigned** later, causing a **memory leak** and losing the reference to this allocated memory.
+
+2. **String Assignment:**
+   ```c
+   str = "found the needle at position";
+   ```
+   - Here, `str` no longer points to the allocated heap memory. Instead, it points to a **string literal** stored in a read-only section of memory.
+   - String literals like `"found the needle at position"` are immutable in C. Attempting to modify them leads to **undefined behavior**.
+
+3. **Segmentation Fault with `strcat`:**
+   ```c
+   strcat(str, " 5");
+   ```
+   - `strcat` tries to append `" 5"` to the string pointed to by `str`.
+   - However, since `str` now points to a **read-only string literal**, attempting to write to this memory causes a **segmentation fault**.
+
+To avoid this issue, you should copy the string literal into the allocated memory instead of reassigning the pointer:
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main(void) {
+    char *str = (char *)malloc(40 * sizeof(char));  // Allocate 40 bytes
+    if (str == NULL) {  // Always check if malloc succeeded
+        perror("Memory allocation failed");
+        return 1;
+    }
+    
+    strcpy(str, "found the needle at position");  // Copy string into allocated memory
+
+    printf("Length of string %lu & value of string : %s\n", strlen(str), str);
+
+    strcat(str, " 5");  // Safe to append now because we have allocated enough space
+    printf("Length of string %lu & value of string : %s\n", strlen(str), str);
+
+    free(str);  // Free the allocated memory
+    return 0;
+}
+```
+#### **Summary:**
+- **String literals are read-only:** Modifying them results in a segmentation fault.
+- **Always allocate and initialize writable memory** when dealing with strings that need to be modified.
+- **Reassigning pointers loses allocated memory references:** Be careful to avoid memory leaks.
