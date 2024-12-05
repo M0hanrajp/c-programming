@@ -2,7 +2,8 @@
 
 - Scanf takes in tokens until "enter" key is used.
 - If a space is encountered then it will print all the characters till that first space and rest all characters are included in input buffer.
-Error 1:
+
+## Error 1:
 ```bash
 basics_main.c: In function ‘main’:
 basics_main.c:20:13: warning: format ‘%s’ expects argument of type ‘char *’, but argument 2 has type ‘char (*)[100]’ [-Wformat=]
@@ -27,7 +28,7 @@ Enter a string::  is tough
 ```
 - learn how scanf reads input and the difference in input buffer.
 
-Error 2:
+## Error 2:
 ```bash
 basics_main.c: In function ‘displayString’:
 basics_main.c:37:49: warning: format ‘%u’ expects argument of type ‘unsigned int’, but argument 4 has type ‘char *’ [-Wformat=]
@@ -39,7 +40,7 @@ basics_main.c:37:49: warning: format ‘%u’ expects argument of type ‘unsign
 ```
 - To print the address of each element we need argument to be of type (void *)&array[i] cast which is used to ensure type safety and proper formatting when printing pointer addresses with the %p(print address in hexadecimal format) format specifier ( also works with %u & %d, compiler throws warnings here).
 
-Error 3:
+## Error 3:
 ```bash
 basics_main.c: In function ‘displayString’:
 basics_main.c:37:68: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
@@ -49,7 +50,7 @@ basics_main.c:37:68: warning: cast from pointer to integer of different size [-W
 - Here if I try casting the char* array to unsigned int in order to print address in decimal format it throws errors as, trying to cast a pointer (address) to a type (short unsigned int) that might be of a different size than the pointer itself. On many systems, pointers are typically 4 bytes (32 bits) or 8 bytes (64 bits), while a short unsigned int is usually 2 bytes (16 bits). This mismatch triggers the warning.
 - So either use %p to print in hexa decimal format or, use long unsigned int (8 bytes == pointer size) which removes the error. Here it only works because unsigned long int is able to hold the is large enough to hold the value of a pointer on most modern systems (e.g., 64-bit pointers).
 
-Error 4:
+## Error 4:
 ```bash
 intermediate_basics_main.c: In function ‘main’:
 intermediate_basics_main.c:10:10: error: assignment to expression with array type
@@ -100,7 +101,7 @@ So, the string literal `"something"` is stored in memory, and the array `word` w
 - Pointers can be reassigned to point to another string.
 - Pointers can be reassigned to point to the same memory location of the desired variable.
 
-Error 4: While using strcat
+## Error 4: While using strcat
 - The size of target string should be greater than total amount of characters combined in target string and source string.
 ```bash
 # the reason
@@ -147,7 +148,7 @@ Segmentation fault (core dumped)
 **Learning:**
 - In C, string literals (like "A") are typically stored in read-only memory, so attempting to modify them leads to a segmentation fault.
 
-Error 5: Corssing out of bound and reading strings from adjacent memory locations
+## Error 5: Corssing out of bound and reading strings from adjacent memory locations
 - While writing custom strcat function encountered the following behavior
 ```bash
 ~/c-programming/programming_concepts/strings$ ./customfunc
@@ -238,7 +239,7 @@ Base address of *srcString = 2768403664 & base address of tarString = 2768403654
 [DEBUG]:: Silicon chip & 2768403675
 After string concat: Silicon chip
 ```
-Error 6: Difference between ||, && conditions
+## Error 6: Difference between ||, && conditions
 
 - While traversing through a string, your requirement is to stop at a point if you encounter NULL, space or hiphen.
 - In such condition, my mistake was using `||` condition saying if meets any NULL, space or hiphen.
@@ -248,7 +249,7 @@ Error 6: Difference between ||, && conditions
 - This is why && correctly controls the loop to extract until one of the stop conditions is met.
 - if not program results in segementation fault.
 
-Error 7: attempting to use increment operator over static variable.
+## Error 7: attempting to use increment operator over static variable.
 ```bash
 char *extractFromPosition(int position, const char *string) {
     static char userOutput[SIZE];
@@ -265,7 +266,7 @@ problem_c.c:18:19: error: lvalue required as increment operand
 - The error you're encountering (lvalue required as increment operand) is due to attempting to increment the userOutput pointer, which points to a statically declared array. Since userOutput is statically allocated, modifying the pointer itself doesn't affect the static array correctly, and this causes undefined behavior.
 - Learn the difference of why you cannot incerment here ?
 
-Error 8: For segemenatation fault in string programs
+## Error 8: For segemenatation fault in string programs
 ```bash
 (gdb) n
 
@@ -279,7 +280,7 @@ A debugging session is active.
 ```
 - Check if memory allocated to a string is enough to handle operations during strcat, strcpy etc..
 
-Error 9: strcpy(str[0], f0);  // is Invalid
+## Error 9: strcpy(str[0], f0);  // is Invalid
 
 No, this line is **not valid** in C:
 
@@ -314,7 +315,7 @@ strcpy(str, f0);  // Valid
 
 How can we avoid this problem ? >> need to explore it using 2D arrays.
 
-Error 10: char *tempf1 = 0 is not a good idea because it does not point to any valid memory location.
+## Error 10: char *tempf1 = 0 is not a good idea because it does not point to any valid memory location.
 ```bash
 14          char *tempf1 = 0;
 (gdb) n
@@ -325,7 +326,7 @@ Error 10: char *tempf1 = 0 is not a good idea because it does not point to any v
     - Uninitialized pointers or null pointers cannot be used with functions like strcpy.
     - Always ensure that pointers point to valid, allocated memory before writing to them.
 
-Error 11: argumemt mismatch bound (warning)
+## Error 11: argumemt mismatch bound (warning)
 ```bash
 mpunix@LIN-5CG3350MRD:~/c-programming/programming_concepts/strings/ypk_problems$ gcc -g -Wall -o e problem_e.c
 problem_e.c:12:26: warning: argument 1 of type ‘char[10]’ with mismatched bound [-Warray-parameter=]
@@ -347,7 +348,7 @@ problem_e.c:5:29: note: previously declared as ‘char *’
 - The compiler warns that the declared size (10) is ignored in the parameter list, which might lead to confusion or incorrect assumptions about the array bounds.
     - Here when I was writing the program I wanted, f0 and f1 to have 10 bytes initially which is not possible to declare it this way.
 
-Error 12: Do not use Malloc/calloc for the arguments of function because function arguments get input prior to function call.
+## Error 12: Do not use Malloc/calloc for the arguments of function because function arguments get input prior to function call.
 ```bash
 Breakpoint 1, main () at problem_e.c:9
 9           printFibonacci("a", "b", 5);
@@ -383,7 +384,7 @@ A debugging session is active.
         Inferior 1 [process 52778] will be killed.
 ```
 
-Error 13: function accessing 10 bytes in a reigon of size 2
+## Error 13: function accessing 10 bytes in a reigon of size 2
 ```bash
 mpunix@LIN-5CG3350MRD:~/c-programming/programming_concepts/strings/ypk_problems$ gcc -g -Wall -o e problem_e.c
 problem_e.c: In function ‘main’:
@@ -445,7 +446,7 @@ This warning relates to how **string literals** and **arrays** interact in C, es
 - The warning is about trying to access **more memory** than is available.
 - **Solution:** Allocate sufficient memory for the strings and handle them carefully within the function.
 
-Error 14: Allocation of memeory to a char array (string)
+## Error 14: Allocation of memeory to a char array (string)
 ```bash
 ~/c-programming/programming_concepts/strings$ gcc -g -Wall -o debug rough.c -lm
 rough.c: In function ‘main’:
@@ -530,7 +531,7 @@ printf("%lu\n", strlen(str));  // Output: 0
 ```
 - **`strlen` stops at the first `'\0'` character**, so it sees the string as empty.
 
-Error 17: Segementation fault - during allocation of dynamic memory and string literal
+## Error 15: Segementation fault - during allocation of dynamic memory and string literal
 ```bash
 # Error:
 Breakpoint 1, main () at rough.c:5
@@ -624,3 +625,59 @@ int main(void) {
 - **String literals are read-only:** Modifying them results in a segmentation fault.
 - **Always allocate and initialize writable memory** when dealing with strings that need to be modified.
 - **Reassigning pointers loses allocated memory references:** Be careful to avoid memory leaks.
+
+## Error 16: Do not compare const char pointers to string literals :
+```bash
+solution.c:2:15: warning: result of comparison against a string literal is unspecified (use strncmp instead) [-Wstring-compare]
+  if(operator == "add")
+              ^  ~~~~~
+```
+The warning you're seeing occurs because you're trying to compare a string pointer with a string literal directly. In C, string literals are arrays of characters, and when used in expressions, they decay to pointers. Comparing pointers like this doesn't check the content of the strings; instead, it checks if they point to the same memory address, which is not what you usually want.
+
+### Problematic code:
+```c
+char *operator = "add";
+
+if (operator == "add") {  // This compares pointers, not content
+    // ...
+}
+```
+
+### Solution: Use `strcmp()` or `strncmp()`
+To compare the **contents** of strings in C, you need to use the `strcmp()` or `strncmp()` functions from the `<string.h>` library. Here's how to correct your code:
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char *operator = "add";
+
+    if (strcmp(operator, "add") == 0) {  // Compare string content
+        printf("Addition operation selected.\n");
+    } else if (strcmp(operator, "subtract") == 0) {
+        printf("Subtraction operation selected.\n");
+    } else {
+        printf("Unknown operation.\n");
+    }
+
+    return 0;
+}
+```
+
+### Explanation:
+- **`strcmp()`**: Compares two strings lexicographically. It returns:
+  - `0` if the strings are equal.
+  - A positive value if the first string is lexicographically greater.
+  - A negative value if the first string is lexicographically smaller.
+  
+- **`strncmp()`**: Similar to `strcmp()`, but only compares the first `n` characters of each string. This is useful when you want to limit the comparison length to avoid potential buffer overflows or handle fixed-length strings.
+
+```c
+if (strncmp(operator, "add", 3) == 0) {
+    // Matches "add"
+}
+```
+
+### Why pointer comparison doesn't work:
+When you write `operator == "add"`, you're comparing the **memory addresses** of the `operator` pointer and the `"add"` literal. Since these are typically stored in different locations in memory, the comparison usually fails even if the contents are the same.
