@@ -19,6 +19,7 @@ Where:
 $$
    S = \frac{4}{2} \cdot (-1 + 2)
 $$
+
 $$
    S = 2 \cdot 1 = 2
 $$
@@ -30,11 +31,13 @@ In the situation where we need to find the number of terms :
 
 #### Formula for the Number of Terms (\(n\)):
 The number of terms in the range can be calculated as:
+
 $$
 n = \frac{l - a}{d} + 1
 $$
 
 Substitute the values:
+
 $$
 n = \frac{2 - (-1)}{1} + 1 = \frac{2 + 1}{1} + 1 = 3 + 1 = 4
 $$
