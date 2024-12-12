@@ -41,3 +41,19 @@ int main() {
 - **Immediate exit**: `return` ends the function instantly.
 - **Outer code ignored**: No further code inside the function is executed after `return`.
 - **Loop termination**: The loop stops processing once `return` is called.
+
+### Error - integer division
+```bash
+    int a = 10, b = 10, c = 13;
+    float s1 = a + b + c / 2;      // Without parentheses
+    # this is the way
+    float s2 = a + b + c / 2.0;
+```
+- here s1 = 26.00 (a + b + c / 2), a b & c are integers and dividing by 2 gives integer division rather than floating point division, even though the result is assigned to float.
+- s2 = 26.50 (a + b + c / 2.0), a b & c are integer but divisor is floating point number, the integers are promoted to floating numbers and operation is performed (the correct way).
+
+### How to control precision of a number during calculation
+```bash
+double rounded = round(num * 100.0) / 100.0; // Round to 2 decimal places
+```
+Use the math.h library to use the round function.
