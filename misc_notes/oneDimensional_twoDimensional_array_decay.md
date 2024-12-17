@@ -29,7 +29,7 @@ However, there are some **exceptions** where the array does *not* decay, and it 
 2. **Exceptions to Array Decay**  
    There are 3 situations where an array does **not** decay to a pointer:
 
-   ### a) **`sizeof` Operator**  
+   #### a) **`sizeof` Operator**  
    When you use `sizeof` with an array, it gives the size of the **entire array** and does not cause decay.
 
    ```c
@@ -39,7 +39,7 @@ However, there are some **exceptions** where the array does *not* decay, and it 
 
    - `sizeof(arr)` gives the size of the entire array (not the size of a pointer).
 
-   ### b) **`&` Operator** (Address-of Operator)  
+   #### b) **`&` Operator** (Address-of Operator)  
    When you take the address of the array, the result is a pointer to the entire array, not a pointer to the first element.
 
    ```c
@@ -49,7 +49,7 @@ However, there are some **exceptions** where the array does *not* decay, and it 
 
    - Here, `&arr` is of type `int (*)[5]` (pointer to an array of 5 integers).
 
-   ### c) **Array as a String Literal in Initialization**  
+   #### c) **Array as a String Literal in Initialization**  
    String literals used to initialize a character array do not decay.
 
    ```c
@@ -124,7 +124,7 @@ To determine what an array decays into, follow these steps:
 
 ### Examples to Reinforce the Rules
 
-### Case 1: Simple Array
+#### Case 1: Simple Array
 ```c
 int arr[5] = {1, 2, 3, 4, 5};
 
@@ -133,7 +133,7 @@ printf("%zu\n", sizeof(arr));  // No decay, size is 20 bytes
 printf("%p\n", (void *)&arr);  // No decay, type is int (*)[5]
 ```
 
-### Case 2: Passing to a Function
+#### Case 2: Passing to a Function
 ```c
 void func(int *p) {
     printf("%d\n", *p);
@@ -143,14 +143,13 @@ int arr[5] = {1, 2, 3, 4, 5};
 func(arr);  // Decays to int *
 ```
 
-### Case 3: Multidimensional Array
+#### Case 3: Multidimensional Array
 ```c
 int arr[2][3] = {{1, 2, 3}, {4, 5, 6}};
 
 printf("%p\n", (void *)arr);      // Decays to int (*)[3]
 printf("%p\n", (void *)&arr[0]);  // Same as 'arr'
 ```
-
 ---
 
 ### **Summary Table**
