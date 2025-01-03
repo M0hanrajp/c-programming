@@ -148,6 +148,40 @@ Segmentation fault (core dumped)
 **Learning:**
 - In C, string literals (like "A") are typically stored in read-only memory, so attempting to modify them leads to a segmentation fault.
 
+### Logical error while using strcat
+
+- strcat is used to appened a string (That is null terminated) from destination to source.
+- it is not used to concat individual characters.
+- use assignment for individual characters instead of strcat.
+- it will start copying from the position of character till the strings end i.e. '\0'.
+```bash
+(gdb) p strings
+$1 = (const char * const *) 0x7fffffffdc30
+(gdb) p strings[0]
+$2 = 0x555555556004 "yoda"
+(gdb) p strings[1]
+$3 = 0x555555556009 "best"
+(gdb) p strings[2]
+$4 = 0x55555555600e "has"
+(gdb) p strings[0][0]
+$5 = 121 'y'
+(gdb) p strings[1][1]
+$6 = 101 'e'
+(gdb) p strings[2][2]
+$7 = 115 's'
+(gdb) n
+6         for(size_t i = 0; i < length; i++)
+(gdb) info locals
+i = 0
+str_out = 0x5555555592a0 "yoda" // entire string is copied instead of individual character
+(gdb) n
+7           strcat(&str_out[i], &strings[i][i]);
+(gdb) n
+6         for(size_t i = 0; i < length; i++)
+(gdb) info locals
+i = 1
+str_out = 0x5555555592a0 "yodaest" // For i = 1, &strings[1][1] points to 'e'. strcat appends "est" from position &str_out[1], overwriting part of the existing content ("yoda").
+```
 ## Error 5: Corssing out of bound and reading strings from adjacent memory locations
 - While writing custom strcat function encountered the following behavior
 ```bash
@@ -681,3 +715,4 @@ if (strncmp(operator, "add", 3) == 0) {
 
 ### Why pointer comparison doesn't work:
 When you write `operator == "add"`, you're comparing the **memory addresses** of the `operator` pointer and the `"add"` literal. Since these are typically stored in different locations in memory, the comparison usually fails even if the contents are the same.
+
