@@ -716,3 +716,18 @@ if (strncmp(operator, "add", 3) == 0) {
 ### Why pointer comparison doesn't work:
 When you write `operator == "add"`, you're comparing the **memory addresses** of the `operator` pointer and the `"add"` literal. Since these are typically stored in different locations in memory, the comparison usually fails even if the contents are the same.
 
+## Error 17: Incorrect usage of pointer arithmetic in strings
+
+- During string manipulation in C, do not return the incremented string.
+- Be aware of when and what the target and source string are being assigned and manipulated.
+```bash
+char *copy_string(const char *str_in, char *ns) {
+    while (*str_in) {
+        *ns = *str_in;  // Copy character
+        str_in++;
+        ns++;           // Increment pointer
+    }
+    return ns; #### ERROR >>>>> Returning an incremented pointer! this will point to NULL
+}
+```
+- assign the start address of ns to `char *start` which will hold the start address.
