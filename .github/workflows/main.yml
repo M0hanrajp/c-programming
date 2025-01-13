@@ -13,14 +13,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
+      - name: Set up Python
+        uses: actions/setup-python@v4
 
       - name: Install dependencies
-        run: go mod download
+        run: pip install pytest pytest-cov
 
       - name: Run tests
-        run: go test -coverprofile=coverage.txt
+        run: pytest --cov-branch --cov-report=xml
 
       - name: Upload results to Codecov
         uses: codecov/codecov-action@v5
