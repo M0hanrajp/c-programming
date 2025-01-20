@@ -6,7 +6,7 @@ Points to remember:
 #### Difference between `char str[] = "Hello code";` and `char *ptr = "Hello code";`
 - where str is a constant pointer to a char.
 - where ptr is a pointer to a constant char.
-![image](https://github.com/user-attachments/assets/721e702c-a53a-484d-94fd-304ae41570ca)
+![Image](https://github.com/user-attachments/assets/fc44f3a0-551a-4a66-b146-c42150b9d7a9)
 
 [Pointers can be read in different way too, for example char const *p and const char *p are the same !](https://github.com/M0hanrajp/c-programming/blob/3659579d1c2d3c058f71432087722554b3259d5d/programming_concepts/strings/two_dimensional_strings/constant_pointers_%26_Pointer_to_constant.c#L28)
 
