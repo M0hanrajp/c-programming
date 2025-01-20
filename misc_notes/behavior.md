@@ -57,3 +57,8 @@ int main() {
 double rounded = round(num * 100.0) / 100.0; // Round to 2 decimal places
 ```
 Use the math.h library to use the round function.
+
+### Usage of continue;
+- `continue` skips code that is written after `continue;`.
+- be vary of using any statements written after it will be skipped.
+- if a flag is set to true after `continue;` it will not be set.
