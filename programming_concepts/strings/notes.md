@@ -84,7 +84,7 @@ programming_concepts/strings/snippets/d.c has the program
 ### Answers:
 
 #### ans-c
-- prints out garbadge value and nulls.
+- prints out garbage value and nulls.
 - Accessing out-of-bound indices results in undefined behavior. 
 - The program reads whatever data happens to be in the memory addresses following the str array.
 ```bash
