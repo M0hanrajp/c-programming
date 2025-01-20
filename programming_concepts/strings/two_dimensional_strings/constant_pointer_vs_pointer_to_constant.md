@@ -3,6 +3,13 @@
 Points to remember:
 - string literals are immutable and typically stored in read-only memory.
 
+#### Difference between `char str[] = "Hello code";` and `char *ptr = "Hello code";`
+- where str is a constant pointer to a char.
+- where ptr is a pointer to a constant char.
+![image](https://github.com/user-attachments/assets/721e702c-a53a-484d-94fd-304ae41570ca)
+
+[Pointers can be read in different way too, for example char const *p and const char *p are the same !](https://github.com/M0hanrajp/c-programming/blob/3659579d1c2d3c058f71432087722554b3259d5d/programming_concepts/strings/two_dimensional_strings/constant_pointers_%26_Pointer_to_constant.c#L28)
+
 #### Constant pointer to a string:
 
 In the textbook YPK let us C, page 340,
@@ -21,7 +28,7 @@ In the textbook YPK let us C, page 340,
 char str[6] = "Linux";
 // Memory layout:
 +----+----+----+----+----+----+
-| 'L'| 'i'| 'n'| 'u'| 'x'| '\0'|
+|'L'| 'i'| 'n'| 'u'| 'x'| '\0'|
 +----+----+----+----+----+----+
  ^ (fixed address, str) but character's at those address are modifyable.
 ```
@@ -43,7 +50,7 @@ In the textbook YPK let us C, page 340,
 char *ptr = "Linux";
 // Memory layout (string in read-only memory):
 +----+----+----+----+----+----+
-| 'L'| 'i'| 'n'| 'u'| 'x'| '\0'|
+|'L'| 'i'| 'n'| 'u'| 'x'| '\0'|
 +----+----+----+----+----+----+
  ^ (modifiable address, ptr)
 ptr can move to the next character, e.g., ptr++.
