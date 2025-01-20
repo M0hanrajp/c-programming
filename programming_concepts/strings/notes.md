@@ -5,7 +5,7 @@
 - [scenarios.md]() has notes on string basics, pointers and passing values to a function.
 - [Basics on 1D string pointers]() how char pointers and char arrays differ.
 - [Behavior.md]() contains all the errors for string programs.
-- [Constant pointer vs pointer to a constant]() explaination of a concepts.
+- [Constant pointer vs pointer to a constant]() explanation of a concepts.
 
 ### Observations & notes:
 - In order to print a string (manually by iterating through each character)
