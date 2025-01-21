@@ -75,3 +75,17 @@ You can also use expressions within `printf`:
    (gdb) continue
    ```
 This approach helps you format the output more precisely than the default `print` command in GDB.
+
+#### Print the type of variable
+
+Use [`whatis <variable>` in gdb to get to know the type](https://github.com/M0hanrajp/c-programming/blob/188035dbc5b7d9b6857aef5314238186831238b1/programming_concepts/function_pointers/notes.md?plain=1#L19)
+```bash
+The following snip shows that display has address associated to it.
+```bash
+(gdb) p display
+$1 = {void ()} 0x555555555149 <display>
+(gdb) whatis display
+type = void ()
+(gdb) printf"%p", display
+0x555555555149(gdb)
+```
