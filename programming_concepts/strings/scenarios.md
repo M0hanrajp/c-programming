@@ -23,6 +23,8 @@ int main() {
     return 0;
 }
 ```
+- the char array address itself is the first element's address :
+![Image](https://github.com/user-attachments/assets/57636f13-8148-443e-a627-d8645d8af462)
 - Observe the first char is 'I' as per sentence[0]. base address of sentence is present inside function.
 ![image](https://github.com/user-attachments/assets/c04b7418-a430-466d-9498-6ld2ba4f4f4bf)
 - Note:
@@ -54,3 +56,4 @@ element :: X & address of element :: 17 is 0x7ffe9d7d58f1
 element :: X & address of element :: 18 is 0x7ffe9d7d58f2
 element :: X & address of element :: 19 is 0x7ffe9d7d58f3
 ```
+#### 1D array of pointers calculations.[here](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/two_dimensional_strings/output.md#passing-stro-to-functions)

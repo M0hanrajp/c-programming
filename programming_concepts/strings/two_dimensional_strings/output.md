@@ -1,38 +1,38 @@
 ### contains output of the programs in the folder
 
+Use [`whatis <variable>` in gdb to get to know the type](https://github.com/M0hanrajp/c-programming/blob/188035dbc5b7d9b6857aef5314238186831238b1/programming_concepts/function_pointers/notes.md?plain=1#L19)
+
 >### 1D array basics
 ```bash
 mpunix@LIN-5CG3350MRD:~/c-programming/programming_concepts/strings/two_dimensional_strings$ ./basics
-size of 1D strO :: 20
-// &strO: Pointer to the entire array (char (*)[20]
-address of variable strO :: 0x7ffe08b41620
-// strO or &strO[0]: Pointer to the first element of the array (char*)
-address of variable strO :: 0x7fff5f53a570 (pointer to whole array)
-size of &StrO :: 8
-# The function accepts char* so we can use pointer arithmetic to print out string.
-Element[ 0] = I & address :: 0x7ffe08b41620 # this is entire arrays address
-Element[ 1] =   & address :: 0x7ffe08b41621
-Element[ 2] = u & address :: 0x7ffe08b41622
-Element[ 3] = s & address :: 0x7ffe08b41623
-Element[ 4] = e & address :: 0x7ffe08b41624
-Element[ 5] =   & address :: 0x7ffe08b41625
-Element[ 6] = A & address :: 0x7ffe08b41626
-Element[ 7] = r & address :: 0x7ffe08b41627
-Element[ 8] = c & address :: 0x7ffe08b41628
-Element[ 9] = h & address :: 0x7ffe08b41629
-Element[10] =   & address :: 0x7ffe08b4162a
-Element[11] = l & address :: 0x7ffe08b4162b
-Element[12] = i & address :: 0x7ffe08b4162c
-Element[13] = n & address :: 0x7ffe08b4162d
-Element[14] = u & address :: 0x7ffe08b4162e
-Element[15] = x & address :: 0x7ffe08b4162f
-Element[16] =   & address :: 0x7ffe08b41630
-Element[17] = B & address :: 0x7ffe08b41631
-Element[18] = T & address :: 0x7ffe08b41632
-Element[19] = W & address :: 0x7ffe08b41633
+sizeof(strO) :: 21
+address of strO (&strO):: 0x7ffc881b4b40 (pointer to whole array) i.e. of type char (*)[20]
+sizeof address (&StrO) :: 8
+str0 decays to a pointer to the first element with address strO:: 0x7ffc881b4b40 && value *strO:: I
+Element[ 0] = I & address :: 0x7ffc881b4b40
+Element[ 1] =   & address :: 0x7ffc881b4b41
+Element[ 2] = u & address :: 0x7ffc881b4b42
+Element[ 3] = s & address :: 0x7ffc881b4b43
+Element[ 4] = e & address :: 0x7ffc881b4b44
+Element[ 5] =   & address :: 0x7ffc881b4b45
+Element[ 6] = A & address :: 0x7ffc881b4b46
+Element[ 7] = r & address :: 0x7ffc881b4b47
+Element[ 8] = c & address :: 0x7ffc881b4b48
+Element[ 9] = h & address :: 0x7ffc881b4b49
+Element[10] =   & address :: 0x7ffc881b4b4a
+Element[11] = l & address :: 0x7ffc881b4b4b
+Element[12] = i & address :: 0x7ffc881b4b4c
+Element[13] = n & address :: 0x7ffc881b4b4d
+Element[14] = u & address :: 0x7ffc881b4b4e
+Element[15] = x & address :: 0x7ffc881b4b4f
+Element[16] =   & address :: 0x7ffc881b4b50
+Element[17] = B & address :: 0x7ffc881b4b51
+Element[18] = T & address :: 0x7ffc881b4b52
+Element[19] = W & address :: 0x7ffc881b4b53
 Using print function :: I use Arch linux BTW
 ```
 Yes, `&strO` points to the **entire array**, whereas `strO` is a pointer to the **first element** of the array. Let's dive deeper into their differences and how to use `&strO`.
+![Image](https://github.com/user-attachments/assets/57636f13-8148-443e-a627-d8645d8af462)
 
 ### **Difference Between `strO` and `&strO`:**
 
@@ -45,6 +45,7 @@ Yes, `&strO` points to the **entire array**, whereas `strO` is a pointer to the 
    - It is the address of the **entire array**.
    - Its type is `char (*)[20]` (a pointer to an array of 20 `char`s).
    - It cannot be directly used for pointer arithmetic or element access because it refers to the whole array as a single unit.
+      - It can be used but with more complexity. (Calculations are shown below).
 
 Here: (the below two points are only if you are passing to a function argument that expects char (*)[x]
 - `(*arrayPointer)` dereferences the pointer to the entire array.
@@ -58,6 +59,25 @@ void displayArrayPointer(char (*array)[20]) {
     printf("Second element: %c\n", (*array)[1]);
 }
 ```
+- here `&strO` is of type `char (*)[20]`, `strO` is a pointer to first element.
+```bash
+(gdb) printf"%p\n", *&strO
+0x7fffffffdfb0
+(gdb) printf"%p\n", strO
+0x7fffffffdfb0
+```
+For example:
+```bash
+// dereferencing a char (*)[20], 
+(gdb) p (*&strO)[0]
+$2 = 73 'I'
+```
+- Calculation first element: `(*&strO)[0] --> (0x7fffffffdfb0)[0] --> *(0x7fffffffdfb0 + 0) --> 'I'`
+```bash
+(gdb) p (*&strO)[1]
+$4 = 32 ' '
+```
+- Calculation second element: `(*&strO)[1] --> (0x7fffffffdfb0)[1] --> *(0x7fffffffdfb0 + 1) --> ' '`
 ---
 
 ### **Key Differences in Practical Use**:

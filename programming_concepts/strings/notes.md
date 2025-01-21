@@ -10,6 +10,7 @@
 ### Observations & notes:
 - Basics on string declarations can be found [here](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/notes.md#basics-of-declaration).
 - strings are character arrays, a character literal in c behaves like an int.
+- char a[4] variable behaves as pointer to the first element `(char *)`, &a gives of type `char (*)[4]` which is a pointer to whole array.
 - In order to print a string (manually by iterating through each character)
     - Use '\0' character as the exit expression.
     - when iterating with i as an integer from 0 till `\0` make sure expression checks the character not the integer.
@@ -72,6 +73,11 @@ $2 = 1
 ```bash
 programming_concepts/strings/snippets/d.c has the program
 ```
+- Calculation of pointer to an array in 1D array `VIMP` [Calculation of pointer to an array in 1D i.e. `char a[21]` used as `char (*)[21]`](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/two_dimensional_strings/output.md#passing-stro-to-functions)
+
+### 2D array Notes
+
+
 ### Questions
 
 - [a] char words[] = {'A', 'B', 'C', 'D', '\0'};, when printed by calling the function mentioned in basics_main.c prints ABCD.
@@ -81,6 +87,7 @@ programming_concepts/strings/snippets/d.c has the program
 - [How does `*t++ and *++t` works](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/snippets/d.c)
 - [Proof that character literal is of type int in C](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/snippets/h.c)
 - [How size is determined for declaration of type `word[] = "string"` ?](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/notes.md#how-size-is-determined-for-declaration-of-type-word--string-)
+- [Calculation of pointer to an array in 1D i.e. `char a[21]` used as `char (*)[21]`](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/two_dimensional_strings/output.md#passing-stro-to-functions)
 
 ### Answers:
 
