@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stddef.h>
 
+// using array of pointers technique
 void displayTwoDimensionalString(size_t size, char (*input)[size]) {
     // 2 because there are only two rows of strings in main function
     for(size_t i = 0; i < 2; i++) {
@@ -12,6 +13,7 @@ void displayTwoDimensionalString(size_t size, char (*input)[size]) {
     // of accessing character by character.
 }
 
+// using double pointer technique.
 void displayTwo_DimensionalString(char **input) {
     // 2 because there are only two rows of strings in main function
     for(size_t i = 0; i < 2; i++) {
@@ -32,11 +34,11 @@ void displayOneDimensionalString(size_t size, const char* string) {
 
 int main() {
     // One dimensional array with basics
-    char strO[20] = "I use Arch linux BTW";
-    printf("size of 1D strO :: %lu\n", sizeof(strO));
-    printf("address of variable strO :: %p (pointer to whole array) \nsize of &StrO :: %lu\n", &strO, sizeof(&strO));
-    printf("str0 decays to a pointer to the first element :: %c && address :: %p (without & operator) \n", *strO, strO);
-    // call the function :: 
+    char strO[21] = "I use Arch linux BTW";
+    printf("sizeof(strO) :: %lu\n", sizeof(strO));
+    printf("address of strO (&strO):: %p (pointer to whole array) i.e. of type char (*)[20] \nsizeof address (&StrO) :: %lu\n", &strO, sizeof(&strO));
+    printf("str0 decays to a pointer to the first element with address strO:: %p && value *strO:: %c\n", strO, *strO);
+    // call the function ::
     displayOneDimensionalString(20, strO);
     // Two dimensional array with basics
     char strT[2][4] = {"one", "two"};
