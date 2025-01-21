@@ -2,12 +2,14 @@
 
 ### Mini index
 - This file has short notes, questions and answers.
-- [scenarios.md]() has notes on string basics, pointers and passing values to a function.
-- [Basics on 1D string pointers]() how char pointers and char arrays differ.
-- [Behavior.md]() contains all the errors for string programs.
-- [Constant pointer vs pointer to a constant]() explanation of a concepts.
+- [scenarios.md](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/scenarios.md) has notes on string basics, pointers and passing values to a function.
+- [Basics on 1D string pointers](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/notes.md#basics-of-declaration) how char pointers and char arrays differ.
+- [Behavior.md](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/Behavior.md) contains all the errors for string programs.
+- [Constant pointer vs pointer to a constant](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/two_dimensional_strings/constant_pointers_%26_Pointer_to_constant.c) explanation of a concepts.
 
 ### Observations & notes:
+- Basics on string declarations can be found [here](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/notes.md#basics-of-declaration).
+- strings are character arrays, a character literal in c behaves like an int.
 - In order to print a string (manually by iterating through each character)
     - Use '\0' character as the exit expression.
     - when iterating with i as an integer from 0 till `\0` make sure expression checks the character not the integer.
@@ -42,8 +44,8 @@ $2 = 1
 #### Basics of declaration:
 - `char b[2] = "A"` vs `char *c = "A"` difference.
 ```bash
-3	  char *c = "A";
-4	  char b[2] = "A";
+3	  char *c = "A"; // this act as a pointer to a constant string, Read only memory
+4	  char b[2] = "A"; // this act as a constant pointer to string
 ```
 ![Image](https://github.com/user-attachments/assets/09a253f0-36bf-40c8-acde-458f6e769973)
 
@@ -66,24 +68,23 @@ $2 = 1
 - Hence since size of c is 3 bytes printf prints till D.
 ![Image](https://github.com/user-attachments/assets/401aac3f-a3e9-4832-bc00-588365c2cab3)
 
-- Declaring a pointer and not initializing it will result in `seg faults`.
+- Declaring a pointer and not initializing it will result in `seg faults`.examples in [file](https://github.com/M0hanrajp/c-programming/blob/9dd2438e7e52471e7c525dcffc1f5e3a6f0b6ae5/misc_notes/dynamic_memory_allocation.md?plain=1#L33), [file](https://github.com/M0hanrajp/c-programming/blob/9dd2438e7e52471e7c525dcffc1f5e3a6f0b6ae5/programming_concepts/strings/Behavior.md?plain=1#L352), [file](https://github.com/M0hanrajp/c-programming/blob/9dd2438e7e52471e7c525dcffc1f5e3a6f0b6ae5/compilation_process/theory.md?plain=1#L71)
 ```bash
 programming_concepts/strings/snippets/d.c has the program
 ```
-- Also in [file](https://github.com/M0hanrajp/c-programming/blob/9dd2438e7e52471e7c525dcffc1f5e3a6f0b6ae5/misc_notes/dynamic_memory_allocation.md?plain=1#L33), [file](https://github.com/M0hanrajp/c-programming/blob/9dd2438e7e52471e7c525dcffc1f5e3a6f0b6ae5/programming_concepts/strings/Behavior.md?plain=1#L352), [file](https://github.com/M0hanrajp/c-programming/blob/9dd2438e7e52471e7c525dcffc1f5e3a6f0b6ae5/compilation_process/theory.md?plain=1#L71)
-
 ### Questions
 
 - [a] char words[] = {'A', 'B', 'C', 'D', '\0'};, when printed by calling the function mentioned in basics_main.c prints ABCD.
     - when the same words[] is used without '\0' it prints ABCD, what is the behavior here ? does compiler add the '\0' terminator ?
 - [b] Working of `printf()` function ?
-- [Q & Ans](####ans-c)[c] When a char[20] is declared and is initialized with string length less than 25 bytes, what is the value in the left out memory locations ?
-- [How does `*t++ and *++t` works]() # from d.c
-- [Proof that character literal is of type int in C]() # from h.c
+- [Q & Ans](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/notes.md#ans-c)[c] When a char[20] is declared and is initialized with string length less than 25 bytes, what is the value in the left out memory locations ?
+- [How does `*t++ and *++t` works](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/snippets/d.c)
+- [Proof that character literal is of type int in C](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/snippets/h.c)
+- [How size is determined for declaration of type `word[] = "string"` ?](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/notes.md#how-size-is-determined-for-declaration-of-type-word--string-)
 
 ### Answers:
 
-#### ans-c
+### ans-c
 - prints out garbage value and nulls.
 - Accessing out-of-bound indices results in undefined behavior. 
 - The program reads whatever data happens to be in the memory addresses following the str array.
@@ -125,7 +126,7 @@ Char[28] =  � & address :: 0x7ffc4a8cea4c
 Char[29] =  � & address :: 0x7ffc4a8cea4d
 ```
 
-#### How size is determined for declaration of type `word[] = "string"` ?
+### How size is determined for declaration of type `word[] = "string"` ?
 
 When we say that `word[]` is a **statically allocated array** in C, it means that its memory is allocated at **compile time** in a fixed location. Let's break this down step by step:
 #### **1. Statically Allocated Memory**
@@ -139,6 +140,9 @@ For example:
 ```c
 char word[] = "something";
 ```
+Size of `word[]` is determined **at compile time**, and the initializer is used to calculate its size. Here's why and how it works:
+- During compile time, the compiler counts the characters in the string literal using a simple string parsing process.
+- The total size is calculated as the number of characters encountered between the quotes plus one for the null terminator `(\0)`.
 Here:
 - Memory for `word` is statically allocated to hold 10 bytes (`'s'`, `'o'`, ..., `'g'`, `\0`).
 - This memory is allocated on the stack if `word` is a local variable or in the data segment if it’s global.
@@ -174,15 +178,6 @@ Here:
 - **Fixed Size**: You cannot resize the array once it is allocated.
 - **Memory Waste**: If you over-allocate space, the unused memory is wasted.
 - **Scope Limited**: Local arrays are destroyed when the function they belong to exits.
-
-#### **Summary**
-- A statically allocated array is a fixed-size block of memory determined at compile time.
-- The memory is managed automatically and exists until the variable goes out of scope.
-- You can modify the contents of the array but cannot reassign the array itself to a new memory location.
-
-Yes, you're absolutely correct in observing that the size of `word[]` is determined **at compile time**, and the initializer is used to calculate its size. Here's why and how it works:
-
----
 
 #### **1. Why Does the Compiler Need to Know the Size?**
 In C, when you declare an array, the compiler needs to reserve enough memory for it. Without explicitly specifying the size, the compiler uses the initializer to determine how much memory to allocate. This allocation happens at **compile time**.

@@ -2,11 +2,10 @@
 int main( ) {
     char s[ ] = "Churchgate: no church no gate" ;
     char t[ 25 ] ;
-    char *ss, *tt = t;
+    char *ss, *tt;
     ss = s ;
-    t[0] = 'C';
     while ( *ss != '\0' )
-     *++tt = *++ss ;
+     *tt++ = *ss++ ;
     printf ( "%s\n", t ) ;
     return 0 ;
 }
@@ -40,5 +39,7 @@ The program no longer exists.
     *tt++ = *ss++; // Step 2: 'e' from s[1] copied to t[1], increment is applied ss = &s[2], tt = &t[2]
     *tt++ = *ss++; // Step 3: 'l' from s[2] copied to t[2], increment is applied ss = &s[3], tt = &t[3] */
 
+// check the previous commit of this file to observe the below behavior
 // if it was *++t then ++ is first preference and t moves to next address, then value will be copied to
-// next address instead of first element address.
+// next address instead of first element address. --> like `\0`hurchgate...
+// so the first element will be null so if you try to print the variable it will print NULL
