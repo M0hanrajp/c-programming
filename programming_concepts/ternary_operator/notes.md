@@ -15,3 +15,76 @@ return sum = ( a > b ) ? (while(b <= a){n += b; b++}) : while(a <= b){n += a; a+
 # The following would also work
 return (a > b) ? calculateSum(b, a) : calculateSum(a, b);
 ```
+
+### return statement not allowed 
+
+- Here the function takes in a char and checks the value.
+- the function returns the desired value based on the character.
+```bash
+hex_char == '9' ? return 9 : return 0;
+```
+>Ternery only allows expressions and not return statements.
+- We could write the above statement as follows:
+```bash
+return hex_char == '9' ? 9 : 0;
+```
+
+### Remeber to match the syntax:
+
+The syntax in your conditional expression looks fine from a purely structural perspective, but there might be issues related to **readability**, **operator precedence**, and **bracket omission**. Here's a step-by-step breakdown of potential problems:
+
+### 1. **Ambiguity Without Parentheses**
+Without parentheses, it can be hard to determine the correct grouping of the conditions. The ternary operator (`?:`) has **right-to-left associativity**, so the expression may not behave as expected unless grouped explicitly. For example:
+```c
+a + b > c ? b + c > a ? c + a > b ? 1 : 0
+```
+This is equivalent to:
+```c
+a + b > c ? (b + c > a ? (c + a > b ? 1 : 0) : 0) : 0
+```
+
+If your intention is different, parentheses are **mandatory** to clarify the logic.
+
+### 2. **Ternary Operator Misuse**
+The ternary operator is nested here, making the logic difficult to follow. While it is valid in C, deeply nested ternary operations can be hard to debug and understand. For instance:
+```c
+a + b > c ? b + c > a ? c + a > b ? 1 : 0 : 0 : 0
+```
+It can be rewritten using `if` statements for clarity.
+
+### 3. **Potential Logical Error**
+The condition checks (`a + b > c`, `b + c > a`, `c + a > b`) resemble a triangle inequality test, where these conditions determine if three sides can form a triangle. If that’s your intent, the ternary operator should evaluate all conditions sequentially, or you should ensure the logic is sound. 
+
+### 4. **Return Statement**
+The word `return` is incomplete in your code snippet:
+```c
+eturn a + b > c ...
+```
+It should be `return` instead of `eturn`.
+
+### Suggested Fixes:
+Here’s a cleaner version with proper parentheses and indentation:
+```c
+return (a + b > c) 
+       ? ((b + c > a) 
+          ? ((c + a > b) ? 1 : 0) 
+          : 0) 
+       : 0;
+```
+
+Or, better yet, use an `if` statement:
+```c
+if (a + b > c && b + c > a && c + a > b) {
+    return 1;
+} else {
+    return 0;
+}
+```
+
+### Summary of Issues:
+1. Missing `return` keyword.
+2. Lack of parentheses makes the logic ambiguous.
+3. Excessive nesting of the ternary operator makes it harder to understand.
+4. Possible logical error depending on your intent.
+
+By addressing these, your code will be syntactically correct and much more readable!
