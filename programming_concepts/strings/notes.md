@@ -50,6 +50,18 @@ $2 = 1
 ```
 ![Image](https://github.com/user-attachments/assets/09a253f0-36bf-40c8-acde-458f6e769973)
 
+- `*c` is treated as integer, as *c dereferences to a char, char literal is treated as int in c.
+![Image](https://github.com/user-attachments/assets/cee8c05e-dc68-417d-8701-d272b09f564a)
+
+- Notice `*c` still points to D, as it's present at address 0x4005e4. you can see the difference in the next picture.
+![Image](https://github.com/user-attachments/assets/dd7dc3fa-68e6-42d2-89f9-4c729908d92d)
+
+- c is a mutable pointer, when c++ is performed it points to the next address.
+![Image](https://github.com/user-attachments/assets/8c2afc01-751c-4fe0-bd14-b11ba7b91a08)
+
+- when c points to NULL. [Note: behavior is undefined when c points to out of bound address]
+![Image](https://github.com/user-attachments/assets/1f47fe6f-694a-42ff-bfa6-ef51adde5e68)
+
 - Printing a string that is not null terminated, printf is used to print b, it outputs "BAC".
 - It's important to print a string with null terminated or behavior is undefined.
 ```bash
@@ -77,6 +89,50 @@ programming_concepts/strings/snippets/d.c has the program
 
 ### 2D array Notes
 
+```bash
+    char strT[2][4] = {"Bit", "Git"};
+```
+![Image](https://github.com/user-attachments/assets/5ee11ab1-9ca0-48c3-ba61-7b2b205c853c)
+- First subscript [2] gives the number of strings in the array.
+- Second subscript [4] gives the length of each string in the array.
+- size of the array can be caluclated by 2 * 4 = 8 bytes.
+- What happens if you declare `char [2][6]` and initialize it to `{"Bit", "Git"}`.
+- string `Bit` occupies 3 bytes only and rest memory locations left are initialized with `'\0'`;
+- this leaves us wastage with 2 bytes for each string, 4 bytes of wastage in total.
+  - Note: how to declare 2D strings in an efficient manner is discussed further below.
+![Image](https://github.com/user-attachments/assets/525266bd-b062-42e6-b981-6e578669d1c5)
+- Basic way of passing arr to a function that can access 2D char array.
+  - Notice the void_display function indicates arr is of type pointer to char[4].
+    - Most basic way to print out 2D char array is to declare function argument as `arr[size][size]` type.
+![Image](https://github.com/user-attachments/assets/39dcd777-3820-4ef1-92b9-395693f94fed)
+- Remember that `char [2][4]` when declared in main, it decays to `char (*)[4]` a pointer to first row when passing to a function.
+[arr decays into a pointer to the first row (each row is an array of 4 characters).](https://github.com/M0hanrajp/c-programming/blob/9dc137f42ddd125c1378418e74411ec3a668c2e5/misc_notes/oneDimensional_twoDimensional_array_decay.md?plain=1#L93)
+```bash
+# 2D array, the arrays has decayed to char (*)[4] type 
+ In function 'main':
+14:11: warning: passing argument 1 of 'display' from incompatible pointer type [-Wincompatible-pointer-types]
+   14 |   display(arr);
+      |           ^~~
+      |           |
+      |           char (*)[4]
+# The function argument is not proper
+3:21: note: expected 'char **' but argument is of type 'char (*)[4]'
+    3 | void display(char** arr) {
+      |              ~~~~~~~^~~
+ ```
+- so in order to pass str to a function, the function argument must be of type `char (*)[size]` to accept array from main.
+- [a] More detailed info is presented in (/two_dimensional_strings/output.md)
+- A summary of [a], In main:
+  - &arr: Address of the 2D array in memory.
+  - arr: Pointer to the first row of the array (char (*)[4]).
+  - *arr: Pointer to the first element of the first row (char *).
+  - arr[1]: Pointer to the first element of the second row.
+In display:
+  - &arr: Address of the local pointer variable in the function's stack frame. (this address only will be different)
+  - arr: Pointer to the first row of the 2D array (same as in main).
+  - *arr: Pointer to the first element of the first row (same as in main).
+  - arr[1]: Pointer to the first element of the second row (same as in main).
+![Image](https://github.com/user-attachments/assets/a03ef831-80e5-4f3b-8244-04e857d4383c)
 
 ### Questions
 
@@ -136,6 +192,8 @@ Char[29] =  � & address :: 0x7ffc4a8cea4d
 ### How size is determined for declaration of type `word[] = "string"` ?
 
 When we say that `word[]` is a **statically allocated array** in C, it means that its memory is allocated at **compile time** in a fixed location. Let's break this down step by step:
+and all arrays with declaration arr[5], arr[], memory is allocated at compile time.
+
 #### **1. Statically Allocated Memory**
 - **Definition**: Statically allocated memory is memory whose size is determined at compile time and cannot be changed during the program's execution.
 - **Characteristics**:
@@ -204,7 +262,7 @@ char word[] = "something";
 2. **Array Indexing**:
    - Arrays in C rely on their size for bounds checking (informally, since C doesn't enforce bounds at runtime). Knowing the size at compile time ensures the program can handle the array properly.
 
-#### **2. Why Not Use Just the Null Terminator?**
+#### **2. Why Not Use Just the Null Terminator? (compiler POV)**
 The null terminator (`\0`) is not sufficient to determine the size of the array because:
 - The null terminator is **part of the string** and does not give the total size of the array.
 - C treats arrays as fixed-size blocks of memory, so the compiler needs to know the full size in advance to manage memory and perform operations like indexing.
