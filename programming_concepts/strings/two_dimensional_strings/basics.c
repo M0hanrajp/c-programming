@@ -2,11 +2,15 @@
 #include <stddef.h>
 
 // using array of pointers technique
+// TODO: How can this work ?
 void displayTwoDimensionalString(size_t size, char (*input)[size]) {
-    // 2 because there are only two rows of strings in main function
-    for(size_t i = 0; i < 2; i++) {
+    // the function argument can be simply written as char input[size][size]
+    // because this also decays to char (*input)[size]
+    // the function argument is decalred in this way because in the main function the array decays into pointer to first row.
+    // [reason](https://github.com/M0hanrajp/c-programming/blob/9dc137f42ddd125c1378418e74411ec3a668c2e5/misc_notes/oneDimensional_twoDimensional_array_decay.md?plain=1#L93)
+    for(size_t i = 0; i < size; i++) {
         for(size_t j = 0; input[i][j] != '\0'; j++) {
-            printf("Row[%lu] :: %c & address :: %p\n", i, input[i][j], &input[i][j]);
+            printf("Row[%lu]Col[%lu] :: %c & address :: %p\n", i, j, input[i][j], &input[i][j]);
         }
     }
     // Note: use 1 for loop and use subscript i & %s to print out the whole string instead
@@ -14,9 +18,9 @@ void displayTwoDimensionalString(size_t size, char (*input)[size]) {
 }
 
 // using double pointer technique.
-void displayTwo_DimensionalString(char **input) {
+void displayTwo_DimensionalString(size_t size, char **input) {
     // 2 because there are only two rows of strings in main function
-    for(size_t i = 0; i < 2; i++) {
+    for(size_t i = 0; i < size; i++) {
         for(size_t j = 0; input[i][j] != '\0'; j++) {
             printf("Row[%lu] :: %c & address :: %p\n", i, input[i][j], &input[i][j]);
         }
@@ -41,16 +45,17 @@ int main() {
     // call the function ::
     displayOneDimensionalString(20, strO);
     // Two dimensional array with basics
-    char strT[2][4] = {"one", "two"};
+    char strT[2][4] = {"Bit", "Git"};
     printf("================\nsizeof 2D char array :: %lu\n", sizeof(strT));
     printf("address of 2D char array :: %p without & operator\n", strT);
-    printf("address of variable &strT :: %p (pointer to whole array) \nsize of &StrO :: %lu\n", &strT, sizeof(&strT));
+    printf("address of variable &strT :: %p (pointer to whole array) char (*)[2][4] \nsize of &StrO :: %lu\n", &strT, sizeof(&strT));
     // call the function ::
-    printf("Value :: %s address of string 1 :: %p\n", strT[0], strT[0]);
-    printf("Value :: %s address of string 2 :: %p\n", strT[1], strT[1]);
-    displayTwoDimensionalString(4, strT);
+    //printf("Value :: %s address of string 1 :: %p\n", strT[0], strT[0]); // this can be written as StrT as it is decaying to type char (*)[4]
+    //printf("Value :: %s address of string 2 :: %p\n", strT[1], strT[1]);
+    displayTwoDimensionalString(2, strT);
+    printf("\n");
 
-    char *strN[5] = {"Hi", "Hello"};
-    displayTwo_DimensionalString(strN);
+/*     char *strN[5] = {"Hi", "Hello"};
+    displayTwo_DimensionalString(2, strN); */
     return 0;
 }
