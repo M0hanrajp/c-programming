@@ -1,6 +1,7 @@
 ### contains output of the programs in the folder
 
 Use [`whatis <variable>` in gdb to get to know the type](https://github.com/M0hanrajp/c-programming/blob/188035dbc5b7d9b6857aef5314238186831238b1/programming_concepts/function_pointers/notes.md?plain=1#L19)
+- [How size is determined for declaration of type `word[] = "string"` ?](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/notes.md#how-size-is-determined-for-declaration-of-type-word--string-)
 
 >### 1D array basics
 ```bash
@@ -78,6 +79,23 @@ $2 = 73 'I'
 $4 = 32 ' '
 ```
 - Calculation second element: `(*&strO)[1] --> (0x7fffffffdfb0)[1] --> *(0x7fffffffdfb0 + 1) --> ' '`
+```bash
+1	#include <stdio.h>
+2	
+3	void_display(char (*arr)[4]) {
+4	  for(int i = 0; (*arr)[i] != '\0'; i++)
+5	    printf("%c", (*arr)[i]);
+6	  printf("\n");
+7	}
+8	
+9	int main() {
+10	  char arr[4] = "Bit";
+11	  void_display(&arr);
+12	  return 0;
+13	}
+```
+![Image](https://github.com/user-attachments/assets/9b0e53a2-9a3a-4441-b10c-7c9b843a7ac0)
+
 ---
 
 ### **Key Differences in Practical Use**:
@@ -122,53 +140,70 @@ arr[0] arr[1] arr[2]
   10     11     12
  x656   x657   x658
 ```
-#### Below is the incorrect method that was used to access.
-#### can be used to understand pointer to arrays.
-
->Summary of the problem
-
-The problem here was logical, using number of rows to print the 2D string, instead the function argument should
-be of type char (*)[size] where size is the total length of string in the array.
-Since 2 was passed (mistake) - the pointer arithmetic turned out to be wrong.
-
->Detailed summary
-
+Few more basics on 2D arrays
 ```bash
-mpunix@LIN-5CG3350MRD:~/c-programming/programming_concepts/strings/two_dimensional_strings$ ./basics
-sizeof 2D char array :: 8
-address of 2D char array :: 0x7fff8714cea8 without & operator
-address of variable &strT :: 0x7fff8714cea8 (pointer to whole array)
-size of &StrO :: 8
-Value :: one address of string 1 :: 0x7fff8714cea8
-Value :: two address of string 2 :: 0x7fff8714ceac
-Row 0 :: one & address :: 0x7fff8714cea8
-Row 1 :: e & address :: 0x7fff8714ceaa # here only e character is printed.
-mpunix@LIN-5CG3350MRD:~/c-programming/programming_concepts/strings/two_dimensional_strings$ cat basics.c
-#include <stdio.h>
-#include <stddef.h>
-void displayTwoDimensionalString(size_t size, char (*input)[size]) {
-    for(size_t i = 0; i < size; i++) {
-        printf("Row %lu :: %s & address :: %p\n", i, input[i], input[i]);
-    }
-}
-int main() {
-    // Two dimensional array with basics
-    char strT[2][4] = {"one", "two"};
-    printf("sizeof 2D char array :: %lu\n", sizeof(strT));
-    printf("address of 2D char array :: %p without & operator\n", strT);
-    printf("address of variable &strT :: %p (pointer to whole array) \nsize of &StrO :: %lu\n", &strT, sizeof(&strT));
-
-    // call the function ::
-    printf("Value :: %s address of string 1 :: %p\n", strT[0], strT[0]);
-    printf("Value :: %s address of string 2 :: %p\n", strT[1], strT[1]);
-
-    # Here is the mistake, passing 2 instead of 4 which is the total length of each row
-    # char strT[2][4] = {"one", "two"};
-    #              ^- this number should be passed but 2 was passed.
-    displayTwoDimensionalString(2, strT);
-    return 0;
-}
+    char str[2][4] = {"Bit", "Git"};
 ```
+- Here str decays to `char (*)[4]` (pointer to the first row) in the main if it's being passed to a function. 
+- note `&str` gives  `char (*)[2][4]` which is different, this is pointer to whole array.
+- so in order to pass the str to a function, the function argument might be written in two different ways.
+```bash
+// Type 1, simple declaration, basically it decays to char (*)[4]
+return_type  <function_name>(char input[size][size])
+
+// Type 2, decyed form of declaration.
+return_type <function_name>(char (*input)[size])
+```
+### Type 1
+```c
+1	#include <stdio.h>
+2	
+3	void display(char arr[2][4]) {
+4	  for(int i = 0; i < 2; i++) {
+5	    for(int j = 0; arr[i][j] != '\0'; j++) {
+6	      printf("%c", arr[i][j]);
+7	    }
+8	    printf("\n");
+9	  }
+10	}
+11	
+12	int main() {
+13	  char arr[2][4] = {"Bit", "Git"};
+```
+- In main, arr/&arr & *arr both point to the first row, arr[1] gives your pointer to the second row.
+![Image](https://github.com/user-attachments/assets/3f422ea2-ac5f-4da5-a65e-480b101b8d67)
+
+- In display, &arr gives the address of arr variable in display function.
+   - arr is the pointer that holds the address of char array that was sent from main.
+   - *arr, when dereferenced it points to the first row (so same address as arr).
+   - arr[1], or *(arr + 1) points to second row.
+   - observe arr is pointer to char[4] i.e. char (*)[4] written beside arr in the below image.
+![Image](https://github.com/user-attachments/assets/84ea24ec-ef0f-4156-8a73-fa2e9d399e96)
+
+- The major difference is:
+   - arr in main decays to char (*)[4] with address 0xfff000bd8, (pointer to first row).
+   - arr in display decays to char (*)[4] as well but with address 0xfff000ba8, as it is local to the function.
+   - The display function takes arr as a parameter, and this parameter is a local variable within the function. 
+     When main calls display, the function creates its own local copy of the pointer to the array.
+   - This means &arr (the address of the pointer variable in display) is different from &arr in main because 
+     these are two separate variables, even though they point to the same memory location.
+   - In main: &arr: Address of the 2D array in memory.
+   - In display: &arr: Address of the local pointer variable in the function's stack frame.
+![Image](https://github.com/user-attachments/assets/a03ef831-80e5-4f3b-8244-04e857d4383c)
+
+### Calculation of 2D array elements
+```bash
+Value :: Bit address of string 1 :: 0x7fffffffdee8 # row 0
+Value :: Git address of string 2 :: 0x7fffffffdeec # row 1
+
+Breakpoint 1, main () at basics.c:54
+54          displayTwoDimensionalString(2, strT);
+(gdb) s
+# Input has main's char array base address
+displayTwoDimensionalString (size=2, input=0x7fffffffdee8) at basics.c:5
+5       void displayTwoDimensionalString(size_t size, char (*input)[size]) {
+```
+
 >Q:why Row 1 :: e & address :: 0x7fff8714ceaa pointer arithmetic is wrong here ?
 
 Ans: strT refers to the base address of the 2D array (the address of strT[0]).
