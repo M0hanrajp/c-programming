@@ -50,16 +50,16 @@ $2 = 1
 ```
 ![Image](https://github.com/user-attachments/assets/09a253f0-36bf-40c8-acde-458f6e769973)
 
-- `*c` is treated as integer, as *c dereferences to a char, char literal is treated as int in c.
+`*c` is treated as integer, as *c dereferences to a char, char literal is treated as int in c.
 ![Image](https://github.com/user-attachments/assets/cee8c05e-dc68-417d-8701-d272b09f564a)
 
-- Notice `*c` still points to D, as it's present at address 0x4005e4. you can see the difference in the next picture.
+Notice `*c` still points to D, as it's present at address 0x4005e4. you can see the difference in the next picture.
 ![Image](https://github.com/user-attachments/assets/dd7dc3fa-68e6-42d2-89f9-4c729908d92d)
 
-- c is a mutable pointer, when c++ is performed it points to the next address.
+c is a mutable pointer, when c++ is performed it points to the next address.
 ![Image](https://github.com/user-attachments/assets/8c2afc01-751c-4fe0-bd14-b11ba7b91a08)
 
-- when c points to NULL. [Note: behavior is undefined when c points to out of bound address]
+when c points to NULL. [Note: behavior is undefined when c points to out of bound address]
 ![Image](https://github.com/user-attachments/assets/1f47fe6f-694a-42ff-bfa6-ef51adde5e68)
 
 - Printing a string that is not null terminated, printf is used to print b, it outputs "BAC".
@@ -133,6 +133,10 @@ In display:
   - *arr: Pointer to the first element of the first row (same as in main).
   - arr[1]: Pointer to the first element of the second row (same as in main).
 ![Image](https://github.com/user-attachments/assets/a03ef831-80e5-4f3b-8244-04e857d4383c)
+- Being aware that a 2D array decays to `char (*)[size]` type,
+  - It's important to know that size should be the 2nd subscript of the declared array.
+    - if `char [2][4]` is the array declared in main, then size should be 4, else pointer arithmetic could go wrong.
+- After knowing the type of char and it's properties learn the calculation [here](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/two_dimensional_strings/output.md#understanding-2d-array-pointer-arithmetic-passing-to-function-etc)
 
 ### Questions
 

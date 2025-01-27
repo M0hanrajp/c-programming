@@ -146,7 +146,7 @@ Few more basics on 2D arrays
 ```
 - Here str decays to `char (*)[4]` (pointer to the first row) in the main if it's being passed to a function. 
 - note `&str` gives  `char (*)[2][4]` which is different, this is pointer to whole array.
-- so in order to pass the str to a function, the function argument might be written in two different ways.
+- [x] so in order to pass the str to a function, the function argument might be written in two different ways.
 ```bash
 // Type 1, simple declaration, basically it decays to char (*)[4]
 return_type  <function_name>(char input[size][size])
@@ -191,36 +191,155 @@ return_type <function_name>(char (*input)[size])
    - In display: &arr: Address of the local pointer variable in the function's stack frame.
 ![Image](https://github.com/user-attachments/assets/a03ef831-80e5-4f3b-8244-04e857d4383c)
 
-### Calculation of 2D array elements
-```bash
-Value :: Bit address of string 1 :: 0x7fffffffdee8 # row 0
-Value :: Git address of string 2 :: 0x7fffffffdeec # row 1
+### Calculation of 2D array elements, function argument is char (*)[size] type
 
-Breakpoint 1, main () at basics.c:54
-54          displayTwoDimensionalString(2, strT);
-(gdb) s
-# Input has main's char array base address
-displayTwoDimensionalString (size=2, input=0x7fffffffdee8) at basics.c:5
-5       void displayTwoDimensionalString(size_t size, char (*input)[size]) {
+Calculation would be valid for both type 1 and type 2 discussed in [x] above (search [x] to find)
+The following is declared in main:
+```c
+    char strT[2][4] = {"Bit", "Git"};
 ```
+The following is the output of GDB
+```bash
+sizeof 2D char array :: 8 # 2 rows * 4 columns
+address of 2D char array :: 0x7fffffffdef8 without & operator # strT
+address of variable &strT :: 0x7fffffffdef8 (pointer to whole array) char (*)[2][4]
+size of &StrO :: 8
+Value :: Bit address of string 1 :: 0x7fffffffdef8 # strT[0] outputs using %s and %p
+Value :: Git address of string 2 :: 0x7fffffffdefc # strT[1] outputs using %s and %p
 
->Q:why Row 1 :: e & address :: 0x7fff8714ceaa pointer arithmetic is wrong here ?
+Breakpoint 1, main () at basics.c:56
+warning: Source file is more recent than executable.
+56          displayTwoDimensionalString(2, 4, strT);
+(gdb) s
+# inside the function
+# input is the local variable to function displayTwoDimensionalString
+# input acts as a pointer to char[4] i.e. char (*)[4]
+# input points to 0x7fffffffdef8 which is pointer to the first row of strT[2][4]
+displayTwoDimensionalString (rows=2, cols=4, input=0x7fffffffdef8) at basics.c:6
+6       void displayTwoDimensionalString(size_t rows, size_t cols, char (*input)[cols]) {
+```
+What is the type of input here ? how pointer arithmetic works ?
+```bash
+# Input is of type char (*)[4]
+# i.e. incrementing input will move ahead by 4 bytes i.e. next row
+# Incrementing input moves it by 4 bytes, because it points to arrays of 4 chars (a row).
+(gdb) p input
+$1 = (char (*)[variable length]) 0x7fffffffdef8
+(gdb) whatis input
+type = char (*)[variable length]
+```
+- discovering the type of input
+- input is a pointer to an array (char (*)[4]), the address of input must be a pointer to a pointer to an array.
+```bash
+# Displays the address of the pointer input itself.
+# The value 0x7fffffffde98 is the location where the pointer input is stored.
+(gdb) p &input
+$2 = (char (**)[variable length]) 0x7fffffffde98
+# It is a pointer to a pointer to an array of 4 characters (char[4]).
+# means &input is (**)[4] type that holds input char (*)[4] type.
+(gdb) whatis &input
+type = char (**)[variable length]
+```
+![Image](https://github.com/user-attachments/assets/0b99a9ed-e6ef-498d-bd63-6d4334be3cdf)
 
-Ans: strT refers to the base address of the 2D array (the address of strT[0]).
-- the logic was to print strT[x] where x would be row.
-   - meaning *(strT + x) will print the whole row at once.(because of how it's calculated)
-   - why ? because since each row is x characters wide.
-   - it moves `x * size * sizeof(char)` bytes because input is pointer to array of type char (*)[size].
-   - whenever you increment or decrement it will move by `x * size * sizeof(char)` bytes. (move by each string)
+Continuing the calculation,
+```bash
+(gdb) info locals
+j = 0
+i = 0
+(gdb) p input
+$3 = (char (*)[variable length]) 0x7fffffffdef8
+# the below expression will not work as size of input is not known at compile time
+# that is why "variable length" is reported while printing out p input
+(gdb) p input[0]
+Cannot perform pointer math on incomplete types, try casting to a known type, or void *.
 
-But what went wrong ?
-
-- what does the declaration `char (*input)[size])` mean ?
-- the function argument `char (*input)[size])` means input is a pointer to an array of `size` characters.
-   - here input is a pointer to array.
-   - `[size]` specifies that the array has size number of elements of type char.
-   - input points to the whole array of type char.
-
+# we can opt to use the type of input in order to print it.
+(gdb) p ((char (*)[4])input)[0]
+$4 = "Bit"
+# checking the address, it points to the first row.
+(gdb) p &((char (*)[4])input)[0]
+$5 = (char (*)[4]) 0x7fffffffdef8
+# why does it points to first row ?
+# Remember that input is of type char (*)[4] type.
+# if you increment input by 1 it will move by 4 bytes 
+# # but why ?
+# # for type char (*)[4] it means pointer to whole array if you consider in 1D array types.
+# # so incrementing input by 1 moves it by 4 bytes.
+# # Meaning char [2][4] is an array that holds 2 ~ 1D char arrays of size 4 bytes.
+# # Why 4 bytes only ?
+# it's because size of char is 1 byte.
+# char (*)[4] means a pointer to whole 1D array of 4 elements i.e. 1 byte * 4 elements = 4 bytes.
+```
+For the command `p ((char (*)[4])input)[0]`
+- it can be written as follows:
+```bash
+# input moves by 0 as 0 does not adds value to the address
+(gdb) p *(((char (*)[4])input) + 0)
+$6 = "Bit"
+# we can observe clearly incrementing the input increased address from "def8" to "defc"
+(gdb) p &((char (*)[4])input)[1]
+$7 = (char (*)[4]) 0x7fffffffdefc
+(gdb) p ((char (*)[4])input)[1]
+$8 = "Git"
+(gdb) p *(((char (*)[4])input) + 1)
+$9 = "Git"
+```
+How can we access the 2D array elements ?
+```bash
+# how does the calculation for input[i][j] works ?
+13 printf("Row[%lu]Col[%lu] :: %c & address :: %p\n", i, j, input[i][j], &input[i][j]);
+(gdb) n
+Row[0]Col[0] :: B & address :: 0x7fffffffdef8
+# Remember that input is char (*)[4] type, incrementing it will move it by 4 bytes.
+# input is 0x7fffffffdef8 base address of char [2][4] from main function.
+# when i = 0 & j = 0
+# input[0]0] can be written as *(*(input + 0) + 0)
+#                                ------------
+#                                <  step 1  > calculate *(input + 0) --> X
+#                              -------------------
+#                              <    step 2       > calculate *(X + 0), insert X from step 1
+# # Step 1 # #
+# *(input + 0) means add 0 to the base address 0x7fffffffdef8
+# input + 0 --> 0x7fffffffdef8 + 0  --> 0x7fffffffdef8
+# # Important: next is the dereference operator *(input + 0)
+#                                               ^
+#                                               usage of * after input + 0
+# *(0x7fffffffdef8) will give you "Bit" because this address is a pointer to first row.
+# So now you have reached till "Bit" which is pointed by 0x7fffffffdef8.
+# # Step 2 # # 
+# In order to calculate the individual bits
+# *(0x7fffffffdef8 + 0) needs to be performed.
+# Remeber in step 1 0x7fffffffdef8 is already dereferenced that gives you "Bit"
+# This can also be written as ((char (*)[4])input)[0]
+(gdb) p *(((char (*)[4])input) + 0)
+$1 = "Bit"
+# Dereferencing second time
+# This can also be written as ((char (*)[4])input)[0][0]
+(gdb) p *(*(((char (*)[4])input) + 0) + 0)
+$2 = 66 'B'
+# When you dereference the second time 
+# you are accessing char elements because you went from char [4] to char
+# Below is the address that gives you char
+(gdb) whatis *(*(((char (*)[4])input) + 0) + 0)
+type = char
+# Below is the pointer address that gives you the first row
+(gdb) whatis *(((char (*)[4])input) + 0)
+type = char [4]
+```
+An example where I'm accessing 2nd Row's 2nd element.
+```bash
+(gdb) p input
+$4 = (char (*)[variable length]) 0x7fffffffdef8
+(gdb)  p *(((char (*)[4])input) + 0)
+$5 = "Bit"
+(gdb)  p *(((char (*)[4])input) + 1)
+$6 = "Git"
+(gdb)  p *(*(((char (*)[4])input) + 1) + 1)
+$7 = 105 'i'
+(gdb) x/8c input
+0x7fffffffdef8: 66 'B'  105 'i' 116 't' 0 '\000'        71 'G'  105 'i' 116 't' 0 '\000'
+```
 - How pointer arithmetic works here ?
    - The amount by which a pointer increments (input++) depends on the type of object the pointer points to.
    - If a pointer `points to char`, it increments by sizeof(char) = 1 byte.
@@ -228,100 +347,7 @@ But what went wrong ?
    - If a pointer `points to an array of size number of characters`, it increments by the size of the whole array.
       - Meaning: input++ moves by `size * sizeof(char)` bytes.
 
-calculation of pointer arithmetic of pointer to an array & debugging the mistake.
-```bash
-# base address ::
-address of 2D char array :: 0x7fffffffe028 without & operator
-address of variable &strT :: 0x7fffffffe028 (pointer to whole array)
-# Row one and Row two
-Value :: one address of string 1 :: 0x7fffffffe028
-# there is a total difference of 4 bytes because 
-# char strT[2][4] = {"one", "two"};, size of each row is 4 bytes.
-Value :: two address of string 2 :: 0x7fffffffe02c
-```
-Entering function and debugging through GDB:
-```bash
-# Enter the funciton, input points to the base address 028 as seen above
-(gdb) s
-displayTwoDimensionalString (size=2, input=0x7fffffffe028) at basics.c:4
-4       void displayTwoDimensionalString(size_t size, char (*input)[size]) {
-
-(gdb) n
-5           for(size_t i = 0; i < size; i++) {
-(gdb) n
-6               printf("Row %lu :: %s & address :: %p\n", i, input[i], input[i]);
-(gdb) info locals
-i = 0
-(gdb) p input
-$3 = (char (*)[variable length]) 0x7fffffffe028
-# size is 2
-(gdb) p size
-$4 = 2
-# when i is 0 the calculation will be 
-# *(input + (0 * size * sizeof(char))) because it is input is of type (*)[size]
-# since i is 0, *input will be resolved to base address it self i.e. 0x7fffffffe028
-# hence it prints the following::
-(gdb) n
-Row 0 :: one & address :: 0x7fffffffe028
-# next when i is 1
-# *(input + (1 * size * sizeof(char)))
-(gdb) info locals
-i = 1
-(gdb) p input 
-(gdb) $7 = (char (*)[variable length]) 0x7fffffffe028
-(gdb) p size
-$4 = 2
-# calculation will be *(028 + 2) (for understanding
-# address will be 02a, because i = 1 & input is of type char (*)[2]
-# Hence + 1 increment to the variable will move 2 bytes ahead.
-# as seen below it matches the address hence only e is printed ::
-(gdb) info locals
-i = 1
-(gdb) p input
-$19 = (char (*)[variable length]) 0x7fffffffe028
-(gdb) n
-Row 1 :: e & address :: 0x7fffffffe02a
-```
-Expanded form: important
-```bash
-# Because input is of type char (*)[2] it points to address 2a
-(gdb) p &*((char (*)[2])input + 1)
-$22 = (char (*)[2]) 0x7fffffffe02a
-```
->### The correct way of displaying 2D strings in char (*)[size] format.
-- make sure size conveys the overall size allocated for each string inside the two dimensional array.
-```bash
-void displayTwoDimensionalString(size_t size, char (*input)[size]) {
-if     char strT[2][4] = {"one", "two"};, 
-# then size should be 4 so arithmetic will be *(input + (size * sizeof(char) * i))
-```
-**Calculating again::**
-```bash
-Value :: one address of string 1 :: 0x7fffffffe028
-Value :: two address of string 2 :: 0x7fffffffe02c
-# for i = 0, it prints base address 28
-(gdb) p input
-$1 = (char (*)[variable length]) 0x7fffffffe028
-(gdb) n
-6           for(size_t i = 0; i < 2; i++) {
-i = 0
-(gdb) n
-Row 0 :: one & address :: 0x7fffffffe028
-```
->#### Proper calculation
-```bash
-# for i = 1,
-(gdb) p input
-$2 = (char (*)[variable length]) 0x7fffffffe028
-(gdb) p *((char (*)[4])input + i)
-$3 = "two"
-# base address 028, pointer of type char (*)[4] hence when + 1 is done it moves by 4
-# 028 + 4 = 02c & prints the whole second string.
-(gdb) p &*((char (*)[4])input + i)
-$4 = (char (*)[4]) 0x7fffffffe02c
-(gdb) n
-Row 1 :: two & address :: 0x7fffffffe02c
-```
+>Review needed from below:
 ### Printing 2D array of type char [x][y] from main to function argument of type char (*)[x] type
 Why this format ? why function argument format is different is answered below.
 - When passing from main function it is passed as char (*)[4] type (decays to pointer to first element i.e. that is char[4]) more discussed below.

@@ -3,18 +3,19 @@
 
 // using array of pointers technique
 // TODO: How can this work ?
-void displayTwoDimensionalString(size_t size, char (*input)[size]) {
+void displayTwoDimensionalString(size_t rows, size_t cols, char (*input)[cols]) {
     // the function argument can be simply written as char input[size][size]
     // because this also decays to char (*input)[size]
     // the function argument is decalred in this way because in the main function the array decays into pointer to first row.
     // [reason](https://github.com/M0hanrajp/c-programming/blob/9dc137f42ddd125c1378418e74411ec3a668c2e5/misc_notes/oneDimensional_twoDimensional_array_decay.md?plain=1#L93)
-    for(size_t i = 0; i < size; i++) {
+    for(size_t i = 0; i < rows; i++) {
         for(size_t j = 0; input[i][j] != '\0'; j++) {
             printf("Row[%lu]Col[%lu] :: %c & address :: %p\n", i, j, input[i][j], &input[i][j]);
         }
     }
     // Note: use 1 for loop and use subscript i & %s to print out the whole string instead
     // of accessing character by character.
+    // Note if j < cols is used, then j will move from 0 till cols - 1, which might end up printing the null character
 }
 
 // using double pointer technique.
@@ -50,9 +51,9 @@ int main() {
     printf("address of 2D char array :: %p without & operator\n", strT);
     printf("address of variable &strT :: %p (pointer to whole array) char (*)[2][4] \nsize of &StrO :: %lu\n", &strT, sizeof(&strT));
     // call the function ::
-    //printf("Value :: %s address of string 1 :: %p\n", strT[0], strT[0]); // this can be written as StrT as it is decaying to type char (*)[4]
-    //printf("Value :: %s address of string 2 :: %p\n", strT[1], strT[1]);
-    displayTwoDimensionalString(2, strT);
+    printf("Value :: %s address of string 1 :: %p\n", strT[0], strT[0]); // this can be written as StrT as it is decaying to type char (*)[4]
+    printf("Value :: %s address of string 2 :: %p\n", strT[1], strT[1]);
+    displayTwoDimensionalString(2, 4, strT);
     printf("\n");
 
 /*     char *strN[5] = {"Hi", "Hello"};
