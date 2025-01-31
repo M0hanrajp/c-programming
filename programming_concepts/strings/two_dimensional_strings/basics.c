@@ -18,18 +18,6 @@ void displayTwoDimensionalString(size_t rows, size_t cols, char (*input)[cols]) 
     // Note if j < cols is used, then j will move from 0 till cols - 1, which might end up printing the null character
 }
 
-// using double pointer technique.
-void displayTwo_DimensionalString(size_t size, char **input) {
-    // 2 because there are only two rows of strings in main function
-    for(size_t i = 0; i < size; i++) {
-        for(size_t j = 0; input[i][j] != '\0'; j++) {
-            printf("Row[%lu] :: %c & address :: %p\n", i, input[i][j], &input[i][j]);
-        }
-    }
-    // Note: use 1 for loop and use subscript i & %s to print out the whole string instead
-    // of accessing character by character.
-}
-
 void displayOneDimensionalString(size_t size, const char* string) {
     for(int i = 0; string[i] != '\0'; i++) {
         printf("Element[%2d] = %c & address :: %p\n",i, string[i], &string[i]);
@@ -56,7 +44,5 @@ int main() {
     displayTwoDimensionalString(2, 4, strT);
     printf("\n");
 
-/*     char *strN[5] = {"Hi", "Hello"};
-    displayTwo_DimensionalString(2, strN); */
     return 0;
 }
