@@ -38,7 +38,9 @@ warning: Source file is more recent than executable.
 printFibonacci (f0=0x555555556006 "a", f1=0x555555556004 "b", order=5) at problem_e.c:12
 12      void printFibonacci(const char *f0, char *f1, int order) {
 (gdb) p strlen(f1)
-$1 = 1
+$1 = 1 # strlen will always print the length of the string + NULL character.
+       # Need to be alert when traversing array becuase arrays are 0 index based.
+       # Because when reversing an array the strlen will return position of NULL character
 (gdb) p strlen(f0)
 $2 = 1
 ```
@@ -59,7 +61,7 @@ Notice `*c` still points to D, as it's present at address 0x4005e4. you can see 
 c is a mutable pointer, when c++ is performed it points to the next address.
 ![Image](https://github.com/user-attachments/assets/8c2afc01-751c-4fe0-bd14-b11ba7b91a08)
 
-when c points to NULL. [Note: behavior is undefined when c points to out of bound address]
+when c points to NULL. "Note: behavior is undefined when c points to out of bound address".
 ![Image](https://github.com/user-attachments/assets/1f47fe6f-694a-42ff-bfa6-ef51adde5e68)
 
 - Printing a string that is not null terminated, printf is used to print b, it outputs "BAC".
@@ -137,6 +139,83 @@ In display:
   - It's important to know that size should be the 2nd subscript of the declared array.
     - if `char [2][4]` is the array declared in main, then size should be 4, else pointer arithmetic could go wrong.
 - After knowing the type of char and it's properties learn the calculation [here](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/two_dimensional_strings/output.md#understanding-2d-array-pointer-arithmetic-passing-to-function-etc)
+
+### Array of pointers.
+```bash
+char *<array_name>[size] = { <element_1: pointer to char>, <element_2: pointer to char> };
+     ^
+     |---- should be written without brackets.
+```
+- Provided above is basic declaration of array of pointers.
+  - Meaning the array we learnt before had elements of type char, int but now array has base address (pointer to a `type`) as it's elements.
+  ```bash
+  char *name[2] = {"Ram", "Sita"};
+                     |-------|-----------> "Ram" at address 80
+                             |-----------> "Sita" at address 88 # Pointer size is considered as 8 bytes.
+  ```
+- For example:
+![Image](https://github.com/user-attachments/assets/31858d24-49b3-4613-8b42-39831ce38b82)
+- In detailed memory layout is discussed in output.md 
+- the type of <array_name> is `char *[3]` which is array of pointers.
+- <array_name> when being passed to a function or used in the expression decays to type `char **`.
+- using sizeof(<array_name>) gives the total size of pointers present in the array.
+  - if you store 4 strings in an array then total size reported will be 4 elements * sizeof(pointer).
+- `char *str[]`, str++ is not allowed, str is an array name, it is a constant pointer and cannot be modified.
+  - str + 1 is allowed as it turns into an expression, you are not modifying str. more on this in output.md (difference between `char *[3]` and `char(*)[3]`)
+- From the output.md, please note as per C spec 6.3.2.1, <array_name> is of type `char *[3]`. if it is used in expression then it decays to `char **`.
+- `&<array_name>` will give `char *(*)[3]`, pointer to an array of pointers.
+- <array_name> is an array of pointers to char, meaning each element str[i] is a pointer to a string literal.
+- x. Use `<array_name> + 1` as an expression to move by 8 bytes i.e. the next address of type `char **` that contains `char *` element.
+```bash
+# For example <array_name> + 1 moves you to the next address
+$3 = (char **) 0x7fffffffdf20
+(gdb) p str + 1
+$4 = (char **) 0x7fffffffdf28 # ---> f20 + 8 = f28
+(gdb) p str + 2
+$5 = (char **) 0x7fffffffdf30 # ---> f28 + 8 = f30 
+# (28 in hex -> 2 * 16 ^ 1 + 8 * 16 ^ 0. -> 48 in dec -> 30 in hex
+```
+>arrays do not decay at non-zero indices.
+- from above x, you are able to get address which are the elements of array of pointers.
+- In order to get the pointers that are pointing to strings that are held by the addresses
+  - `*(<array_name> + 1)` by doing this you get the address points to the string.
+```bash
+# Formula == (base address of str) + (1 * size of (char *))
+(gdb) p *(str + 0) # in other words str[0]
+$7 = 0x555555556008 "Welcome"
+#  str + 1 = str + (0 * 8) = 0x7fffffffdf20 +  0 = 0x7fffffffdf20 ---> *0x7fffffffdf20 ---> 0x555555556008
+```
+- When you are able to access the strings how can we access individual elements ?
+```bash
+# Continuing from the above equations.
+(gdb) whatis *(str + 0)
+type = char *
+# 2. *(0x555555556008) ---> 'W' (because *(0x7fffffffdf20) + 0 = 0x7fffffffdf20)"
+(gdb) p *(*(str + 0) + 0)
+$18 = 87 'W'
+(gdb) printf"%p\n", (*(str + 0) + 0)
+0x555555556008
+```
+- `char *[3]` is an array of pointers and `char (*)[3]` pointer to an array.
+- str is not a pointer variable; it's an array name, which acts as a constant pointer to str[0].
+- Trying to increment str (str++) is like trying to modify a constant pointer, which is not allowed.
+- Note: str + 1 is allowed because it computes a new address without modifying str.
+- `char *[3]` decays into `char **` while passing to a function.
+  - The function argument might be written as:
+```bash
+void <func-name>(char **<var_name>);
+# OR
+void <func-name>(char *<var_name>[]);
+```
+- In order to get the number of pointers present in the array of pointers there are multiple ways:
+  - a. declare the size in function argument and pass it. i.e. `void <func-name>(char **<var_name>, unsigned size)`;
+    - where size will be passed a unsigned int from main.
+  - b. When initializing array of pointers in main (can be anywhere based on situation).
+    - declare it `char *str[] = {"Welcome", "to", "jumanji", NULL};`
+    - Keep the function argument `void <func-name>(char **<var_name>)`
+    - Inside the function, `str[i] != NULL` must be the condition so increments only till the last string.
+- In order to calculate the amount of bytes occupied by the strings, write a custom function that takes advantage of `strlen` input, and gives the total amount of memory occupied by strings.
+- all arrays in C, 1D or 2D they decay as pointer to first element.
 
 ### Questions
 
