@@ -3,7 +3,7 @@
 Use [`whatis <variable>` in gdb to get to know the type](https://github.com/M0hanrajp/c-programming/blob/188035dbc5b7d9b6857aef5314238186831238b1/programming_concepts/function_pointers/notes.md?plain=1#L19)
 - [How size is determined for declaration of type `word[] = "string"` ?](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/notes.md#how-size-is-determined-for-declaration-of-type-word--string-)
 
->### 1D array basics
+>## One dimensional array
 ```bash
 mpunix@LIN-5CG3350MRD:~/c-programming/programming_concepts/strings/two_dimensional_strings$ ./basics
 sizeof(strO) :: 21
@@ -129,6 +129,8 @@ $4 = 73 'I'
 - the function receives the base address of the passed string, char * behaves as a single char.
 - by performing &x inside the function do not expect (*)[x] type it will be `char**` type.
 
+## Two dimensional arrays
+
 ### Understanding 2D array pointer arithmetic, passing to function etc.
 
 - the size of 2D array is calculated by number of elements i.e.
@@ -144,14 +146,14 @@ Few more basics on 2D arrays
 ```bash
     char str[2][4] = {"Bit", "Git"};
 ```
-- Here str decays to `char (*)[4]` (pointer to the first row) in the main if it's being passed to a function. 
-- note `&str` gives  `char (*)[2][4]` which is different, this is pointer to whole array.
-- [x] so in order to pass the str to a function, the function argument might be written in two different ways.
+- If `str` is passed to a function it decays to `char (*)[4]` (pointer to the first row). 
+- note `&str` decays to  `char (*)[2][4]` which is different, this is pointer to whole array.
+- (x) so in order to pass the str to a function, the function argument might be written in two different ways.
 ```bash
 // Type 1, simple declaration, basically it decays to char (*)[4]
 return_type  <function_name>(char input[size][size])
 
-// Type 2, decyed form of declaration.
+// Type 2, decayed form of declaration.
 return_type <function_name>(char (*input)[size])
 ```
 ### Type 1
@@ -193,7 +195,7 @@ return_type <function_name>(char (*input)[size])
 
 ### Calculation of 2D array elements, function argument is char (*)[size] type
 
-Calculation would be valid for both type 1 and type 2 discussed in [x] above (search [x] to find)
+Calculation would be valid for both type 1 and type 2 discussed in (x) above (search (x) to find)
 The following is declared in main:
 ```c
     char strT[2][4] = {"Bit", "Git"};
@@ -347,131 +349,7 @@ $7 = 105 'i'
    - If a pointer `points to an array of size number of characters`, it increments by the size of the whole array.
       - Meaning: input++ moves by `size * sizeof(char)` bytes.
 
->Review needed from below:
-### Printing 2D array of type char [x][y] from main to function argument of type char (*)[x] type
-Why this format ? why function argument format is different is answered below.
-- When passing from main function it is passed as char (*)[4] type (decays to pointer to first element i.e. that is char[4]) more discussed below.
-- inside the function it behaves like array of pointers inside the function and it will move by x * sizeof(char) * subscript
-```bash
-sizeof 2D char array :: 8
-address of 2D char array :: 0x7fffffffe008 without & operator
-address of variable &strT :: 0x7fffffffe008 (pointer to whole array), size of &StrO :: 8
-Main function base address string :: one address of string row 0 :: 0x7fffffffe008
-Row[0] :: Element[0] - o & address :: 0x7fffffffe008
-Row[0] :: Element[1] - n & address :: 0x7fffffffe009
-Row[0] :: Element[2] - e & address :: 0x7fffffffe00a
-Row[1] :: Element[0] - t & address :: 0x7fffffffe00c
-Row[1] :: Element[1] - w & address :: 0x7fffffffe00d
-Row[1] :: Element[2] - o & address :: 0x7fffffffe00e
-```
-#### Calculation of char (*)[x] type.
-```bash
-(gdb) p strT
-$6 = {"one", "two"}
-(gdb) p *strT
-$7 = "one"
-(gdb) p *((*strT) + 0)
-$8 = 111 'o'
-```
-- when array is passed.
-```bash
-# The input has the same base address as main function's string
-displayTwoDimensionalString (rows=2, size=4, input=0x7fffffffe008) at basics.c:4
-4       void displayTwoDimensionalString(size_t rows, size_t size, char (*input)[size]) {
-(gdb) n
-# Now input becomes following format
-(gdb) p input
-$9 = (char (*)[variable length]) 0x7fffffffe008
-# By dereferecning input i get the first string which is stored at base address.
-(gdb) p *input
-$11 = "one"
-# In order to access each element we need to derefence the base address + the element subscript
-(gdb) p (*input)[0]
-$12 = 111 'o'
-(gdb) p *(*input + 0)
-$13 = 111 'o'
-```
-#### Calculation of type char (*)[x] which gets us the whole row.
-```bash
-(gdb) p input[0]
-Cannot perform pointer math on incomplete types, try casting to a known type, or void *.
-# base address 008
-(gdb) p *((char (*)[4])input + 0)
-$21 = "one"
-# base address 008 + 1 * 4 (because of type (*)[4]) = 00c
-(gdb) p *((char (*)[4])input + 1)
-$22 = "two"
-(gdb) p &*((char (*)[4])input + 1)
-$25 = (char (*)[4]) 0x7fffffffe00c
-# Array terminated previously so below string is null
-(gdb) p *((char (*)[4])input + 2)
-$23 = "\000\000\000"
-```
-#### Calculation of type char (*)[x] for element access
-```bash
-# base address
-(gdb) p &*((char (*)[4])input + 0)
-$34 = (char (*)[4]) 0x7fffffffe008
-# defrefence the base address & add  1 
-# after dereference it becomes char[4] i.e. char *
-(gdb) p *((char (*)[4])input + 0)
-$39 = "one"
-(gdb) p &*((char (*)[4])input + 0)
-$40 = (char (*)[4]) 0x7fffffffe008
-(gdb) p *(*((char (*)[4])input + 0) + 1)
-$41 = 110 'n'
-(gdb) p &*(*((char (*)[4])input + 0) + 1)
-$42 = 0x7fffffffe009 "ne"
-# This is the same way as writing input[i][j]
-```
-#### Here when derefrencing char (*)[4] it turns to char * allowing for easier element access
-```bash
-(gdb) p &*(*((char (*)[4])input + 0))
-$45 = 0x7fffffffe008 "one"
-(gdb) p &*(*((char (*)[4])input + 0) + 1)
-$46 = 0x7fffffffe009 "ne"
-(gdb) p &*(*((char (*)[4])input + 0) + 2)
-$47 = 0x7fffffffe00a "e"
-(gdb) p &*(*((char (*)[4])input + 0) + 3)
-$48 = 0x7fffffffe00b ""
-(gdb) p &*(*((char (*)[4])input + 0) + 4)
-$49 = 0x7fffffffe00c "two"
-(gdb) p &*(*((char (*)[4])input + 0) + 5)
-$50 = 0x7fffffffe00d "wo"
-(gdb) p &*(*((char (*)[4])input + 0) + 6)
-$51 = 0x7fffffffe00e "o"
-(gdb) p &*(*((char (*)[4])input + 0) + 7)
-$52 = 0x7fffffffe00f ""
-```
-#### Checking what is the type of arr[x][y] when passing to a function.
-- strT is declared to be `char strT[2][4] = {"one", "two"};`.
-- Compiler says strT is of Type `char (*)[4]`, when passing to a function that takes in argument of type `char**`
-```bash
-basics.c: In function ‘main’:
-basics.c:50:37: warning: passing argument 2 of ‘displayTwo_DimensionalString’ from incompatible pointer type [-Wincompatible-pointer-types]
-   50 |     displayTwo_DimensionalString(2, strT);
-      |                                     ^~~~
-      |                                     |
-      |                                     char (*)[4]
-basics.c:15:55: note: expected ‘char **’ but argument is of type ‘char (*)[4]’
-   15 | void displayTwo_DimensionalString(size_t size, char **input) {
-      |
-```
-> **Why is strT of type char (*)[4] ? where did the [2] go ?**
-- In main function, the first element of strT is the first row: char[4] (an array of 4 char).
-- Therefore, the type of the decayed strT is a pointer to an array of 4 characters, or char (*)[4].
-- The number of rows can be passed as a separate element to the function.
-
-More on how array decays is performed here : [Link](https://github.com/M0hanrajp/c-programming/blob/master/misc_notes/oneDimensional_twoDimensional_array_decay.md#what-is-array-decay)
-
-**Inspecting strT Type in GDB**
-```bash
-(gdb) whatis strT
-type = char [2][4]
-```
-This shows that strT is indeed an array of 2 elements, where each element is an array of 4 char.
-
-#### Printing out the memory layout
+### Memory layout of a 2D string array
 
 Memory layout will be as same as :
 
@@ -480,12 +358,12 @@ Memory layout will be as same as :
 
 When we are passing the array in the function, input acts as (*)[4] hence we see the below layot.
 ```bash
-# b8 is address of input element 0
+# b8 is base address of input which is a variable to a local function.
 address input :: 0x7ffe08ede0b8
-# input element 0 at address b8 holds address base address :: 0x7ffe08ede118
-# 118 is of char[4] format, using this we can print out the whole string.
+# input base address 0x7ffe08ede0b8 holds address :: 0x7ffe08ede118 which is pointer to a char.
+# 10x7ffe08ede118 is pointer to char (*)[4] using this we can print out the whole string.
 Row[0] :: Element[0] - o & address :: 0x7ffe08ede118
-Row[0] :: Element[1] - n & address :: 0x7ffe08ede119
+Row[0] :: Element[1] - n & address :: 0x7ffe08ede119 ##  *(*(0x7ffe08ede118 + 0) + 1) # for in detail calculations check above calculations
 Row[0] :: Element[2] - e & address :: 0x7ffe08ede11a
 address input :: 0x7ffe08ede0c0
 Row[1] :: Element[0] - t & address :: 0x7ffe08ede11c
@@ -495,4 +373,314 @@ Row[1] :: Element[2] - o & address :: 0x7ffe08ede11e
 **Main function, Memory layout of `char *arr[4] = {"Hello", "programmer!!"}` (array of string pointers)**
 ![image](https://github.com/user-attachments/assets/e239f6a2-67f1-4827-93fa-3aebd1b7e821)
 
-### Printing 2D array of type `char (*)[y]` from main to function argument of type `char**` type
+### Array of pointers.
+
+How can array of pointers save memory for storing strings.
+
+#### Basic memory layout of two dimensional arrays
+![Image](https://github.com/user-attachments/assets/31858d24-49b3-4613-8b42-39831ce38b82)
+- Note, green line: are of type `char *[3]` (do not confuse with `char (*)[3]` because both are different.
+- Note, purple line: are of type `char *` which store a string.
+```bash
+# # # Basics of array of pointers
+# str is of type char *[3] even when size is not mentioned in main.
+# compiler automatically deduces the size based on the number of elements (which is 3 here).
+# char *[3] would mean array of 3 pointer elements.
+# The address 0x555555556008 holds the string "Welcome" which is of type char *.
+(gdb) p str
+$1 = {0x555555556008 "Welcome", 0x555555556010 "to", 0x555555556013 "jumanji"}
+(gdb) whatis str
+type = char *[3]
+# We can observe below that str's address is 0x7fffffffdf20
+# When we type "whatis str" in gdb it says it's of type char *[3]
+# as it points to the first element of the array
+# so 0x7fffffffdf20 is of type char *[3], but when it is used in an
+# expression it converts to "char **" per C spec 6.3.2.1
+# and 0x7fffffffdf20 holds 0x555555556008 "Welcome" see further below.
+(gdb) printf"%p\n", str
+0x7fffffffdf20
+# below &str gives the type pointer to a array of 3 pointer elements or 3 char * elements.
+(gdb) whatis &str
+type = char *(*)[3]
+# `&str` remains `char *(*)[3]`, which is a pointer to the entire array
+(gdb) printf"%p\n", &str
+0x7fffffffdf20
+(gdb) p &str
+$2 = (char *(*)[3]) 0x7fffffffdf20
+```
+#### Accessing array elements ( string as a whole )
+```bash
+# One of the main advantages of array of pointers is the ease of accessing a string. (as a whole)
+# str is an array of pointers to char, meaning each element str[i] is a pointer to a string literal.
+(gdb) whatis str
+type = char *[3]
+# decays to char ** when used in an expression
+(gdb) whatis str + 0
+type = char **
+(gdb) whatis str + 1
+type = char **
+(gdb) whatis str + 2
+type = char **
+(gdb) p str + 0
+# Following are the address of the pointers that hold char *
+$3 = (char **) 0x7fffffffdf20
+(gdb) p str + 1
+$4 = (char **) 0x7fffffffdf28 # ---> f20 + 8 = f28
+(gdb) p str + 2
+$5 = (char **) 0x7fffffffdf30 # ---> f28 + 8 = f30 
+# (28 in hex -> 2 * 16 ^ 1 + 8 * 16 ^ 0. -> 48 in dec -> 30 in hex
+(gdb) p str
+$6 = {0x555555556008 "Welcome", 0x555555556010 "to", 0x555555556013 "jumanji"}
+# # # Calculations
+# Array of pointers contain different memory locations that point to string.
+# since variables hold address which are of size 8 bytes on a 64 bit machine.
+# when *(str + x) is performed (x = 1, 2..), total expression moves by 8 bytes.
+# Which help to access each array elements.
+# these addresses 0x7fffffffdf20 0x7fffffffdf28 & 0x7fffffffdf30 hold pointer to char
+# We are dereferencing 0x7fffffffdf20, this is equal to *str which holds 0x555555556008
+# sizeof(char *) = 8 bytes
+
+# Formula == (base address of str) + (1 * size of (char *))
+(gdb) p *(str + 0) # in other words str[0]
+$7 = 0x555555556008 "Welcome"
+#  str + 1 = str + (0 * 8) = 0x7fffffffdf20 +  0 = 0x7fffffffdf20 ---> *0x7fffffffdf20 ---> 0x555555556008
+
+(gdb) p *(str + 1) # in other words str[1]
+$11 = 0x555555556010 "to"
+# str + 1 = str + (1 * 8) = 0x7fffffffdf20 +  8 = 0x7fffffffdf28 ---> *0x7fffffffdf28 ---> 0x555555556010
+
+(gdb) p *(str + 2) # in other words str[2]
+$12 = 0x555555556013 "jumanji"
+# str + 2 = str + (2 * 8) = 0x7fffffffdf20 + 16 = 0x7fffffffdf30 ---> *0x7fffffffdf30 ---> 0x555555556013
+# Note
+# 0x7fffffffdf28 or 0x7fffffffdf30 are NOT a char *[3], because arrays do not decay at non-zero indices.
+```
+✅ str (by itself) is an array (char *[3]).
+✅ str (when used in an expression) decays into char **.
+✅ str + 1 is just a pointer to str[1], not an array anymore.
+✅ Arrays only decay once, at str, not at str + 1 or further.
+
+- For reference:0x400584, 0x40058C, 0x40058F are all `char *` elements. 
+- They can be accessed from 0xFFF000BC0, 0xFFF000BC8 & 0xFFF000BD0 which are `char **` type.
+![Image](https://github.com/user-attachments/assets/31858d24-49b3-4613-8b42-39831ce38b82)
+
+#### Accessing individual elements of a string in array of pointers.
+```bash
+# str is an array of pointers to char, meaning each element str[i] is a pointer to a string literal.
+(gdb) info locals
+str = {0x555555556008 "Welcome", 0x555555556010 "to", 0x555555556013 "jumanji"}
+(gdb) p *(str + 0)
+$16 = 0x555555556008 "Welcome"
+# Since "Welcome" is a string literal, *(str + 0) is of type char *.
+# Accessing individual elements
+(gdb) p *(*(str + 0) + 0)
+$18 = 87 'W'
+# # # calculation.
+# *(*(str + 0) + 0)
+#    ---------
+#    <step 1>
+# ----------------
+#    <step 2>
+# <step 1> This step is to move by 8 bytes to pointer to char * (char **) in an array
+# -----------------------------------------------------------------------------------
+# *(str + 0)
+# Formula == (base address of str) + (1 * size of (char *))
+# str + 1 = str + (1 * 8) = 0x7fffffffdf20 + 0 = 0x7fffffffdf20
+# 
+# <step 2> after getting pointer to char ** address in the array.
+# ---------------------------------------------------------------
+# we use this address to dereference to a char * address and then access individual elements from it.
+# so the expression now 
+# *(*(0x7fffffffdf20) + 0)
+# 1. *0x7fffffffdf20 --> 0x555555556008 "Welcome"
+(gdb) whatis *(str + 0)
+type = char *
+# 2. *(0x555555556008) ---> 'W' (because *(0x7fffffffdf20) + 0 = 0x7fffffffdf20)"
+(gdb) p *(*(str + 0) + 0)
+$18 = 87 'W'
+# The type is char as we are accessing individual elements
+(gdb) whatis *(*(str + 0) + 0)
+type = char
+### rest of the elements.
+(gdb) p *(*(str + 0) + 1)
+$19 = 101 'e'
+(gdb) p *(*(str + 0) + 2)
+$20 = 108 'l'
+(gdb) p *(*(str + 0) + 3)
+$21 =  99 'c'
+(gdb) p *(*(str + 0) + 4)
+$22 = 111 'o'
+(gdb) p *(*(str + 0) + 5)
+$23 = 109 'm'
+(gdb) p *(*(str + 0) + 6)
+$24 = 101 'e'
+# Proof with their character address
+# Note here there is no 2nd * operator in order to print address.
+# if we dereference it again it decays to char literal not char *
+(gdb) printf"%p\n", (*(str + 0) + 0)
+0x555555556008
+(gdb) printf"%p\n", (*(str + 0) + 1)
+0x555555556009
+(gdb) printf"%p\n", (*(str + 0) + 2)
+0x55555555600a
+(gdb) printf"%p\n", (*(str + 0) + 3)
+0x55555555600b
+(gdb) printf"%p\n", (*(str + 0) + 4)
+0x55555555600c
+(gdb) printf"%p\n", (*(str + 0) + 5)
+0x55555555600d
+(gdb) printf"%p\n", (*(str + 0) + 6)
+0x55555555600e
+```
+#### Output of the program at phase 1
+```bash
+size of str using sizeof :: 24
+String[0] ::  Welcome at address :: 0x56381814f008 stored in 0x7ffd6cb23020
+Element[0] :: W at address :: 0x56381814f008 stored in 0x7ffd6cb23020
+# 0x56381814f008 is the first element address, ignore the stored in x statement it's just for mapping purpose
+Element[1] :: e at address :: 0x56381814f009 stored in 0x7ffd6cb23020
+Element[2] :: l at address :: 0x56381814f00a stored in 0x7ffd6cb23020
+Element[3] :: c at address :: 0x56381814f00b stored in 0x7ffd6cb23020
+Element[4] :: o at address :: 0x56381814f00c stored in 0x7ffd6cb23020
+Element[5] :: m at address :: 0x56381814f00d stored in 0x7ffd6cb23020
+Element[6] :: e at address :: 0x56381814f00e stored in 0x7ffd6cb23020
+String[1] ::       to at address :: 0x56381814f010 stored in 0x7ffd6cb23028
+Element[0] :: t at address :: 0x56381814f010 stored in 0x7ffd6cb23028
+Element[1] :: o at address :: 0x56381814f011 stored in 0x7ffd6cb23028
+String[2] ::  jumanji at address :: 0x56381814f013 stored in 0x7ffd6cb23030
+Element[0] :: j at address :: 0x56381814f013 stored in 0x7ffd6cb23030
+Element[1] :: u at address :: 0x56381814f014 stored in 0x7ffd6cb23030
+Element[2] :: m at address :: 0x56381814f015 stored in 0x7ffd6cb23030
+Element[3] :: a at address :: 0x56381814f016 stored in 0x7ffd6cb23030
+Element[4] :: n at address :: 0x56381814f017 stored in 0x7ffd6cb23030
+Element[5] :: j at address :: 0x56381814f018 stored in 0x7ffd6cb23030
+Element[6] :: i at address :: 0x56381814f019 stored in 0x7ffd6cb23030
+```
+you can match the above output to the below snippet for more clarification
+![Image](https://github.com/user-attachments/assets/31858d24-49b3-4613-8b42-39831ce38b82)
+
+#### What is the difference between `char *[3]` and `char (*)[3]`
+- Naming convention `char *[3]` Array of 3 pointers to char & `char (*)[3]` pointer to an array of 3 char elements.
+- `char *[3]` 
+   - This is an array of 3 pointers to char, Each element of the array is a pointer to a char.
+   - Each element in the array points to a different memory location (a char or a string).
+   - For any `char *str[3]` variable:
+      - #### Cannot perform str++ 
+      - str is not a pointer variable; it's an array name, which acts as a constant pointer to str[0].
+      - Trying to increment str (str++) is like trying to modify a constant pointer, which is not allowed.
+      ```bash
+      array_of_pointers_to_strings.c: In function ‘main’:
+      array_of_pointers_to_strings.c:6:6: error: lvalue required as increment operand
+          6 |   str++;
+            |      ^~
+      ```
+      - Note: str + 1 is allowed because it computes a new address without modifying str.
+      - str++ is not allowed because str is an array name, which acts as a constant pointer and cannot be changed.
+
+      - #### But could perform (*str)++
+      - For the declaration:
+      ```bash
+        char *str[] = {"Welcome", "to", "jumanji"};
+      ```
+      - The elements of the array (str[0], str[1], etc.) are modifiable pointers, and you can change what they point to
+        (e.g., by using (*str)++).
+      - Meaning if you look at the above memory map, str is of type `char *[3]`, we cannot modify it since it's a constant pointer.
+      - When you dereference str, *str gives you the pointer to a constant string, this pointer is mutable. hence (*str)++ is valid.
+      - For the declaration:
+      ```bash
+        char *str[] = {"Welcome", "to", "jumanji"};
+        char a[4] = "asd";
+        char q[3] = "er";
+        char v[2] = "1";
+        str[0] = a;
+        str[1] = q;
+        str[2] = v;
+        ```
+      - Here I have assigned a, q, v to str, My thinking is since a is a constant pointer to "asd" can we still do (*str)++ ?
+      - Yes, we can, Array names like `a` decay into pointers when passed or assigned. So, when you do str[0] = a;, you are 
+        assigning the pointer to the first element of a (&a[0]) to str[0].
+      - Based on the C spec, 6.3.2.1 Whenever an array appears in most expressions, it is implicitly converted to a pointer to its first element.
+- `char (*)[3]`
+   - This is a pointer to an array of 3 char, ptr is a pointer to the entire array arr, not just an element.
+   - Points to a contiguous block of memory containing 3 char elements.(Remeber it points to the location where 3 char elements are present).
+
+#### When an array is used in an expression it decays into a pointer to it's first element.
+#### C spec 6.3.2.1
+- this question came to my mind when using gdb, the output for `whatis str` and `whatis str + 0` type was different.
+- when I expected it to be same, as I was thinking from arithmetic POV, that the address remains the same regardless of the expression.
+- This behavior is defined in C spec 6.3.2.1, refer above for more details.
+![Image](https://github.com/user-attachments/assets/8a6c0f4d-fc1c-47a2-9add-47d92472efeb)
+```bash
+# Str is of type char *[3]
+(gdb) p str
+$1 = {0x555555556008 "Welcome", 0x555555556010 "to", 0x555555556013 "jumanji"}
+(gdb) whatis str
+type = char *[3]
+# str becomes char ** when str + 0 is performed
+(gdb) whatis str + 0
+type = char **
+# str address remains the same for all the types.
+(gdb) printf"%p\n", str
+0x7fffffffdf10
+(gdb) printf"%p\n", &str
+0x7fffffffdf10
+(gdb) printf"%p\n", str + 0
+0x7fffffffdf10
+```
+- In C, when an array name is used in an expression (except with sizeof or &), it decays into a pointer to its first element.
+- str is an array of pointers (char *[3]), so it decays into a pointer to its first element (char **).
+
+#### Passing array of pointers to a function
+- When passing an array of pointers i.e. `char *[3]` from main.
+- They decay into `char **` pointer to the first element.
+```bash
+array_of_pointers_to_strings.c: In function ‘main’:
+array_of_pointers_to_strings.c:43:11: warning: passing argument 1 of ‘display’ from incompatible pointer type [-Wincompatible-pointer-types]
+   43 |   display(str, 3);
+      |           ^~~
+      |           |
+      |           char **
+```
+- Hence the function argument is going to be `(char **)`, `char *[]` is also acceptable.
+```bash
+# code
+void display(char **input, unsigned size) { // this can be written as *input[]
+  printf("Input is local to the function display hence it's address will be different\naddress of input :: %p\n", &input);
+  for(unsigned i = 0; i < size; i++) {
+      printf("<< String[%u]  >> :: %8s at address :: %p stored in %p\n", i, input[i], input[i], input + i);
+      for(unsigned j = 0; input[i][j] != '\0'; j++) {
+          printf("Element[%u] :: %c at address :: %p stored in %p\n", j, input[i][j], (*(input + i) + j), input + i);
+      }
+  }
+  // for(unsigned i = 0; input[i] != NULL; i++) 
+  // the above statement works only if input[i] is NULL.
+  // so char *str[] = {"Welcome", "to", "jumanji", NULL}; will work but if not declared then it will cause a segfault
+}
+```
+The calculation remains the same.
+```bash
+$ ./twod
+total memory occupied by elements of str :: 24
+prints the size of the array of pointers, not the total memory occupied by the strings.
+Input is local to the function display hence address will be different
+address of input :: 0x7ffe87323578
+<< String[0]  >> ::  Welcome at address :: 0x5614f689c0d9 stored in 0x7ffe873235a0
+Element[0] :: W at address :: 0x5614f689c0d9 stored in 0x7ffe873235a0
+Element[1] :: e at address :: 0x5614f689c0da stored in 0x7ffe873235a0
+Element[2] :: l at address :: 0x5614f689c0db stored in 0x7ffe873235a0
+Element[3] :: c at address :: 0x5614f689c0dc stored in 0x7ffe873235a0
+Element[4] :: o at address :: 0x5614f689c0dd stored in 0x7ffe873235a0
+Element[5] :: m at address :: 0x5614f689c0de stored in 0x7ffe873235a0
+Element[6] :: e at address :: 0x5614f689c0df stored in 0x7ffe873235a0
+<< String[1]  >> ::       to at address :: 0x5614f689c0e1 stored in 0x7ffe873235a8
+Element[0] :: t at address :: 0x5614f689c0e1 stored in 0x7ffe873235a8
+Element[1] :: o at address :: 0x5614f689c0e2 stored in 0x7ffe873235a8
+<< String[2]  >> ::  jumanji at address :: 0x5614f689c0e4 stored in 0x7ffe873235b0
+Element[0] :: j at address :: 0x5614f689c0e4 stored in 0x7ffe873235b0
+Element[1] :: u at address :: 0x5614f689c0e5 stored in 0x7ffe873235b0
+Element[2] :: m at address :: 0x5614f689c0e6 stored in 0x7ffe873235b0
+Element[3] :: a at address :: 0x5614f689c0e7 stored in 0x7ffe873235b0
+Element[4] :: n at address :: 0x5614f689c0e8 stored in 0x7ffe873235b0
+Element[5] :: j at address :: 0x5614f689c0e9 stored in 0x7ffe873235b0
+Element[6] :: i at address :: 0x5614f689c0ea stored in 0x7ffe873235b0
+```
