@@ -257,3 +257,185 @@ x/10i <address>
    0x7fffffffdf98:      nop
    0x7fffffffdf99:      cmp    $0x7ffff7db,%eax
 ```
+
+Yes! You can use GDB to dig deeper into the segmentation fault and understand more about why it occurs. Here are some useful debugging techniques:
+
+---
+
+### **1. Use `backtrace (bt)` to see the call stack**
+
+>Note: check scenarios.md file in strings/, it has a segfault debugging note.
+
+After the segmentation fault occurs, type:
+
+```gdb
+(gdb) bt
+```
+This will show the sequence of function calls leading to the crash, helping you determine where exactly the issue occurs.
+```bash
+
+Program received signal SIGSEGV, Segmentation fault.
+__strlen_evex () at ../sysdeps/x86_64/multiarch/strlen-evex.S:77
+77      ../sysdeps/x86_64/multiarch/strlen-evex.S: No such file or directory.
+(gdb) bt
+#0  __strlen_evex () at ../sysdeps/x86_64/multiarch/strlen-evex.S:77
+#1  0x00007ffff7e00d31 in __vfprintf_internal (s=0x7ffff7fa5780 <_IO_2_1_stdout_>, format=0x555555556008 "<< String[%u]  >> :: %8s at address :: %p stored in %p\n",
+    ap=ap@entry=0x7fffffffde10, mode_flags=mode_flags@entry=0) at ./stdio-common/vfprintf-internal.c:1517
+#2  0x00007ffff7dea79f in __printf (format=<optimized out>) at ./stdio-common/printf.c:33
+#3  0x00005555555551de in display (input=0x7fffffffdf20) at array_of_pointers_to_strings.c:7
+#4  0x0000555555555304 in main () at array_of_pointers_to_strings.c:39
+```
+
+---
+
+### **2. Inspect memory addresses**
+Use `print` (`p`) to check the address and contents of `str[0]`:
+
+```gdb
+(gdb) p str
+$1 = {0x555555556008 "Welcome", 0x555555556010 "to", 0x555555556013 "jumanji"}
+```
+This confirms that `str[0]` points to a read-only memory section.
+
+You can also check the specific address of `str[0]`:
+
+```gdb
+(gdb) p &str[0]
+$2 = (char **) 0x7fffffffe220
+```
+
+To inspect memory at `str[0]`, use:
+
+```gdb
+(gdb) x/s str[0]
+```
+This will print the string at that memory location.
+```gdb
+(gdb) x/3s str[0]
+0x555555556008: "Welcome"
+0x555555556010: "to"
+0x555555556013: "jumanji"
+```
+---
+
+### **3. Check memory protections with `info proc mappings`**
+To see if `str[0]` is in a read-only section, use:
+
+```gdb
+(gdb) info proc mappings
+```
+This lists memory regions and their permissions (`r`, `w`, `x`). If the segment containing `"Welcome"` is **read-only**, modifying it will cause a segmentation fault.
+
+---
+
+### **4. Use `disassemble` to examine compiled instructions**
+To see the actual machine instructions where it crashes:
+
+```gdb
+(gdb) disassemble main
+```
+Look for the exact instruction that caused the segmentation fault.
+
+---
+
+### **5. Use `catch` to break on segmentation faults**
+Instead of waiting for the crash, you can make GDB stop execution **before** the segmentation fault happens:
+
+```gdb
+(gdb) catch segfault
+```
+Then, run the program:
+
+```gdb
+(gdb) run
+```
+GDB will break as soon as the segmentation fault happens, allowing you to inspect values before the crash.
+
+---
+
+### **6. Examine Registers (`info registers`)**
+If you suspect the segmentation fault is due to an invalid memory access, inspect CPU registers:
+
+```gdb
+(gdb) info registers
+```
+Check the **instruction pointer (RIP/eip)** and the **faulty memory address (RAX, RDX, etc.)**.
+
+---
+
+### **7. Step Into (`si`) and Step Over (`ni`)**
+Use `si` (step into) to execute one assembly instruction at a time:
+
+```gdb
+(gdb) si
+```
+Or `ni` (next instruction) to step over function calls:
+
+```gdb
+(gdb) ni
+```
+This helps pinpoint the exact instruction causing the fault.
+
+---
+
+### **8. Use Valgrind for More Details**
+If you have Valgrind installed, running:
+
+```bash
+valgrind --tool=memcheck --track-origins=yes ./your_program
+```
+will show **invalid memory accesses**, making debugging easier.
+
+### **Memory Permissions in GDB (`r`, `w`, `x`)**
+When you inspect memory regions in GDB using `info proc mappings`, you will see different permission flags:
+
+| Permission | Meaning |
+|------------|---------|
+| `r` (Read) | The memory region can be read. |
+| `w` (Write) | The memory region can be modified. |
+| `x` (Execute) | The memory region contains executable code. |
+| `-` (None) | No permission is granted for this region. |
+
+#### **🔹 Common Debugging Scenarios**
+| Scenario | Likely Cause |
+|----------|-------------|
+| **Segmentation Fault when modifying a string** | String literal is in `.rodata` (`r--p`). |
+| **Stack overflow** | Exceeded stack limit (`rw-p`). |
+| **Jumping to an invalid memory address** | Trying to execute non-executable memory (`rw-p`). |
+| **Buffer overflow attack detection** | Writing past allocated memory in `rw-p`. |
+
+#### **🔹 Summary**
+| Flag  | Meaning | Example Memory Region |
+|-------|---------|----------------------|
+| `r--p` | Read-only | `.rodata` (String literals) |
+| `rw-p` | Read & Write | Heap, Global Variables |
+| `r-xp` | Read & Execute | Program Code (`.text`) |
+| `rwxp` | Read, Write & Execute | JIT Code (Rare) |
+
+#### **What Does "Private" Mean in GDB Memory Permissions?**
+
+In GDB’s `info proc mappings` output, the **last character** in the permissions field (`r--p`, `rw-p`, `r-xp`, etc.) indicates whether the memory mapping is **private (`p`)** or **shared (`s`)**.
+
+---
+
+#### **🔹 Meaning of "Private" (`p`) vs. "Shared" (`s`)**
+| Flag | Meaning |
+|------|---------|
+| `p` (Private) | Changes to this memory are **not** visible to other processes. |
+| `s` (Shared) | Changes to this memory **are** visible to other processes. |
+
+#### **🔹 Summary**
+| Permission | Meaning | Example |
+|------------|---------|---------|
+| `r--p` | Read-only, private | String literals (`.rodata`) |
+| `rw-p` | Read & write, private | Stack, heap, global variables |
+| `r-xp` | Read & execute, private | Program code (`.text`) |
+| `r--s` | Read-only, shared | Shared memory (`shm_open`) |
+| `rw-s` | Read & write, shared | Shared memory between processes |
+
+---
+
+#### **🔹 Key Takeaway**
+- **"Private" (`p`)** means **modifications are only visible to the process**.
+- **"Shared" (`s`)** means **modifications are visible across multiple processes** (e.g., shared memory regions or shared libraries).
+- **Most process memory is private (`p`)**, except for explicitly shared memory.
