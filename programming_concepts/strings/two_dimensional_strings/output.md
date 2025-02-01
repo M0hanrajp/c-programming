@@ -427,6 +427,9 @@ $3 = (char **) 0x7fffffffdf20
 (gdb) p str + 1
 $4 = (char **) 0x7fffffffdf28 # ---> f20 + 8 = f28
 (gdb) p str + 2
+# sizeof(char *) (8 bytes on a 64-bit system)
+# Remeber str is an array of pointers
+# str + 1 will move by 8 bytes. explanation given below.
 $5 = (char **) 0x7fffffffdf30 # ---> f28 + 8 = f30 
 # (28 in hex -> 2 * 16 ^ 1 + 8 * 16 ^ 0. -> 48 in dec -> 30 in hex
 (gdb) p str
@@ -441,6 +444,13 @@ $6 = {0x555555556008 "Welcome", 0x555555556010 "to", 0x555555556013 "jumanji"}
 # sizeof(char *) = 8 bytes
 
 # Formula == (base address of str) + (1 * size of (char *))
+# why do we move by 8 bytes here ?
+# because the base address or str is of type char *[3]
+# so in expression str + x it decays to char **
+# elements of str are of type char *.
+# when we perform str + 1, it means move by size of element of a
+# so an element here is char *, which is 8 bytes on a 64-bit system.
+# so str + 1 moves by 8 bytes.
 (gdb) p *(str + 0) # in other words str[0]
 $7 = 0x555555556008 "Welcome"
 #  str + 1 = str + (0 * 8) = 0x7fffffffdf20 +  0 = 0x7fffffffdf20 ---> *0x7fffffffdf20 ---> 0x555555556008

@@ -214,6 +214,9 @@ void <func-name>(char *<var_name>[]);
     - declare it `char *str[] = {"Welcome", "to", "jumanji", NULL};`
     - Keep the function argument `void <func-name>(char **<var_name>)`
     - Inside the function, `str[i] != NULL` must be the condition so increments only till the last string.
+    - The char elements in str are not mutable because element at str[0] is char *, the string is stored in read only memory.
+    - If the char elements need to be modified if memory is allocated from heap or assigned address is constant pointer to a string. i.e. char[3] = "AAA";
+      - More information on heap allocated strings that are modified [here](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/two_dimensional_strings/array_of_pointers_to_strings.c)
 - In order to calculate the amount of bytes occupied by the strings, write a custom function that takes advantage of `strlen` input, and gives the total amount of memory occupied by strings.
 - all arrays in C, 1D or 2D they decay as pointer to first element.
 
