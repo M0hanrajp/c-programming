@@ -21,7 +21,7 @@ int main(void) {
   // str[2] = mod;str[2][0] = 't';
   printf("total memory occupied by elements of str :: %lu\nprints the size of the array of pointers, not the total memory occupied by the strings.\n",
           sizeof(str));
-  str++;
+  // str++;
   // Phase 1
   // Printing out str elements, address.
   // Printing out individual char elements from char * elements.
@@ -37,8 +37,10 @@ int main(void) {
    * way even though the string literal is stored in readonly memory, during array creation
    * the string is copied from readonly memory to the stack and char array works as constant
    * pointer to a char/string, hence we are able to modify the contents.
-   * for example in this program comment out char mod[] & char str[2] = mod statements and
-   * exectue the program to see the difference. */
+   * for example in this program comment out char mod[] & char str[2] = mod;str[2][0] = 't' 
+   * statements and exectue the program to see the difference. 
+   * Capital T from mod will be changed to t.
+   * */
 
   // Calling display funciton to display array of pointers
   display(str, 3);
