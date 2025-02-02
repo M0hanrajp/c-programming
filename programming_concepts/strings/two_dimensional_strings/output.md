@@ -694,3 +694,5 @@ Element[4] :: n at address :: 0x5614f689c0e8 stored in 0x7ffe873235b0
 Element[5] :: j at address :: 0x5614f689c0e9 stored in 0x7ffe873235b0
 Element[6] :: i at address :: 0x5614f689c0ea stored in 0x7ffe873235b0
 ```
+#### Difference in memory allocations of 2D array and array of pointers
+![Image](https://github.com/user-attachments/assets/a9fa5892-3f73-4c35-9166-43bdfc955e32)
