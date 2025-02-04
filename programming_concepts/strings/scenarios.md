@@ -4,7 +4,8 @@
 
 - In the below scenario, sentence is a constant pointer to a char array.
 - the funciton display string takes input pointer to a char as an argument.
-- base address of sentence is sent, here both `pointer` and `string` are mutable.
+- base address of sentence is sent, here `string` is mutable, but sentence which is the array name is not mutable.
+   - It acts as a constant pointer to a string.
 ```bash
 void displayString(char *input) {
     printf("Address &input %p & value *input %c, value of input (which holds char array's address) %p\n", &input, *input, input);
@@ -29,7 +30,7 @@ int main() {
 
 - Note:
    - declare a pointer variable of type char that holds sentence's address.
-   - Then pointer is mutable, string can be modified.
+   - Then pointer is mutable, string can be modified, you can mutate the pointer inside the function, not in the main function.
 - [How size is determined for declaration of type `word[] = "string"` ?](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/notes.md#how-size-is-determined-for-declaration-of-type-word--string-)
 ```bash
 Address of sentence in main 0x7ffe9d7d58e0
