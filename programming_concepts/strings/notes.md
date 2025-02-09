@@ -139,6 +139,22 @@ In display:
   - It's important to know that size should be the 2nd subscript of the declared array.
     - if `char [2][4]` is the array declared in main, then size should be 4, else pointer arithmetic could go wrong.
 - After knowing the type of char and it's properties learn the calculation [here](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/two_dimensional_strings/output.md#understanding-2d-array-pointer-arithmetic-passing-to-function-etc)
+- The following program is valid for receiving strings from `stdin`
+```c
+char strings[10][20];
+// char strings[10][20] = {0}; // Sets all elements to '\0'
+for(int i = 0; i < 10; i++) {
+  printf("Enter the name:");
+  scanf("%s", strings[i]);
+}
+```
+- the program is valid because:
+  - `strings[10][20]` reserves 200 bytes of space in memory.
+  - the declaration states 10 strings can be stored of the size 20 bytes each.
+  - Since strings is an uninitialized local array, it contains garbage values until explicitly assigned.
+  - Only static/global arrays are zero-initialized (i.e., all elements set to \0).
+  - the elements are mutable in the above declaration.
+  - Based on the above method it does not workout for array of pointers check below.
 
 ### Array of pointers.
 ```bash
@@ -219,6 +235,44 @@ void <func-name>(char *<var_name>[]);
       - More information on heap allocated strings that are modified [here](https://github.com/M0hanrajp/c-programming/blob/master/programming_concepts/strings/two_dimensional_strings/array_of_pointers_to_strings.c)
 - In order to calculate the amount of bytes occupied by the strings, write a custom function that takes advantage of `strlen` input, and gives the total amount of memory occupied by strings.
 - all arrays in C, 1D or 2D they decay as pointer to first element.
+- Can we receive input from `stdin` for array of pointers ?
+```c
+  char *temp[20];
+  for(int i = 0; i < 5; i++) {
+    printf("Enter the name:");
+    scanf("%s", temp[i]);
+  }
+```
+- How does the program behave ?
+  - temp is an array of pointers (elements are `char *` type), when we declare the statement.
+    - there is no memory allocated, `char *temp[20]` means, temp is an array of pointers that can hold 20 char * elements.
+    - but the elements have not been assigned a valid memory space when `temp` is declared.
+    - Running the program takes is an undefined behavior, will declare segementation fault.
+    ```bash
+    $ ./a.out
+    Enter the name:Ram
+    Segmentation fault (core dumped)
+    ```
+- The current way to get input for array of pointers:
+```c
+  char *temp[20];
+  for(int i = 0; i < 5; i++) {
+    temp[i] = (char *)calloc(20, sizeof(char));
+    printf("Enter the name:");
+    scanf("%s", temp[i]);
+  }
+```
+- Here for each element we are initialzing it with an address and memory of 20 bytes.
+- this is capable of holiding strings of size 20 (with NULL character).
+```bash
+$ ./a.out
+Enter the name:Ram
+Enter the name:Ramesh
+Enter the name:a
+Enter the name:b
+Enter the name:c
+Ramesh
+```
 
 ### Questions
 
