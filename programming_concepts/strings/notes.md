@@ -103,6 +103,8 @@ programming_concepts/strings/snippets/d.c has the program
 - this leaves us wastage with 2 bytes for each string, 4 bytes of wastage in total.
   - Note: how to declare 2D strings in an efficient manner is discussed further below.
 ![Image](https://github.com/user-attachments/assets/525266bd-b062-42e6-b981-6e578669d1c5)
+- Fixed-size char arrays don't guarantee null-termination unless explicitly managed.
+- when char a[10] is declared and The string "RamRamRama" has 10 characters, so there's no space left for \0.
 - Basic way of passing arr to a function that can access 2D char array.
   - Notice the void_display function indicates arr is of type pointer to char[4].
     - Most basic way to print out 2D char array is to declare function argument as `arr[size][size]` type.
@@ -154,7 +156,47 @@ for(int i = 0; i < 10; i++) {
   - Since strings is an uninitialized local array, it contains garbage values until explicitly assigned.
   - Only static/global arrays are zero-initialized (i.e., all elements set to \0).
   - the elements are mutable in the above declaration.
-  - Based on the above method it does not workout for array of pointers check below.
+```bash
+# We can see that before running the program memory has been allocated to temp
+# in the below example a total of 30 bytes is allocated.
+# The declaration that was made for this example is temp[3][10]
+(gdb) info locals
+i = 0
+temp = {"\000\000\000\000\000\000\000\000\000", "\000\000\000\000\000\000\000\000\000", "\000\000\000\000\000\000\000\000\000"}
+(gdb) x/30bx temp
+0x7fffffffdf50: 0x00    0x00    0x00    0x00    0x00    0x00    0x00    0x00
+0x7fffffffdf58: 0x00    0x00    0x00    0x00    0x00    0x00    0x00    0x00
+0x7fffffffdf60: 0x00    0x00    0x00    0x00    0x00    0x00    0x00    0x00
+0x7fffffffdf68: 0x00    0x00    0x00    0x00    0x00    0x00
+# After the strings are received from stdin
+# Here I'm displaying 30 bytes of temp in hexadecimal format.
+# temp starts at 0x7fffffffdf50
+(gdb) x/30bx temp
+0x7fffffffdf50: 0x52    0x61    0x6d    0x00    0x00    0x00    0x00    0x00
+0x7fffffffdf58: 0x00    0x00    0x52    0x61    0x6d    0x65    0x73    0x68
+0x7fffffffdf60: 0x00    0x00    0x00    0x00    0x53    0x75    0x72    0x65
+0x7fffffffdf68: 0x73    0x68    0x00    0x00    0x00    0x00
+# temp ends at 0x7fffffffdf6e
+(gdb) x/30bs temp
+0x7fffffffdf50: "Ram" # starts at 50, 53 is the null character
+0x7fffffffdf54: "" # rest all bytes are empty not occupied.
+0x7fffffffdf55: ""
+0x7fffffffdf56: ""
+0x7fffffffdf57: ""
+0x7fffffffdf58: ""
+0x7fffffffdf59: ""
+0x7fffffffdf5a: "Ramesh"
+0x7fffffffdf61: ""
+0x7fffffffdf62: ""
+0x7fffffffdf63: ""
+0x7fffffffdf64: "Suresh"
+0x7fffffffdf6b: ""
+0x7fffffffdf6c: ""
+0x7fffffffdf6d: ""
+0x7fffffffdf6e: ""
+```
+- We can see that temp
+- Based on the above method it does not workout for array of pointers check below.
 
 ### Array of pointers.
 ```bash
@@ -272,6 +314,51 @@ Enter the name:a
 Enter the name:b
 Enter the name:c
 Ramesh
+```
+- Checking out memory layout
+```bash
+# For the declaration of type *temp[3]
+# Initial, there is no address allocated.
+(gdb) info locals
+i = 0
+temp = {0x0, 0x0, 0x0}
+# Calloc is performed for 0th element
+(gdb) n
+34          temp[i] = (char *)calloc(10, sizeof(char));
+# 0th element is 0x5555555592a0 stored at 0x7fffffffdf60
+(gdb) printf"%p\n", temp[0]
+0x5555555592a0
+# Inspecting 24 bytes as *temp[3] can hold 3 different address of 8 bytes each
+# If you try inspecting more you'll see garbadge values.
+# Below is the layout of the whole 24 bytes (3 elements * 8 bytes) of *temp[3]
+(gdb) x/24bx temp
+0x7fffffffdf60: 0xa0    0x92    0x55    0x55    0x55    0x55    0x00    0x00
+0x7fffffffdf68: 0x00    0x00    0x00    0x00    0x00    0x00    0x00    0x00
+0x7fffffffdf70: 0x00    0x00    0x00    0x00    0x00    0x00    0x00    0x00
+# confirmation that first element is populated with adderss, which is of type char *
+(gdb) p temp
+$2 = {0x5555555592a0 "", 0x0, 0x0}
+# Entering the first string
+(gdb) n
+Enter the name:Ram
+# First string memory layout, 0x52 is R
+# inspecting temp[0] which is the first element and 10 bytes because a total of 10 bytes is allocated using calloc
+(gdb) x/10bx temp[0]
+0x5555555592a0: 0x52    0x61    0x6d    0x00    0x00    0x00    0x00    0x00
+0x5555555592a8: 0x00    0x00
+# For 2nd element
+(gdb) n
+Enter the name:Sita-Rama
+(gdb) x/24bx temp
+0x7fffffffdf60: 0xa0    0x92    0x55    0x55    0x55    0x55    0x00    0x00
+0x7fffffffdf68: 0xe0    0x9a    0x55    0x55    0x55    0x55    0x00    0x00
+0x7fffffffdf70: 0x00    0x00    0x00    0x00    0x00    0x00    0x00    0x00
+(gdb) printf"%p\n", temp[1]
+0x555555559ae0
+(gdb) x/10bx temp[1]
+0x555555559ae0: 0x53    0x69    0x74    0x61    0x2d    0x52    0x61    0x6d
+0x555555559ae8: 0x61    0x00
+                ^--------------> 0x61 in dec is 97 which is character 'a'
 ```
 
 ### Questions
