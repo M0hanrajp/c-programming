@@ -2,22 +2,36 @@
 #include <stdio.h>
 #include <string.h>
 #include <strings.h>
+
 // declaration of structure outside the main funciton
 struct laptop_essentials {
     char name[15];
     int quantity;
     float price;
 };
+
 struct laptop_essentials database_essentials_office = {"keyboard", 2, 2324};
 
 int main(void)
 {
     // struct inside main function
-    struct laptop {
-        char name[10];
+    struct laptop { // name of the structure
+        char name[10]; // data types ends declaration, ends with ;
         float price;
         int quantity;
-    }database_home;
+    }; // close the declaration with ;
+    struct laptop database_home; // declare variables with type struct <struct name>
+
+    // get input from stdin
+    printf("Enter laptop's name:");
+    scanf("%s", database_home.name);
+    printf("Enter laptop's price:");
+    scanf("%f", &database_home.price);
+    printf("Enter number of laptops:");
+    scanf("%d", &database_home.quantity);
+/*     GDB output
+ *     (gdb) info locals
+       database_home = {name = "Lenovo\000\000\000", price = 1000, quantity = 2} */
 
     // Initialize using assignment operator
     struct laptop database_office;
@@ -38,7 +52,7 @@ int main(void)
                 database_lock.name, database_lock.price, database_lock.quantity);
     // Checking the address:
     strcpy(database_office.name, "Lenovo");database_office.price = 45000;database_office.quantity = 2;
-    printf("Address of name: %u\nAddress of price: %u\nAddress of quantity: %u\n",
+    printf("Address of name: %p\nAddress of price: %p\nAddress of quantity: %p\n",
             &database_home.name, &database_home.price, &database_home.quantity);
 
     printf("Laptop essentials:\n%s, qty:%d, price:%2f\n", 
@@ -51,7 +65,7 @@ int main(void)
     database_room[2].quantity = 44;
 
     for(int index = 0; index < 3; index++) {
-        printf("database_room[%d], name:%s & a:%u, quantity:%d & a:%u, price:%f & a:%u\n",
+        printf("database_room[%d], name:%s & a:%p, quantity:%d & a:%p, price:%f & a:%p\n",
                 index, database_room[index].name, &database_room[index].name,
                 database_room[index].quantity, &database_room[index].quantity,
                 database_room[index].price, &database_room[index].price);
