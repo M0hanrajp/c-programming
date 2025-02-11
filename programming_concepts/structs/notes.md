@@ -77,4 +77,60 @@ struct <struct-name> <var-name> = {// fields populated};
    - The compiler reserves enough space to store `database_home` in memory.
 
 #### **How Much Memory is Allocated?**  
+- The concept of **structure padding**
+    - A processor will have processing word length as that of data bus size. On a 32-bit machine, the processing word size will be 4 bytes.
+    - If the memory is arranged as a single bank of one-byte width, the processor needs to issue 4 memory read cycles to fetch an integer.
+        - Meaning int is of 4 byte and to read the whole integer you would need 4 cycles from the processor.
+        - So in 32 bit architecture, 1 byte is 8 bit long, 32/8 - 4 bytes (word processing length)
+        - A processor will have processing word length as that of data bus size. On a 32-bit machine, the processing word size will be 4 bytes.
+        - Overall 32 bit processor will be able to read the integer in one cycle.
+        - the natural alignment of int on a 32-bit machine is 4 bytes. When a data type is naturally aligned, the CPU fetches it in minimum read cycles.
+    - The allignment/Padding will be decided by the largest data type present in the structure.
+        - I.e. if int is the largest element then structure will be 4 byte alligned.
+        - if double in the largest element then structure will be 8 byte alligned.
+            - Note that a double variable will be allocated on an 8-byte boundary on a 32-bit machine and requires two memory read cycles.
+            - i.e. since data is porcessed in 4 byte (1 cycle), double is 8 bytes and will require 2 cycles to be read.
+            - On a 64-bit machine, based on a number of banks, a double variable will be allocated on the 8-byte boundary and requires only one memory read cycle.
+    - the sizeof structure also depends on the order of the elements written inside of the structure.
+    - For example below struct C will be of size 24 bytes and struct D will be of size 16 bytes.
+    ```c
+        // structure C
+    typedef struct structc_tag {
+        char c;
+        double d;
+        int s;
+    } structc_t;
 
+    // structure D
+    typedef struct structd_tag {
+        double d;
+        int s;
+        char c;
+    } structd_t;
+    ```
+    - Note Even though `char name[10]` is large, it consists of chars, which only require 1-byte alignment.
+- Each member within the structure is aligned **according to its own type's alignment requirements**, while the **overall structure size** is aligned to the **largest member’s alignment requirement**.
+#### **Alignment of Individual Members**
+Each type has its own alignment requirement:
+- `char` → **1-byte alignment** (can be placed anywhere)
+- `int` → **4-byte alignment** (must be placed at a multiple of `4` address)
+- `double` → **8-byte alignment** (must be placed at a multiple of `8` address)
+
+So, **each member is placed at an offset that satisfies its own alignment requirement**.
+
+#### **1. What is Alignment?**
+**Alignment** means that a data type must be stored at a memory address that is a **multiple of its alignment requirement**. The CPU accesses memory efficiently when data is aligned properly.
+- **4-byte alignment**: The variable must start at an address that is a multiple of 4 (e.g., **0, 4, 8, 12, 16, ...**).
+- **8-byte alignment**: The variable must start at an address that is a multiple of 8 (e.g., **0, 8, 16, 24, 32, ...**).
+- Refer below table for more clarity
+---
+#### **2. Alignment Requirements for Common Data Types**
+| Data Type | Size (bytes) | Alignment Requirement |
+|-----------|------------|----------------------|
+| `char`    | 1         | 1-byte (can be anywhere) |
+| `short`   | 2         | 2-byte (must start at a multiple of 2) |
+| `int`     | 4         | 4-byte (must start at a multiple of 4) |
+| `float`   | 4         | 4-byte (must start at a multiple of 4) |
+| `double`  | 8         | 8-byte (must start at a multiple of 8) |
+| `long`    | 8         | 8-byte (must start at a multiple of 8) |
+| `pointer` | 8 (on 64-bit) | 8-byte (must start at a multiple of 8) |
