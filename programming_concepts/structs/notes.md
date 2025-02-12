@@ -8,7 +8,8 @@
 struct <struct-name> {
     element 0; // may be char
     element 1; // may be float or int
-};
+} <variable-name>; // method 1 
+struct <struct-name> <variable-name> // method 2
 ```
 - Below is one type of declaration of structures, more declaration types & info in basics_declaration.c
 ```c
@@ -28,7 +29,7 @@ struct <struct-name> {
         // struct elements
     } database_record = {"Lenovo", 4545.44, 2}; // variable is declared during struct declaration.
 ```
-- Struct elements can be initialized separately as below:
+- If elements are not initialized during declaration then they can be assigned separately as below:
 ```c
     strcpy(database_home.name, "Lenovo");
     database_home.quantity = 2;
@@ -61,10 +62,16 @@ struct <struct-name> {
     // declaration
     float <field-item>;
 }
-
 struct <struct-name> <var-name> = {// fields populated};
 ```
 - We can acess using the `.` operator, by using syntax `<var-name>.<field-item>`
+- `struct <struct-name> <var-name> = {0};` this will set all fields to 0 inside the struct.
+- so what is <var-name> what can it be called ? for example `struct books harry_potter` what is `harry_potter` here ?
+    - answer is in Learnings.md[2] and basics_memory_part_2.c
+    - harry_potter is an instance/object/variable of type struct books.
+    - You can't print it directly because it's a collection of fields, not a primitive type.
+    - Field access relies on memory offsets from the base address.
+    - Passing a struct to a function copies its value, unless passed by pointer.(Needs verification)
 
 ### Structure memory organization
 
@@ -110,6 +117,7 @@ struct <struct-name> <var-name> = {// fields populated};
     ```
     - Note Even though `char name[10]` is large, it consists of chars, which only require 1-byte alignment.
 - Each member within the structure is aligned **according to its own type's alignment requirements**, while the **overall structure size** is aligned to the **largest member’s alignment requirement**.
+
 #### **Alignment of Individual Members**
 Each type has its own alignment requirement:
 - `char` → **1-byte alignment** (can be placed anywhere)
@@ -117,6 +125,16 @@ Each type has its own alignment requirement:
 - `double` → **8-byte alignment** (must be placed at a multiple of `8` address)
 
 So, **each member is placed at an offset that satisfies its own alignment requirement**.
+
+Below is an example of struct,
+```c
+2	  struct books {
+3	    char name[4];
+4	    int pages;
+5	    double price;
+6	  } harry_potter = {"GOF", 1114, 80.80};
+```
+![Image](https://github.com/user-attachments/assets/831bf6d4-55df-4539-90f6-ce763ec13201)
 
 #### **1. What is Alignment?**
 **Alignment** means that a data type must be stored at a memory address that is a **multiple of its alignment requirement**. The CPU accesses memory efficiently when data is aligned properly.
@@ -134,3 +152,14 @@ So, **each member is placed at an offset that satisfies its own alignment requir
 | `double`  | 8         | 8-byte (must start at a multiple of 8) |
 | `long`    | 8         | 8-byte (must start at a multiple of 8) |
 | `pointer` | 8 (on 64-bit) | 8-byte (must start at a multiple of 8) |
+
+```bash
+#TODO: 
+- learn the next struct arrays and etc..
+- struct pointer variable how to use it to get the value of member ?
+- learn structure passing to function by value & reference, return a struct from function.
+    - do this for netsted structures, arrays.
+- Passing a struct to a function copies its value, unless passed by pointer.(Needs verification)
+- how will struct allignment differ in 32 bit and 64 bit architecture
+- struct arrays and nested structure update memory layout at the end of lesson
+```
