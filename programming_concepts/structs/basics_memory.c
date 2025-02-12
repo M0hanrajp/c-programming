@@ -1,6 +1,8 @@
 #include <stdio.h>
 
-// program to understand structure memory and padding
+// This is the part 1 of struct memory basics which discusses on memory layout and padding.
+// For learning how address is calculated and what struct decays to please check part 2.
+// program to understand structure memory layout and padding
 
 // char         1 byte
 // short int    2 bytes
@@ -41,7 +43,6 @@ int main()
         int s; // 4 bytes
         char c; // 1 byte
     } structe_t;
-
 
     /* Important
      *
