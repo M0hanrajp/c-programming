@@ -11,6 +11,14 @@ struct laptop_essentials {
 };
 
 struct laptop_essentials database_essentials_office = {"keyboard", 2, 2324};
+/* 
+ * While printing out the memory layout
+ * since database_essentials_office is declared globally
+ * GDB prints out the offset value <database_essentials_office+16>: 
+(gdb) x/24bx &database_essentials_office
+0x555555558010 <database_essentials_office>:    0x6b    0x65    0x79    0x62    0x6f    0x61    0x72    0x64
+0x555555558018 <database_essentials_office+8>:  0x00    0x00    0x00    0x00    0x00    0x00    0x00    0x00
+0x555555558020 <database_essentials_office+16>: 0x02    0x00    0x00    0x00    0x00    0x40    0x11    0x45 */
 
 int main(void)
 {
@@ -57,18 +65,5 @@ int main(void)
 
     printf("Laptop essentials:\n%s, qty:%d, price:%2f\n", 
             database_essentials_office.name, database_essentials_office.quantity, database_essentials_office.price);
-    
-    // Array of structure (collection of dissimilar data types
-    struct laptop_essentials database_room[3];
-    strcpy(database_room[0].name, "mouse");
-    database_room[1].price = 45;
-    database_room[2].quantity = 44;
-
-    for(int index = 0; index < 3; index++) {
-        printf("database_room[%d], name:%s & a:%p, quantity:%d & a:%p, price:%f & a:%p\n",
-                index, database_room[index].name, &database_room[index].name,
-                database_room[index].quantity, &database_room[index].quantity,
-                database_room[index].price, &database_room[index].price);
-    }
     return 0;
 }
