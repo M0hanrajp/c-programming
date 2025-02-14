@@ -22,6 +22,7 @@ struct <struct-name> <variable-name> // method 2
         int quantity;
     }; // close struct laptop declaration with ;
     struct laptop database_home; // database_home is declared as a variable of type struct laptop
+    // database_home might be refered to as structure variable/instance/object
 ```
 - Assignment of values is only allowed during declaration.
 ```c
@@ -145,7 +146,7 @@ Below is an example of struct,
 ```
 ![Image](https://github.com/user-attachments/assets/831bf6d4-55df-4539-90f6-ce763ec13201)
 
-#### **1. What is Alignment?**
+#### **What is Alignment?**
 **Alignment** means that a data type must be stored at a memory address that is a **multiple of its alignment requirement**. The CPU accesses memory efficiently when data is aligned properly.
 - **4-byte alignment**: The variable must start at an address that is a multiple of 4 (e.g., **0, 4, 8, 12, 16, ...**).
 - **8-byte alignment**: The variable must start at an address that is a multiple of 8 (e.g., **0, 8, 16, 24, 32, ...**).
@@ -190,12 +191,11 @@ typedef struct <struct-name> {
 <variable-name>[0].field
 <variable-name>[n].field
 ```
-Important note regarding accessing struct filds,
-- alias[1].field-name is same as `(*(alias + 1)).field-name` & `(alias + 1).field-name` give value of the element.
+Important note regarding accessing struct filds, note that [a] applies in GDB only.
+- [a] alias[1].field-name is same as `(*(alias + 1)).field-name` & `(alias + 1).field-name` give value of the element.
 - The `.` operator automatically accesses the struct fields, even if data + i is a pointer.
-Here are **detailed bullet-point notes** covering everything you've learned so far:  
 
-#### ** Struct and Pointer Arithmetic**  
+#### **Struct and Pointer Arithmetic**  
 - **Array notation (`data[i]`) and pointer arithmetic (`*(data + i)`) are equivalent** for accessing elements.  
 - The **dot (`.`) operator automatically dereferences** pointers when accessing struct fields.  
 - **Pointer arithmetic in struct arrays:**
@@ -203,14 +203,14 @@ Here are **detailed bullet-point notes** covering everything you've learned so f
   - `&data[i]` gives the **address of struct i**.
   - `&(data[i].field)` gives the **address of the specific field** within struct `i`.  
 
-#### ** Memory Offsets & Address Calculations**  
+#### **Memory Offsets & Address Calculations**  
 - The **base address of an array of structs** is the address of `data[0]`.  
 - **Field address calculation in struct arrays:**  
   - `Address of field = Base Address + (Index * sizeof(struct)) + Offset of Field`  
   - Example: `data[1].screws` → `Base Address + 1 * sizeof(struct) + Offset of screws`  
 - **Using GDB (`x/24bx &variable`)** helps visualize how struct fields are stored in memory.  
 
-#### ** Pointer & Struct Relationship**  
+#### **Pointer & Struct Relationship**  
 - A **struct variable itself is not a pointer**, but we can create pointers to structs.  
 - **Using `&data[0]` gives a pointer to the first struct instance** in an array.  
 - `data[i]` is equivalent to `*(data + i)`, meaning `data` can be used as a pointer to the first element.  
@@ -227,6 +227,8 @@ Here are **detailed bullet-point notes** covering everything you've learned so f
 | `(*(input_data + subscript)).screws` | Pointer to struct array | `input_data[subscript].screws` |
 | `(input_data + subscript)->screws` | Pointer to struct array | `(*(input_data + subscript)).screws` |
 | `*(int *)((char *)input_data + subscript * sizeof(tools_db) + offsetof(tools_db, screws))` | Memory manipulation | Manual field access |
+
+>Note: Learn how array of fields can be created and accessed in struct, in file struct_field_element_array.c
 
 #### **Key Takeaways**
 ✅ **Use `.` when working with struct variables.**  
@@ -281,6 +283,7 @@ void printLaptopPtr(struct Laptop *l) {
 - learn the next struct field arrays and etc.., nested structs.
     - memory layout, addressing, dereferencing etc..
 - return a struct from function. (at last when all types are done)
+- pointer to a struct and struct pointers
 - Passing a struct to a function copies its value, unless passed by pointer.(Needs verification)
 - how will struct allignment differ in 32 bit and 64 bit architecture
 - struct arrays and nested structure update memory layout at the end of lesson
