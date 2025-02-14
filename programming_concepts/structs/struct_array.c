@@ -31,10 +31,10 @@ int main(void) {
     data[1].screws = 1;data[1].knife = 2;data[1].saw = 3;
     data[2].screws = 1;data[2].knife = 2;data[2].saw = 3;
 
-/*  (gdb) whatis tools_db >> this is just an alias
+/*  (gdb) whatis tools_db >> this is just an alias for reference in the entire program
     type = struct tools
     (gdb) whatis data
-    type = tools_db [3] >> data is the array of struct of size 3
+    type = tools_db [3] >> data is the array of struct of size 3 of type struct tools
     (gdb) p data
     $2 = {{screws = 1, knife = 2, saw = 3}, {screws = 1, kinfe = 2, saw = 3}, {screws = 1, kinfe = 2, saw = 3}}
     (gdb) p sizeof(tools_db) >> size of the structure is 12 bytes since tools_db is of type struct tools
@@ -69,15 +69,18 @@ int main(void) {
     $13 = {screws = 1, kinfe = 2, saw = 3}
     (gdb) p &data[0]
     $14 = (tools_db *) 0x7fffffffdf70 // memory address 0x7fffffffdf70 is being interpreted as a pointer
-                                      // to a tools_db struct, since it's the base address. & data acts
+                                      // to a tools_db struct, since it's the base address. &data acts
                                       // as a pointer to a first element
 
-    (gdb) p (data + 1).screws // here dot operator implicitly dereferences so we get one.
+    // Beware the below arithmetic only works in gdb not in .c files.
+    (gdb) p (data + 1).screws // here dot operator implicitly dereferences so we get 1. (only in gdb)
                               // Means it as same as (*(data + 1)).screws
                               // (data + i).field is equivalent to (*(data + i)).field, since . has higher precedence than *.
                               // The . operator automatically accesses the struct fields, even if data + i is a pointer.
-                              // This was possible only through gdb as it's more flexible
+                              // ****IMP >>> This was possible only through gdb as it's more flexible
                               // Need to use -> operator if we are accessing fields from struct pointers.
+                              // Remember for struct instance we use "." operator.
+                              // If we need to access field using a pointer to a struct we need "->" operator.
     $39 = 1
     (gdb) p data[1].screws // simple way of accessing struct field, the type would be int.
     $40 = 1
@@ -89,18 +92,36 @@ int main(void) {
     How Calculations can be done ?
     ==============================
     data[1].screws gives out value = 1.
-    basically base address + offset address = address of struct field
+    Previously as we know in order to get the value of a struct field we used the formula
+    base address + offset address = address of struct field
 
     so in terms of array of structs,
     ===================================================================================
-    >> data[1].screws: Address = Base Address + 1 * sizeof(tools_db) + Offset of screws
+    >> data[1].screws: Address = Base Address + n * sizeof(tools_db) + Offset of screws
+    >> where n is 0 based index of the array
     ===================================================================================
-    > 0x7fffffffdf70 (Base address) + 1 * 12(sizeof(tools_db)) + 0 = 1 (screws)
-    > 0x7fffffffdf70 (Base address) + 1 * 12(sizeof(tools_db)) + 4 = 2 (knife)
-    > 0x7fffffffdf70 (Base address) + 1 * 12(sizeof(tools_db)) + 8 = 2 (saw)
+
+    For accessing struct fields at 0th index:
+
+    > 0x7fffffffdf70 (Base address) + 0 * 12 (sizeof(tools_db)) + 0 = 1 (screws)
+    > 0x7fffffffdf70 (Base address) + 0 * 12 (sizeof(tools_db)) + 4 = 2 (knife)
+    > 0x7fffffffdf70 (Base address) + 0 * 12 (sizeof(tools_db)) + 8 = 2 (saw)
+
+    For accessing struct fields at 1st index:
+
+    > 0x7fffffffdf70 (Base address) + 1 * 12 (sizeof(tools_db)) + 0 = 1 (screws)
+    > 0x7fffffffdf70 (Base address) + 1 * 12 (sizeof(tools_db)) + 4 = 2 (knife)
+    > 0x7fffffffdf70 (Base address) + 1 * 12 (sizeof(tools_db)) + 8 = 2 (saw)
+
+    For accessing struct fields at 2nd index:
+
+    > 0x7fffffffdf70 (Base address) + 2 * 12 (sizeof(tools_db)) + 0 = 1 (screws)
+    > 0x7fffffffdf70 (Base address) + 2 * 12 (sizeof(tools_db)) + 4 = 2 (knife)
+    > 0x7fffffffdf70 (Base address) + 2 * 12 (sizeof(tools_db)) + 8 = 2 (saw)
 */
-    // Passing data to a function
+    // Passing data to a function, pass by reference style
     display_struct_array(data, 3);
+
 /*  - while passing array of struct which is of type <alias-name> var-name[sizeofarray]
         - the function argument must accept the base address of the struct instance.
         - Hence the function argument might be written as (<alias-name> *<var-name>), a pointer that 
@@ -108,6 +129,7 @@ int main(void) {
     - Since data is already of type tools_db [3] here, it decays as a pointer to it's first element.
     - Hence `data` can be sent without using & operator.
     - Because if we send &data here it will be a pointer to whole array i.e. tools_db (*)[3] 
+    - the function variable that get's the base address will be a pointer to struct type.
 
     For information on how the elements are accessed please refer the comments w.r.t to
     function name  display_struct_array(data, 3); below
@@ -136,11 +158,11 @@ void display_struct_array(tools_db *input_data, int data_size) {
         printf("Screws: %d, Knife: %d, saw: %d\n", 
                 (*(input_data + subscript)).screws, (input_data + subscript)->knife, input_data[subscript].saw);
     }
-/*     - above are the ways in which we can access fields from struct pointer.
-       - why struct pointer term here ?
-       - When you pass a pointer to a struct (tools_db *input_data), the variable inside 
+/*     - above are the ways in which we can access fields from pointer to a struct.
+       - why pointer to a struct term here ?
+       - When you pass a pointer to a struct which has function argument (tools_db *input_data), the variable inside 
          the function acts as a pointer, so you must use -> to access its fields.
-       - Due to this variable it does not act like instance of the struct instead acts as 
+       - Due to this variable does not act like instance of the struct instead acts as 
          a pointer to a struct hence we need -> to dereference the pointer to point to the field.
        - this is known as passing by reference.
 
