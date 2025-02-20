@@ -66,6 +66,8 @@ Declaring a struct inside `main()` vs. globally has several implications in term
 | **Global Struct Instance**  | **Data Segment (BSS/Initialized Data Section)**  | **Program Lifetime**  | Accessible **anywhere** in the file (or across files using `extern`) |
 | **Local Struct Instance**  | **Stack**  | **Only while the function is executing**  | Accessible **only inside the function** |
 
+- The Global declared & local declared struct both structs were initialised to 0 by default.
+
 #### Accessing structure elements
 ```c
 struct <struct-name> {
@@ -85,15 +87,15 @@ struct <struct-name> <var-name> = {// fields populated};
 
 ### Structure memory organization
 
-1. **Structure Definition (`struct laptop { ... };`)**  
-   - **No memory is allocated here**.  
+1. **Structure Definition (`struct laptop { ... };`)**
+   - **No memory is allocated here**.
    - It **only defines** a new data type (`struct laptop`) or the format of the struct is defined.
 
 2. **Variable Declaration (`struct laptop database_home;`)**  
-   - **Memory is allocated here**.  
+   - **Memory is allocated here**.
    - The compiler reserves enough space to store `database_home` in memory.
 
-#### **How Much Memory is Allocated?**  
+#### **How Much Memory is Allocated?**
 - The concept of **structure padding**
     - A processor will have processing word length as that of data bus size. On a 32-bit machine, the processing word size will be 4 bytes.
     - If the memory is arranged as a single bank of one-byte width, the processor needs to issue 4 memory read cycles to fetch an integer.
@@ -265,6 +267,12 @@ int main() {
 
 #### **Passing by Pointer (struct pointer)**
 ```c
+int main() {
+    struct Laptop myLaptop = {"Dell", 500};
+    printLaptop(&myLaptop); // Passes address of myLaptop
+    return 0;
+}
+
 void printLaptopPtr(struct Laptop *l) {
     // l is a pointer to the original struct
     printf("Laptop: %s, Price: %d\n", l->name, l->price);
@@ -278,13 +286,62 @@ void printLaptopPtr(struct Laptop *l) {
 | **Pass by Value** (`printLaptop(l)`) | A **copy** of the struct is passed. Access fields with `.` |
 | **Pass by Pointer** (`printLaptopPtr(&l)`) | A **pointer** to the original struct is passed. Access fields with `->` |
 
+Note you can also pass individual elements of the struct by having function arguments of their respective type.
+
+#### Nested structs
+more information in struct_nesting.c (below are the short notes)
+```c
+struct kitchen {
+    int items;
+    char name[20];
+    char compartment_name[10];
+};
+
+struct home {
+    int rooms;
+    struct kitchen records;// struct inside another struct
+};
+```
+Observe the memory layout [Link to above generated layout](https://pythontutor.com/render.html#code=struct%20kitchen%20%7B%0A%20%20%20%20int%20items%3B%0A%20%20%20%20char%20name%5B20%5D%3B%0A%20%20%20%20char%20compartment_name%5B10%5D%3B%0A%7D%3B%0A%0Astruct%20home%20%7B%0A%20%20%20%20int%20rooms%3B%0A%20%20%20%20struct%20kitchen%20records%3B//%20struct%20inside%20another%20struct%0A%7D%3B%0Aint%20main%28void%29%0A%7B%0A%20%20%20%20struct%20home%20database%3B%0A%20%20%20%20//%20following%20way%20we%20can%20assign%20the%20varaibles%0A%20%20%20%20database.rooms%20%3D%201%3B%0A%20%20%20%20//%20%22.%22%20operator%20used%202%20times%20for%20refering%20nested%20struct's%20fields%0A%20%20%20%20strcpy%28database.records.name,%20%22knife%22%29%3B%0A%20%20%20%20database.records.items%20%3D%204%3B%0A%20%20%20%20strcpy%28database.records.compartment_name,%20%22shelf%22%29%3B%0A%20%20return%200%3B%0A%7D&cppShowBinary=true&cppShowMemAddrs=true&cumulative=true&curInstr=5&heapPrimitives=true&mode=display&origin=opt-frontend.js&py=c_gcc9.3.0&rawInputLstJSON=%5B%5D&textReferences=false)
+![Image](https://github.com/user-attachments/assets/4f096073-bf8c-44ef-b51d-3d8c2b4495ea)
+
+✅ **Accessing Nested Struct Fields:**  
+   - **Format:** `outer_struct.inner_struct.field = value;`
+   - **Two dot operators (`.`)** → First for **nested struct**, second for **field inside nested struct**.  
+   - **Memory calculation formula:**  
+     ```
+     Address = Base Address of Outer Struct + Offset of Nested Struct + Offset of Field
+     ```
+✅ **Offset Calculation from Nested Struct Perspective:**  
+   - The **offset of a field inside a nested struct is relative to the nested struct itself**.  
+   - We first compute the **nested struct’s offset within the outer struct**.  
+   - Then, we compute the **field’s offset within the nested struct**.  
+
+#### **💡 Accessing `database.rooms`**
+```
+Address = Base Address (0x7fffffffdf80) + Offset of `rooms` (0)
+         = 0x7fffffffdf80
+Value   = 1
+```
+✅ **Correct Calculation:** `database.rooms = 1`
+
+#### **💡 Accessing `database.records.name`**
+```
+Address = Base Address (0x7fffffffdf80) + Offset of `records` (4) + Offset of `name` (4)
+         = 0x7fffffffdf80 + 4 + 4
+         = 0x7fffffffdf88
+Value   = "knife"
+```
+if there was a pointer to a struct that has a nested struct.
+```c
+    // pointer to a struct, and accessing nested struct elements
+    struct home *ptr = &database;
+    printf("House features:\nRooms:%d, item_name:%s, qty:%d, item_location:%s\n",
+            ptr->rooms, ptr->records.name, ptr->records.items, ptr->records.compartment_name);
+```
+
 ```bash
 #TODO: 
-- learn the next struct field arrays and etc.., nested structs.
-    - memory layout, addressing, dereferencing etc..
-- return a struct from function. (at last when all types are done)
-- pointer to a struct and struct pointers
-- Passing a struct to a function copies its value, unless passed by pointer.(Needs verification)
 - how will struct allignment differ in 32 bit and 64 bit architecture
-- struct arrays and nested structure update memory layout at the end of lesson
+- dynamic allocation of structs.
 ```
