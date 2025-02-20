@@ -134,20 +134,6 @@ int main(void) {
     For information on how the elements are accessed please refer the comments w.r.t to
     function name  display_struct_array(data, 3); below
 */
-
-    tools_db_array new_data;
-    new_data.screws[0] = 1;new_data.knife[0] = 2;new_data.saw[0] = 3;
-    new_data.screws[1] = 1;new_data.knife[1] = 2;new_data.saw[1] = 3;
-    display_struct_variable_array(&new_data, 2); // &new_data is sent as function argument because new_data is just an instance
-                                                 // It's not like array that it will decay to an address hence &new_data is sent
-                                                 // Remember new_data is an variable/instance of type struct tools_db_array
-
-
-    // Pointer to a struct
-    tools_db_array *some_data = &new_data;
-    some_data->screws[0] = 1;some_data->knife[0] = 2;some_data->saw[0] = 6;
-    some_data->screws[1] = 1;some_data->knife[1] = 2;some_data->saw[1] = 3;
-    display_struct_variable_array(some_data, 2);
     return 0;
 }
 
@@ -173,17 +159,4 @@ void display_struct_array(tools_db *input_data, int data_size) {
     - When calling the function, the struct instance is copied onto the stack.
     - Inside the function, the parameter is a local copy of the struct, which behaves like a normal variable.
     - You access its fields with . because it is a full struct, not a pointer. */
-}
-
-// display struct variable array
-void display_struct_variable_array(tools_db_array *input_data, int data_size) {
-    printf("struct_variable_array\n");
-    for(int subscript = 0; subscript < data_size; subscript++) {
-        printf("Screws: %d, Knife: %d, saw: %d\n",
-                input_data->screws[subscript], input_data->knife[subscript], input_data->saw[subscript]);
-    }
-    /* Below are the ways in which we can access the elements 
-     * *(input_data->screws + subscript), *(input_data->knife + subscript), *(input_data->saw + subscript));
-     * (*input_data).screws[subscript], (*input_data).knife[subscript], (*input_data).saw[subscript]);
-     */
 }

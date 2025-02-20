@@ -33,6 +33,8 @@ int main(void) {
     //database_home = {"Lenovo", 3334.45, 2};
 
     // The following initialization is allowed
+    // the below declaration will change only the value that is set and other values in struct
+    // remain same, unchanged
     strcpy(database_home.name, "Lenovo");
     database_home.quantity = 2;
     database_home.price = 2222.32;

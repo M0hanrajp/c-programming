@@ -70,7 +70,7 @@ int main(void) {
      * ================================
      *
      * Accessing field member "name" from struct books, which is of type char [4], a string, (array of char)
-     * 
+     *
      * (gdb) whatis harry_potter.name
      * type = char [4]
      * here name[4] is char array that can hold 3 chars plus one NULL char (A string).
@@ -78,7 +78,7 @@ int main(void) {
      * In order to print a string using %s operator the argument must be of type char * (pointer to a char)
      * Why because :: when base address of the array is passed, string is printed from base address till it 
      * encounters the null character. if it does not enconter the null char behavior is undefined.
-     * 
+     *
      * What is offset and who remembers it ?
      * > Offset refers to the difference (in bytes) between a struct field's memory location 
      * and the base address of the struct.

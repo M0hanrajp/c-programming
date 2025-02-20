@@ -56,18 +56,21 @@ int main(void) {
     // For accessing struct field screws 0 & 1
     >> 0x7fffffffdf80 (Base address) + 0 (offset of field) + (0 * sizeof(int)) = new_data.screws[0] = 1
     >> 0x7fffffffdf80 (Base address) + 0 (offset of field) + (1 * sizeof(int)) = new_data.screws[1] = 4
+    // Note that The offset of screws is 0 in the struct.
+    // But inside screws, screws[1] has an internal offset of 1 * sizeof(int).
+    // basically take offset of screws and other fields as their own respective offset from base address
 
     // For accessing struct field knife 0 & 1
     >> 0x7fffffffdf80 (Base address) + 8 (offset of field) + (0 * sizeof(int)) = new_data.knife[0] = 2
     >> 0x7fffffffdf80 (Base address) + 8 (offset of field) + (1 * sizeof(int)) = new_data.knife[1] = 5
 
     // For accessing struct field saw 0 & 1
-    >> 0x7fffffffdf80 (Base address) + 16 (offset of field) + (0 * sizeof(int)) = new_data.knife[0] = 3
-    >> 0x7fffffffdf80 (Base address) + 16 (offset of field) + (1 * sizeof(int)) = new_data.knife[1] = 6 
+    >> 0x7fffffffdf80 (Base address) + 16 (offset of field) + (0 * sizeof(int)) = new_data.saw[0] = 3
+    >> 0x7fffffffdf80 (Base address) + 16 (offset of field) + (1 * sizeof(int)) = new_data.saw[1] = 6 
 */
 
     display_struct_variable_array(&new_data, 2);
-    // &new_data is sent as function argument because new_data is just an instance
+    // &new_data is used because new_data is just an instance, the function argument expects a pointer to struct
     // It's not struct array that it will decay into a pointer to the first element of the struct.
     // Remember new_data is an variable/instance of type struct tools_db_array
     /* the function argument is a pointer to a struct
@@ -100,7 +103,7 @@ void display_struct_variable_array(tools_db_array *input_data, int data_size) {
      * Here we have not used "->" operator
      * input_data retrieves the actual struct that input_data is pointing to.
      * input_data behaves like a regular struct instance.
-     * input_data is now the struct instance, (*input_data).screws accesses the screws array inside the struct.
+     * (*input_data).screws accesses the screws array inside the struct.
      * ((*input_data).screws[subscript]) This retrieves the subscript-th element from the screws array.
      *
      * Most important 
