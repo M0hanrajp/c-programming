@@ -58,6 +58,11 @@ int main()
     /* Output
      * (gdb) p structA
      * $1 =   {c = 77 'M', s = -1}
+     *     // structure A
+        typedef struct structa_tag {
+            char c;
+            short int s;
+        } structa_t;
      * (gdb) x/4bx &structA
      * 0x7fffffffdf5c: 0x4d    0x00    0xff    0xff
      * Here short int is data type has largest size hence 2 byte allignment is prefered.
@@ -80,6 +85,12 @@ int main()
     /* Output
      * (gdb) p structB
      * $1 = {s = -1, c = 77 'M', i = -1}
+     *     // structure B
+        typedef struct structb_tag {
+            short int s;
+            char c;
+            int i;
+        } structb_t;
      * (gdb) x/8bx &structB
      * 0x7fffffffdf58: 0xff    0xff    0x4d    0x00    0xff    0xff    0xff    0xff
      * Int is the data type with largest size of 4 byte hence 4 byte allignemnt will be used
@@ -110,6 +121,12 @@ int main()
     /* Output
      * (gdb) p structC
      * $1 = {c = 77 'M', d = 45555.555549999997, s = -1}
+     *     // structure C
+        typedef struct structc_tag {
+            char c;
+            double d;
+            int s;
+        } structc_t;
      * (gdb) x/24bx &structC
      * 0x7fffffffdf40: 0x4d    0x00    0x00    0x00    0x00    0x00    0x00    0x00
      * 0x7fffffffdf48: 0x29    0xcb    0x10    0xc7    0x71    0x3e    0xe6    0x40
@@ -188,6 +205,12 @@ int main()
     /* Output
      * (gdb) p structD
      * $1 = {d = 45555.555549999997, s = -1, c = 77 'M'}
+     *     // structure D
+        typedef struct structd_tag {
+            double d;
+            int s;
+            char c;
+        } structd_t;
      * the order of the data types is 
      * double, int, char
      * largest data type is 8, size of struct will be multiple of 8.
@@ -232,6 +255,11 @@ int main()
     /* Output
      * p structE
      * $1 = {name = "RamRamRam", c = 65 'A'}
+     *     typedef struct structe_tag {
+            char name[10]; // 10 bytes
+            int s; // 4 bytes
+            char c; // 1 byte
+        } structe_t;
      * (gdb) x/20bx &check_mem
        0x7fffffffdf60: 0x52    0x61    0x6d    0x52    0x61    0x6d    0x52    0x61
        0x7fffffffdf68: 0x6d    0x00    0x00    0x00    0xff    0x00    0x00    0x00

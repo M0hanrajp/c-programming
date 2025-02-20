@@ -26,6 +26,7 @@ int main(void) {
     // Passing whole struct
     struct city database_two;
     database_two.database.price = 95000; // This should not be given priority
+    // pass by value
     struct_display(database_two);
     return 0;
 }
@@ -33,10 +34,10 @@ int main(void) {
 // Function definition - display structure elements individual
 void struct_display_elements(char *city, char *animal_name, int *total_animals, float price) {
     printf("Passing individual elements: The following data is the type of animal found in the city\n");
-    printf("City name:%s, Animal:%s, total animals:%d, price:%.2f\n", city, animal_name, *(total_animals + 0), price);
+    printf("City name:%s, Animal:%s, total animals:%d, price:%.2f\n", city, animal_name, *total_animals, price);
 }
 
-// Function definition - passing the whole struct
+// Function definition - passing the whole struct (pass by value)
 void struct_display(struct city function_database) {
     strcpy(function_database.name, "Mumbai");
     strcpy(function_database.database.name, "Dino");
