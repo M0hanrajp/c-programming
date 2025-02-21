@@ -97,6 +97,7 @@ struct <struct-name> <var-name> = {// fields populated};
 
 #### **How Much Memory is Allocated?**
 - The concept of **structure padding**
+    - for simple explanation follow basics_memory.c for all explanation
     - A processor will have processing word length as that of data bus size. On a 32-bit machine, the processing word size will be 4 bytes.
     - If the memory is arranged as a single bank of one-byte width, the processor needs to issue 4 memory read cycles to fetch an integer.
         - Meaning int is of 4 byte and to read the whole integer you would need 4 cycles from the processor.
@@ -111,7 +112,7 @@ struct <struct-name> <var-name> = {// fields populated};
             - i.e. since data is porcessed in 4 byte (1 cycle), double is 8 bytes and will require 2 cycles to be read.
             - On a 64-bit machine, based on a number of banks, a double variable will be allocated on the 8-byte boundary and requires only one memory read cycle.
     - the sizeof structure also depends on the order of the elements written inside of the structure.
-    - For example below struct C will be of size 24 bytes and struct D will be of size 16 bytes.
+    - For example below struct C will be of size 24 bytes and struct D will be of size 16 bytes on 64 bit architecture
     ```c
         // structure C
     typedef struct structc_tag {
@@ -127,25 +128,12 @@ struct <struct-name> <var-name> = {// fields populated};
         char c;
     } structd_t;
     ```
-    - Note Even though `char name[10]` is large, it consists of chars, which only require 1-byte alignment.
+    - Note: if `char name[10]` is declared, it consists of chars, which only require 1-byte alignment.
 - Each member within the structure is aligned **according to its own type's alignment requirements**, while the **overall structure size** is aligned to the **largest member’s alignment requirement**.
 
 #### **Alignment of Individual Members**
-Each type has its own alignment requirement:
-- `char` → **1-byte alignment** (can be placed anywhere)
-- `int` → **4-byte alignment** (must be placed at a multiple of `4` address)
-- `double` → **8-byte alignment** (must be placed at a multiple of `8` address)
+- Please follow [link](https://stackoverflow.com/questions/79445733/structure-padding-clarification-for-32-bit-and-64-bit-architecture) to underdstand alignment requirements of System V ABI specific docs.
 
-So, **each member is placed at an offset that satisfies its own alignment requirement**.
-
-Below is an example of struct,
-```c
-2	  struct books {
-3	    char name[4];
-4	    int pages;
-5	    double price;
-6	  } harry_potter = {"GOF", 1114, 80.80};
-```
 ![Image](https://github.com/user-attachments/assets/831bf6d4-55df-4539-90f6-ce763ec13201)
 
 #### **What is Alignment?**
@@ -153,17 +141,6 @@ Below is an example of struct,
 - **4-byte alignment**: The variable must start at an address that is a multiple of 4 (e.g., **0, 4, 8, 12, 16, ...**).
 - **8-byte alignment**: The variable must start at an address that is a multiple of 8 (e.g., **0, 8, 16, 24, 32, ...**).
 - Refer below table for more clarity
----
-#### **2. Alignment Requirements for Common Data Types**
-| Data Type | Size (bytes) | Alignment Requirement |
-|-----------|------------|----------------------|
-| `char`    | 1         | 1-byte (can be anywhere) |
-| `short`   | 2         | 2-byte (must start at a multiple of 2) |
-| `int`     | 4         | 4-byte (must start at a multiple of 4) |
-| `float`   | 4         | 4-byte (must start at a multiple of 4) |
-| `double`  | 8         | 8-byte (must start at a multiple of 8) |
-| `long`    | 8         | 8-byte (must start at a multiple of 8) |
-| `pointer` | 8 (on 64-bit) | 8-byte (must start at a multiple of 8) |
 
 ### **Understanding `typedef` in `struct` Declarations**
 In C, `typedef` is used to create an alias for a type, making the code more readable and reducing the need to repeatedly use `struct` when declaring variables.
@@ -342,6 +319,5 @@ if there was a pointer to a struct that has a nested struct.
 
 ```bash
 #TODO: 
-- how will struct allignment differ in 32 bit and 64 bit architecture
-- dynamic allocation of structs.
+- struct bitfields
 ```

@@ -3,7 +3,6 @@
 // This is the part 1 of struct memory basics which discusses on memory layout and padding.
 // For learning how address is calculated and what struct decays to please check part 2.
 // program to understand structure memory layout and padding
-
 // char         1 byte
 // short int    2 bytes
 // int          4 bytes
@@ -38,6 +37,7 @@ int main()
         char c;
     } structd_t;
 
+    // structure E
     typedef struct structe_tag {
         char name[10]; // 10 bytes
         int s; // 4 bytes
@@ -45,14 +45,25 @@ int main()
     } structe_t;
 
     /* Important
-     *
      * Each member within the structure is aligned according to its own type's alignment 
      * requirements, while the overall structure size is aligned to the largest member’s 
-     * alignment requirement. */
-
-    /* The overall structure size must be a multiple of the largest member’s alignment 
-     * (which is double, requiring 8-byte alignment). This ensures that if an array of 
-     * structc_t is created, every instance is properly aligned. */
+     * alignment requirement. 
+     *
+     * the requirements are specified in i386 and AMD64 requirements, for SYSV ABI specific doc
+     * It provides reason on why few data types are aligned to specific alignment.
+     * The most common reason is to maintain portability between operating systems.
+     *
+     *
+     * Simple rules for struct alignment
+     * Align the struct members based on their requirement specific (based on either 32 or 64 bit)
+     * it's very important to check based on i386 or AMD64 SYSV docs what is the alignment requirement for certain
+     * data types. based on that alignment is done
+     * the whole overall structure size is aligned to the largest member’s alignment requirement.
+     * it is done so that if a struct is declared as an array then the index'th member will be properly aligned.
+     *
+     * the main discussion on stack overflow 
+     * https://stackoverflow.com/questions/79445733/structure-padding-clarification-for-32-bit-and-64-bit-architecture
+     * */
 
     structa_t structA = {'M', 0xFFFF};
     /* Output
@@ -79,6 +90,7 @@ int main()
      *        $5 = 0x7fffffffdf5c "M"
      *        (gdb) p &structA.s
      *        $6 = (short *) 0x7fffffffdf5e
+     *  // Same alignment will be observed for 32 bit architecture
      */
 
     structb_t structB = {0xFFFF, 'M', 0xFFFFFFFF};
@@ -115,6 +127,8 @@ int main()
      * $4 = 0x7fffffffdf5a "M"
      * (gdb) p &structB.i
      * $5 = (int *) 0x7fffffffdf5c
+     *
+     *  // Same alignment will be observed for 32 bit architecture
      */
 
     structc_t structC = {'M', 45555.55555, 0xFFFFFFFF};
@@ -166,6 +180,9 @@ int main()
      *        0x7fffffffdf56   0x00 > NULL
      *        0x7fffffffdf57   0x00 > NULL  8 bytes
      *        -------------------------------------
+     *  The whole struct size should be a multiple of 8, 
+     *  hence the next struct will be at df`58` which is df`88` in decimal.
+     *
      * // offsets
      * (gdb) p &structC.c
      * $2 = 0x7fffffffdf40 "M"
@@ -199,6 +216,15 @@ int main()
      * $2 = (int *) 0x7fffffffdf54
      * (gdb) p &structC.d
      * $3 = (double *) 0x7fffffffdf58 
+     *
+     * // 32 bit alignment will be different
+     * // SYSV ABI AMD64 specifies double is 4 byte aligned
+     * 1000 - char
+     * 3 byte padding
+     * 1004 - double
+     * 100C - int
+     * Total of 16 bytes.
+     *
      */
 
     structd_t structD = {45555.55555, 0xFFFFFFFF, 'M'};
@@ -241,6 +267,8 @@ int main()
      *        0x7fffffffdf3e   0x00 > NULL
      *        0x7fffffffdf3f   0x00 > NULL         4 bytes --> now total size of struct is 16.
      *        --------------------------------------------
+     *        whole struct is aligned to double alignment ( 8 byte alignment)
+     *        last address 3f is 63 and next address 64 (multiple of 8)
      *
      * // offsets
      * (gdb) p &structD.d
@@ -249,6 +277,12 @@ int main()
      * $3 = (int *) 0x7fffffffdf38
      * (gdb) p &structD.c
      * $4 = 0x7fffffffdf3c "M"
+     *
+     *  // same layout for 32 bit architecture
+     *  (gdb) x/16bx &structD
+        0xffffd0c8:     0x29    0xcb    0x10    0xc7    0x71    0x3e    0xe6    0x40
+        0xffffd0d0:     0xff    0xff    0xff    0xff    0x4d    0x00    0x00    0x00
+     *
      */
 
     structe_t structE = {"RamRamRam", 255, 'A'};
@@ -301,6 +335,11 @@ int main()
      *        (gdb) p &check_mem.c
      *        $4 = 0x7fffffffdf70 "A"
      *        sizeof(structe_t) = 20 <--- stdout
+     *
+     *      // Same alignment for 32 bit architecture
+     *      0xffffd0e8:     0x52    0x61    0x6d    0x52    0x61    0x6d    0x52    0x61
+            0xffffd0f0:     0x6d    0x00    0xff    0xff    0xff    0x00    0x00    0x00
+            0xffffd0f8:     0x41    0xeb    0xfb    0xf7
      */
     printf("sizeof(structa_t) = %lu\n", sizeof(structA));
     printf("sizeof(structb_t) = %lu\n", sizeof(structB));
