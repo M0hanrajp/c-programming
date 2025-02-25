@@ -55,14 +55,16 @@ int main()
      *
      *
      * Simple rules for struct alignment
-     * Align the struct members based on their requirement specific (based on either 32 or 64 bit)
-     * it's very important to check based on i386 or AMD64 SYSV docs what is the alignment requirement for certain
-     * data types. based on that alignment is done
-     * the whole overall structure size is aligned to the largest member’s alignment requirement.
-     * it is done so that if a struct is declared as an array then the index'th member will be properly aligned.
+     * 1. Align the struct members based on their requirement specific (based on either 32 or 64 bit)
+     * 2. Based on i386 or AMD64 SYSV docs alignment requirement is specified for certain data types. 
+     *    Which is based on x86 or x86_64 architecture.
+     * 3. the whole overall structure size is aligned to the largest member’s alignment requirement.
+     *    it is done so that if a struct is declared as an array then the index'th member will be properly aligned.
      *
      * the main discussion on stack overflow 
      * https://stackoverflow.com/questions/79445733/structure-padding-clarification-for-32-bit-and-64-bit-architecture
+     * https://stackoverflow.com/questions/4306186/structure-padding-and-packing (for rules too)
+     * http://www.catb.org/esr/structure-packing/ 
      * */
 
     structa_t structA = {'M', 0xFFFF};
