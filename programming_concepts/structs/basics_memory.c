@@ -44,6 +44,14 @@ int main()
         char c; // 1 byte
     } structe_t;
 
+    // structure F
+    typedef struct structf_tag {
+        double *d;
+        int *s;
+        char *c;
+        short int *i;
+    } structf_t;
+
     /* Important
      * Each member within the structure is aligned according to its own type's alignment 
      * requirements, while the overall structure size is aligned to the largest member’s 
@@ -348,7 +356,11 @@ int main()
     printf("sizeof(structc_t) = %lu\n", sizeof(structC));
     printf("sizeof(structd_t) = %lu\n", sizeof(structD));
     printf("sizeof(structe_t) = %lu\n", sizeof(structE));
-
+    printf("sizeof(structf_t) = %lu\n", sizeof(structf_t));
+    /* for struct E
+     * when compiled with 64 bit flag, size of pointer is 8 bytes
+     * when compiled with 32 bit flag, size of pointer is 4 bytes
+     */
     return 0;
 }
 
