@@ -316,8 +316,11 @@ if there was a pointer to a struct that has a nested struct.
     printf("House features:\nRooms:%d, item_name:%s, qty:%d, item_location:%s\n",
             ptr->rooms, ptr->records.name, ptr->records.items, ptr->records.compartment_name);
 ```
+### struct Bitfields
 
-```bash
-#TODO: 
-- struct bitfields
-```
+More info in /struct_bitfields.c
+
+Data types allowed and disallowed in struct while using bitfields
+
+✅ **Allowed**: `int`, `unsigned int`, `_Bool`, `char`, `short`, `long`, `enum`  
+❌ **Disallowed**: `float`, `double`, pointers, arrays, structs, void  

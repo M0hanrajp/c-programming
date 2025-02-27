@@ -4,6 +4,7 @@
 /* some references
  * https://stackoverflow.com/questions/14179748/what-is-the-difference-between-pragma-pack-and-attribute-aligned
  * https://stackoverflow.com/questions/232785/use-of-pragma-in-c
+ * https://stackoverflow.com/questions/8568432/is-gccs-attribute-packed-pragma-pack-unsafe
  */
 
 int main(void) {
