@@ -319,8 +319,17 @@ if there was a pointer to a struct that has a nested struct.
 ### struct Bitfields
 
 More info in /struct_bitfields.c
-
 Data types allowed and disallowed in struct while using bitfields
 
-✅ **Allowed**: `int`, `unsigned int`, `_Bool`, `char`, `short`, `long`, `enum`  
+✅ **Allowed**: `int`, `unsigned int`, `_Bool`, `char`, `short`, `long`, `enum`
 ❌ **Disallowed**: `float`, `double`, pointers, arrays, structs, void  
+
+Some important links that were read to understand, but follow struct_bitfields.c for exact info
+```bash
+ * https://stackoverflow.com/questions/45403919/size-of-a-struct-with-bitfields-not-aligned-on-byte-boundary
+ * https://stackoverflow.com/questions/50041152/inaccurate-size-of-a-struct-with-bit-fields-in-my-book
+ * https://stackoverflow.com/questions/16692699/bit-field-padding-in-c
+ * https://stackoverflow.com/questions/16803397/can-endianness-refer-to-bits-order-in-a-byte
+ * https://stackoverflow.com/questions/47586786/big-endian-and-little-endian-little-confusion
+ * https://stackoverflow.com/questions/26842043/memory-layout-of-bitfield-in-c-cant-understand-the-output
+```
