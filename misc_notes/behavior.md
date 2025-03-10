@@ -62,3 +62,21 @@ Use the math.h library to use the round function.
 - `continue` skips code that is written after `continue;`.
 - be vary of using any statements written after it will be skipped.
 - if a flag is set to true after `continue;` it will not be set.
+
+### Error - assigning NULL to integer value
+
+Use case: To make sure int variable should not be assigned any value.
+![Image](https://github.com/user-attachments/assets/5acd9647-cbfe-4630-b9a4-e6fb031e8a0d)
+In C, **NULL** is a macro used to represent a null pointer, not an integer. Typically, it is defined as something like 
+`((void *)0)` (or simply `0` in some cases). When you try to assign **NULL** to an `int` variable, you're essentially 
+trying to assign a pointer value to an integer, which causes the type mismatch warning. 
+
+For example:
+```c
+int count_t = NULL; // Warning: initializing 'int' from 'void *'
+```
+Instead, if you want to initialize an integer to zero, you should use the integer literal `0`:
+```c
+int count_t = 0;
+```
+This avoids the type mismatch and clearly indicates that you’re setting an integer value rather than a pointer.
