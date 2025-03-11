@@ -55,6 +55,20 @@ Summary of all the directory functionalities: https://en.wikipedia.org/wiki/Unix
 Simplified structure of the Linux kernel: ext4 is implemented between the Linux kernel Virtual File System and the generic block layer.
 ![Image](https://github.com/user-attachments/assets/d5ea81f8-bc89-4f16-93f2-fac65eecb8cb)
 
+#### File access modes for fopen function
+
++--------+----------------+--------------------------------------+-------------------------------------+--------------------------------+
+| Mode   | Meaning        | Explanation                          | Action if file already exists       | Action if file does not exist  |
++--------+----------------+--------------------------------------+-------------------------------------+--------------------------------+
+| "r"    | read           | Open a file for reading              | Read from start                     | Failure to open                |
+| "w"    | write          | Create a file for writing            | Destroy contents                    | Create new                   |
+| "a"    | append         | Append to a file                     | Write to end                        | Create new                   |
+| "r+"   | read extended  | Open a file for read/write           | Read from start                     | Error                        |
+| "w+"   | write extended | Create a file for read/write         | Destroy contents                    | Create new                   |
+| "a+"   | append extended| Open a file for read/write           | Write to end                        | Create new                   |
++--------+----------------+--------------------------------------+-------------------------------------+--------------------------------+
+
+
 ### References
 - https://unix.stackexchange.com/questions/652047/how-does-the-os-access-files-stored-on-the-hard-disk
 - [Design and Implementation of the Second Extended Filesystem](https://e2fsprogs.sourceforge.net/ext2intro.html)
