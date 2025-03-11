@@ -80,3 +80,21 @@ Instead, if you want to initialize an integer to zero, you should use the intege
 int count_t = 0;
 ```
 This avoids the type mismatch and clearly indicates that you’re setting an integer value rather than a pointer.
+
+### Difference between signed char and unsigned char
+
+The primary difference is how the bit values are interpreted:
+
+- **Signed char:**  
+  Uses one bit (typically the most significant bit) to represent the sign, allowing values typically from -128 to 127 (on an 8-bit system). 
+  This means it can represent both negative and positive numbers.
+
+- **Unsigned char:**  
+  Does not have a sign bit, so all bits represent the value. This gives it a range of 0 to 255 (on an 8-bit system), allowing only non-negative values.
+
+- Both types occupy the same amount of memory, but their arithmetic and comparisons differ due to the interpretation of the highest bit. This is important when performing operations that might lead to overflow or when working with binary data where the interpretation of the sign could affect the result.
+- the original ASCII standard defines 128 characters (ranging from 0 to 127). 
+- However, the char data type in C and many other languages is typically 8 bits, which can represent 256 distinct values. 
+- When you use an unsigned char, it can hold values from 0 to 255, allowing it to represent extended character sets (like ISO-8859-1)
+- While standard 7-bit ASCII only defines characters for values 0–127, extended ASCII encodings (like ISO-8859-1) assign 
+  additional characters to values 128–255. For example, in ISO-8859-1, the unsigned char value 240 corresponds to the lowercase letter "ð" (eth), which is used in Icelandic.
