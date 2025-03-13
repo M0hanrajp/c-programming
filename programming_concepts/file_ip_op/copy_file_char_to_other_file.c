@@ -1,5 +1,7 @@
+// Program that copies a file into another file char by char & string
 #include <stdio.h>
 
+// copying a file char by char
 void copyFile(const char *source, const char *target) {
     FILE *fs = NULL, *ft = NULL;
     char  ch = 0;
@@ -22,9 +24,22 @@ void copyFile(const char *source, const char *target) {
     fclose(fs);
 }
 
+// copying a file using strings
+void copyFile_s(const char *source, const char *target) {
+    FILE *fs = fopen(source, "r");
+    FILE *ft = fopen(target, "w");
+    char sbuff[10];
+    while (fgets(sbuff, 10, fs) != NULL) {
+        fputs(sbuff, ft);
+    }
+    fclose(ft);
+    fclose(fs);
+}
+
 int main(void) {              /* second argument can have any filename, since fopen can create
                                  file if it does not exist. */
     copyFile("fdir/file-a.c", "fdir/new.txt");
+    copyFile_s("fdir/new.txt", "fdir/new-s.txt");
     printf("File copied, please check fdir/empty.txt has been updated or not!\n");
     return 0;
 }
