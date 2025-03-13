@@ -68,6 +68,9 @@ Simplified structure of the Linux kernel: ext4 is implemented between the Linux 
 | "a+"   | append extended| Open a file for read/write           | Write to end                        | Create new                   |
 +--------+----------------+--------------------------------------+-------------------------------------+--------------------------------+
 
+### Newline character counts
+- Based on linux, \n is linefeed and it will be counted as 1 character
+- Based on windows, \n is converted to \r\n, so there might be extra 1 character read.
 
 ### References
 - https://unix.stackexchange.com/questions/652047/how-does-the-os-access-files-stored-on-the-hard-disk
