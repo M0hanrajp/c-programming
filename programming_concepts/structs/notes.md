@@ -132,6 +132,14 @@ struct <struct-name> <var-name> = {// fields populated};
 - Each member within the structure is aligned **according to its own type's alignment requirements**, while the **overall structure size** is aligned to the **largest member’s alignment requirement**.
 
 #### **Alignment of Individual Members**
+```c
+// struct used in the fig
+    struct books {
+        char name[4];
+        int pages;
+        double price;
+    } harry_potter = {"GOF", 1900, 85.75};
+```
 - Please follow [link](https://stackoverflow.com/questions/79445733/structure-padding-clarification-for-32-bit-and-64-bit-architecture) to underdstand alignment requirements of System V ABI specific docs.
 
 ![Image](https://github.com/user-attachments/assets/831bf6d4-55df-4539-90f6-ce763ec13201)

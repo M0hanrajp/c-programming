@@ -33,6 +33,12 @@ int main(void) {
      *    0x7fffffffdf6f     0x40 <--- double price
      */
 
+    // Observe the line: 0x7fffffffdf60: 0x47    0x4f    0x46    0x00
+    //                                    'G'    'O'      'F'    '\0'
+    /* For single-byte types (such as a char), there’s no ordering issue because one 
+     * byte is the smallest addressable unit in memory—it’s stored exactly as it is, 
+     * without any reversal or reordering. */
+
     // Note: Is harry_potter a variable ? a instance or a pointer ? ans at Learnings.md [2]
     printf("What is the size of struct ? sizeof(harry_potter) :: %zu\n", sizeof(harry_potter));
     // note that the size of the struct is alligned to multiple of 8 (double data type occupying 8 bytes)

@@ -1,3 +1,4 @@
+// count the number of spaces, Tabs, newlines, characters
 #include <stdio.h>
 
 int main(void) {
