@@ -98,3 +98,9 @@ The primary difference is how the bit values are interpreted:
 - When you use an unsigned char, it can hold values from 0 to 255, allowing it to represent extended character sets (like ISO-8859-1)
 - While standard 7-bit ASCII only defines characters for values 0–127, extended ASCII encodings (like ISO-8859-1) assign 
   additional characters to values 128–255. For example, in ISO-8859-1, the unsigned char value 240 corresponds to the lowercase letter "ð" (eth), which is used in Icelandic.
+
+### `scanf` behavior on reading data from terminal
+
+- `scanf("%[^\n]s", args);` this format helps scanf read all the characters till it encounters a newline.
+- `scanf(" %s", args);` this format reads characters from standard input until it encounters a whitespace character (such as a space, tab, or newline). This means that if your input contains spaces, only the first word (up to the first space) will be stored.
+- the leading space tells scanf to ignore any whitespace characters (including newlines left in the input buffer) until it finds a non-whitespace character. Only then does it read that character.
