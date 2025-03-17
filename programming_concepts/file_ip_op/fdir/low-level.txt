@@ -1,0 +1,17 @@
+flowchart TD
+    A[Call g_bus_own_name()]
+    B[Attempt connection to bus (bus_type)]
+    C{Is connection successful?}
+    D[name_lost_handler (NULL connection)]
+    E[bus_acquired_handler invoked]
+    F{Is name acquired?}
+    G[name_lost_handler (after bus acquired)]
+    H[name_acquired_handler invoked]
+
+    A --> B
+    B --> C
+    C -- "No" --> D
+    C -- "Yes" --> E
+    E --> F
+    F -- "No" --> G
+    F -- "Yes" --> H
