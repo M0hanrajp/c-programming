@@ -56,18 +56,18 @@ Simplified structure of the Linux kernel: ext4 is implemented between the Linux 
 ![Image](https://github.com/user-attachments/assets/d5ea81f8-bc89-4f16-93f2-fac65eecb8cb)
 
 #### File access modes for fopen function
-
+```bash
 +--------+----------------+--------------------------------------+-------------------------------------+--------------------------------+
 | Mode   | Meaning        | Explanation                          | Action if file already exists       | Action if file does not exist  |
 +--------+----------------+--------------------------------------+-------------------------------------+--------------------------------+
 | "r"    | read           | Open a file for reading              | Read from start                     | Failure to open                |
-| "w"    | write          | Create a file for writing            | Destroy contents                    | Create new                   |
-| "a"    | append         | Append to a file                     | Write to end                        | Create new                   |
-| "r+"   | read extended  | Open a file for read/write           | Read from start                     | Error                        |
-| "w+"   | write extended | Create a file for read/write         | Destroy contents                    | Create new                   |
-| "a+"   | append extended| Open a file for read/write           | Write to end                        | Create new                   |
+| "w"    | write          | Create a file for writing            | Destroy contents                    | Create new                     |
+| "a"    | append         | Append to a file                     | Write to end                        | Create new                     |
+| "r+"   | read extended  | Open a file for read/write           | Read from start                     | Error                          |
+| "w+"   | write extended | Create a file for read/write         | Destroy contents                    | Create new                     |
+| "a+"   | append extended| Open a file for read/write           | Write to end                        | Create new                     |
 +--------+----------------+--------------------------------------+-------------------------------------+--------------------------------+
-
+```
 ### Newline character counts
 - Based on linux, \n is linefeed and it will be counted as 1 character
 - Based on windows, \n is converted to \r\n, so there might be extra 1 character read.
