@@ -2,7 +2,6 @@
 
 ## 1. Introduction
 - **Multi-programming and Multi-tasking Operating Systems** are two fundamental types of OS that improve CPU utilization and responsiveness.
-- **Students often get confused** between them, so understanding their key differences is crucial.
 - **Multi-programming** focuses on maximizing CPU utilization by keeping multiple processes in memory.
 - **Multi-tasking (Time-Sharing)** ensures that multiple tasks run concurrently by allocating time slices to each process.
 
