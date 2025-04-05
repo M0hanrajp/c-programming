@@ -73,6 +73,8 @@ mpunix      2020  2.0  0.5 340464 45240 ?        Ssl  19:43   1:25 /opt/nvim/usr
 mpunix      2496  0.0  0.0   7484  3244 pts/0    R+   20:53   0:00 ps aux
 ```
 ### Trace Process transitions
+https://man7.org/linux/man-pages/man1/strace.1.html
+
 - Use strace to monitor system calls and process execution:
     - `strace -f -e trace=all chrt -r 1 ./program`
 For real-time tracking:`watch -n 1 "ps -eo pid,ppid,stat,cmd"`
@@ -223,6 +225,8 @@ mprotect(0x7f325e6d5000, 98304, PROT_NONE) = 0
 ```
 ### Monitoring Process Scheduling
 
+https://man7.org/linux/man-pages/man1/chrt.1.html
+
 Check the current scheduling policy of a process:
 - SCHED_OTHER – Normal time-sharing (default)
 - SCHED_FIFO – First-in, first-out (non-preemptive)
@@ -275,6 +279,7 @@ sdc              3.10     78.61     0.94  23.32    0.56    25.34    2.21     27.
 ```
 ### Lifecycle
 
+https://github.com/ColinIanKing/forkstat?tab=readme-ov-file
 ```bash
 ^Cmpunix@LIN-5CG3350MRD:~/c-programming/operating_systems$ sudo forkstat -X
 Time     Event     PID     UID    EUID TTY     Info   Duration Process
