@@ -90,8 +90,8 @@ condition ? expression_if_true : expression_if_false
 - a function which is declared of type void (which does not return anything) is not allowed.
 - expression must evaluate to a value.
 
-### Using pointer variables in ternery operator condition
-Ternery operator synatx:
+### Using pointer variables in ternary operator condition
+Ternary operator syntax:
 ```bash
 // syntax
 condition ? expression_if_true : expression_if_false
