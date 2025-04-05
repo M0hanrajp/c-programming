@@ -19,6 +19,6 @@
 if(ptr)
 ```
 - if ptr is assigned to NULL, if condition fails.
-- if ptr is uninitialzied then behavior is undefiend (not sure if condition will be true / false).
+- if ptr is uninitialized then behavior is undefined (not sure if condition will be true / false).
 C spec: 23(draft) 6.7.9
 ![Image](https://github.com/user-attachments/assets/0dd29f56-8359-40da-90da-11ffd5afe5fe)
