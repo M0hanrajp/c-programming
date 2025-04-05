@@ -81,7 +81,7 @@ if (a + b > c && b + c > a && c + a > b) {
 }
 ```
 ### Using functions in ternery operator expression
-Ternery operator synatx:
+Ternary operator syntax:
 ```bash
 // syntax
 condition ? expression_if_true : expression_if_false
