@@ -62,7 +62,7 @@ eturn a + b > c ...
 ```
 It should be `return` instead of `eturn`.
 
-### Suggested Fixes:
+#### Suggested Fixes:
 Here’s a cleaner version with proper parentheses and indentation:
 ```c
 return (a + b > c) 
@@ -80,11 +80,28 @@ if (a + b > c && b + c > a && c + a > b) {
     return 0;
 }
 ```
+### Using functions in ternery operator expression
+Ternery operator synatx:
+```bash
+// syntax
+condition ? expression_if_true : expression_if_false
+```
+- a function (which is having a valid return type) is allowed using in ternery operator.
+- a function which is declared of type void (which does not return anything) is not allowed.
+- expression must evaluate to a value.
 
-### Summary of Issues:
-1. Missing `return` keyword.
-2. Lack of parentheses makes the logic ambiguous.
-3. Excessive nesting of the ternary operator makes it harder to understand.
-4. Possible logical error depending on your intent.
-
-By addressing these, your code will be syntactically correct and much more readable!
+### Using pointer variables in ternery operator condition
+Ternery operator synatx:
+```bash
+// syntax
+condition ? expression_if_true : expression_if_false
+   ^>> what if a pointer is used here.
+```
+- if a pointer is used at a condition
+    - a. is assigned to NULL, it is false.
+    - b. is assigned to valid address which itself is a nonzero number, which is why the condition evaluates to true.
+    - c. is not assigned NULL is just declared, then here ptr is initialized inside main,
+        - it's storage class is automatic storage class it's value is indeterminate.
+        - Hence the expression would lead to undefined behavior.
+C spec: 23(draft) 6.7.9
+![Image](https://github.com/user-attachments/assets/0dd29f56-8359-40da-90da-11ffd5afe5fe)
