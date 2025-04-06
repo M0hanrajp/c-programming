@@ -15,7 +15,7 @@ An overview of Linux architecture, highlighting the system call interface.
   - Has good overview of system calls vs library calls.
 ```bash
 A library function is simply one of the functions that constitute the standard C library.
-ome library functions are layered on top of system calls. For example, the fopen() library 
+Some library functions are layered on top of system calls. For example, the fopen() library 
 function uses the open system call to actually open a file.
 ```
   - provides difference between ABI(hardware dependent) and API(hardware independent).
