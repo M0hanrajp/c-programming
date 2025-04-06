@@ -6,7 +6,7 @@
 - This may include hardware-related services (for example, accessing a hard disk drive or accessing the device's camera), creation and execution of new processes, and communication with integral kernel services such as process scheduling. 
 - System calls provide an essential interface between a process and the operating system.
 
-An overview of linux architecture from linux, system call interface is defined
+An overview of Linux architecture, highlighting the system call interface.
 ![Image](https://github.com/user-attachments/assets/060d07b5-2c2c-4fd5-929c-b755eb911351)
 
 ### References.
