@@ -24,7 +24,7 @@ Linux system calls are accessible using an application binary interface (ABI).
 An ABI defines how a routine is accessed in machine code (hardware-dependent) 
 whereas an API defines a similar access in source code (hardware-independent).
 ```
-An overview of how system call works ?
+An overview of how system calls work.
 ![Image](https://github.com/user-attachments/assets/aa592a89-fd97-4099-9793-0754f76ae8f9)
 
 
