@@ -1,0 +1,18 @@
+ASCII TABLE
+DEC  = DECIMAL VALUE
+CHAR = CHARACTER
+
+'5' HAS THE INT VALUE 53
+IF WE WRITE '5'-'0' IT EVALUATES TO 53-48, OR THE INT 5
+IF WE WRITE CHAR C = 'B'+32; THEN C STORES 'B'
+
+
+DEC  CHAR                           DEC  CHAR     DEC  CHAR     DEC  CHAR
+---------                           ---------     ---------     ----------
+  0  NUL (NULL)                      32  SPACE     64  @         96  `
+  1  SOH (START OF HEADING)          33  !         65  A         97  A
+  2  STX (START OF TEXT)             34  "         66  B         98  B
+  3  ETX (END OF TEXT)               35  #         67  C         99  C
+  4  EOT (END OF TRANSMISSION)       36  $         68  D        100  D
+  5  ENQ (ENQUIRY)                   37  %         69  E        101  E
+  6  ACK (ACKNOWLEDGE)               38  &         70  F        102  F

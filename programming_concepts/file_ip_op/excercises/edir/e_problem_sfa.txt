@@ -1,0 +1,2 @@
+1. Identify the key components and types of autonomous robots.
+3. Describe the basic principles of embodied AI in robotics.

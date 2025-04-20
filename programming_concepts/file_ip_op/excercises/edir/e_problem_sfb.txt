@@ -1,0 +1,4 @@
+2. Recognize the main elements of robotic systems and architecture.
+4. List the primary sensors and perception techniques used in robotics.
+5. Outline the fundamental concepts of localization and mapping in autonomous navigation.
+6. Recall the basic principles of control systems in robotics.
