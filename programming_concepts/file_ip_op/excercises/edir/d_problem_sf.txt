@@ -1,0 +1,18 @@
+ASCII Table
+Dec  = Decimal Value
+Char = Character
+
+'5' has the int value 53
+if we write '5'-'0' it evaluates to 53-48, or the int 5
+if we write char c = 'B'+32; then c stores 'b'
+
+
+Dec  Char                           Dec  Char     Dec  Char     Dec  Char
+---------                           ---------     ---------     ----------
+  0  NUL (null)                      32  SPACE     64  @         96  `
+  1  SOH (start of heading)          33  !         65  A         97  a
+  2  STX (start of text)             34  "         66  B         98  b
+  3  ETX (end of text)               35  #         67  C         99  c
+  4  EOT (end of transmission)       36  $         68  D        100  d
+  5  ENQ (enquiry)                   37  %         69  E        101  e
+  6  ACK (acknowledge)               38  &         70  F        102  f
