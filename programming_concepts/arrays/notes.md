@@ -26,6 +26,10 @@ This approach works best for zero-initializing arrays of basic types (like `int`
   ```c
   int array[26];  // Global declaration, elements are all 0
 
+### Visual representation of int (*)[5]
+
+![Image](https://github.com/user-attachments/assets/4f960cc7-61b7-4aa7-b0a5-dce974dc6898)
+
 ---
 
 ### Questions 
@@ -127,3 +131,24 @@ In many use cases, zero-based indexing avoids redundant operations. For example:
   char *start = buffer;
   char *offset = start + i;  // Efficient with zero-based indexing
   ```
+
+**Q: Can we calculate sizeof array from a function argument that is of type `int *` ?**
+`MainFuncitonArray` is declared in main, 
+```bash
+// type is array of 5 int
+(gdb) whatis MainFuncitonArray
+type = int [5]
+// When you use the variable you get (4 * 5) = 20 bytes
+(gdb) p sizeof(MainFuncitonArray)
+$5 = 20
+```
+Same is not the case with `array_input` which is an argument
+- that is of type `int *`
+- it is used to get the array from the main function (pass by reference)
+```bash
+(gdb) whatis array_input
+type = int *
+// since it's pointer to an integer, we cannot get the sizeof array here
+(gdb) p sizeof(array_input)
+$6 = 8
+```

@@ -23,3 +23,15 @@ int main(void) {
     }
     return 0;
 }
+
+// output
+/*
+$ ./a.out
+Normal array:
+Element[0][0] = 1 Element[0][1] = 3 Element[0][2] = 5
+Element[1][0] = 2 Element[1][1] = 4 Element[1][2] = 6
+Transpose of array ::
+Element[0][0] = 1 Element[0][1] = 2
+Element[1][0] = 3 Element[1][1] = 4
+Element[2][0] = 5 Element[2][1] = 6
+*/

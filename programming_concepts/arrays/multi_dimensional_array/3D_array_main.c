@@ -10,7 +10,7 @@ void display(int three_dimension_array[BLOCK][ROW][COLUMN]);
 int main(void)
 {
     int matrix[BLOCK][ROW][COLUMN] = {0};
-    
+
     // Populating all the required data into the array
     for(int element_block = 0; element_block < BLOCK; element_block++)
     {
@@ -27,7 +27,7 @@ int main(void)
             }
         }
     }
-    
+
     // calling the function to display the program
     display(matrix);
     return 0;
@@ -48,3 +48,14 @@ void display(int three_dimension_array[BLOCK][ROW][COLUMN])
         printf("\n");
     }
 }
+// output
+/* 
+$ ./a.out
+Matrix[0][0][0] = 1 Matrix[0][0][1] = 1 Matrix[0][0][2] = 1 Matrix[0][0][3] = 1
+Matrix[0][1][0] = 2 Matrix[0][1][1] = 2 Matrix[0][1][2] = 2 Matrix[0][1][3] = 2
+Matrix[0][2][0] = 3 Matrix[0][2][1] = 3 Matrix[0][2][2] = 3 Matrix[0][2][3] = 3
+
+Matrix[1][0][0] = 1 Matrix[1][0][1] = 1 Matrix[1][0][2] = 1 Matrix[1][0][3] = 1
+Matrix[1][1][0] = 2 Matrix[1][1][1] = 2 Matrix[1][1][2] = 2 Matrix[1][1][3] = 2
+Matrix[1][2][0] = 3 Matrix[1][2][1] = 3 Matrix[1][2][2] = 3 Matrix[1][2][3] = 3
+*/
