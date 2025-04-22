@@ -4,92 +4,79 @@
 // Merges two subarrays of arr[]. 
 // First subarray is arr[l..m] 
 // Second subarray is arr[m+1..r] 
-void merge(int arr[], int l, int m, int r) 
+void merge(int arr[], int leftIndex, int midIndex, int rightIndex) 
 { 
 	int i, j, k; 
-	int n1 = m - l + 1; 
-	int n2 = r - m; 
+	int leftSize = midIndex - leftIndex + 1; 
+	int rightSize = rightIndex - midIndex; 
 
 	// Create temp arrays 
-	int L[n1], R[n2]; 
+	int leftArr[leftSize], rightArr[rightSize]; 
 
-	// Copy data to temp arrays 
-	// L[] and R[] 
-	for (i = 0; i < n1; i++) 
-		L[i] = arr[l + i]; 
-	for (j = 0; j < n2; j++) 
-		R[j] = arr[m + 1 + j]; 
+	// Copy data to temp arrays L[] and R[] 
+	for (i = 0; i < leftSize; i++) 
+		leftArr[i] = arr[leftIndex + i]; // from the left index start copying
+	for (j = 0; j < rightSize; j++) 
+		rightArr[j] = arr[midIndex + 1 + j]; // from the middle copy the next element hence m + 1
 
-	// Merge the temp arrays back 
-	// into arr[l..r] 
-	// Initial index of first subarray 
-	i = 0; 
-
-	// Initial index of second subarray 
-	j = 0; 
-
-	// Initial index of merged subarray 
-	k = l; 
-	while (i < n1 && j < n2) { 
-		if (L[i] <= R[j]) { 
-			arr[k] = L[i]; 
-			i++; 
-		} 
-		else { 
-			arr[k] = R[j]; 
-			j++; 
-		} 
-		k++; 
+	i = 0;
+	j = 0;
+	k = leftIndex;
+	while (i < leftSize && j < rightSize) {
+		if (leftArr[i] <= rightArr[j]) {
+			arr[k] = leftArr[i];
+			i++;
+		} else {
+			arr[k] = rightArr[j];
+			j++;
+		}
+		k++;
 	} 
 
-	// Copy the remaining elements 
-	// of L[], if there are any 
-	while (i < n1) { 
-		arr[k] = L[i]; 
-		i++; 
-		k++; 
-	} 
-	// Copy the remaining elements of 
-	// R[], if there are any 
-	while (j < n2) { 
-		arr[k] = R[j]; 
-		j++; 
-		k++; 
-	} 
-} 
+	// Copy the remaining elements
+	// of L[], if there are any
+	while (i < leftSize) {
+		arr[k] = leftArr[i];
+		i++;
+		k++;
+	}
+	// Copy the remaining elements of
+	// R[], if there are any
+	while (j < rightSize) {
+		arr[k] = rightArr[j];
+		j++;
+		k++;
+	}
+}
 
-// l is for left index and r is 
-// right index of the sub-array 
-// of arr to be sorted 
-void mergeSort(int arr[], int l, int r) 
+// left index and right index of the sub-array of arr to be sorted 
+void mergeSort(int arr[], int leftIndex, int rightIndex) 
 { 
-	if (l < r) { 
+	if (leftIndex < rightIndex) { 
 		// Same as (l+r)/2, but avoids 
 		// overflow for large l and r 
-		int m = l + (r - l) / 2; 
+		int midIndex = leftIndex + (rightIndex - leftIndex) / 2; 
 
-		// Sort first and second halves 
-		mergeSort(arr, l, m); 
-		mergeSort(arr, m + 1, r); 
+		mergeSort(arr, leftIndex, midIndex);// sort left 
+		mergeSort(arr, midIndex + 1, rightIndex); // sort right
 
-		merge(arr, l, m, r); 
+		merge(arr, leftIndex, midIndex, rightIndex); // merge arrays
 	} 
 } 
 
-// UTILITY FUNCTIONS 
 // Function to print an array 
 void printArray(int A[], int size) 
 { 
 	int i; 
 	for (i = 0; i < size; i++) 
-		printf("A[%2d] = %2d & address: %u\n", i, A[i], &A[i]); 
+		printf("A[%2d] = %2d & address: %p\n", i, A[i], &A[i]); 
 	printf("\n"); 
 } 
 
 // Driver code 
 int main() 
 { 
-	int arr[] = {38, 27, 43, 3, 9, 82, 10}; 
+	int arr[] = {4, 5, 5, 2, 1, 6, 7}; 
 	int arr_size = sizeof(arr) / sizeof(arr[0]); 
 	printf("Given array is \n"); 
 	printArray(arr, arr_size); 
