@@ -5,6 +5,13 @@
 - In computing, a system call (syscall) is the programmatic way in which a computer program requests a service from the operating system on which it is executed. 
 - This may include hardware-related services (for example, accessing a hard disk drive or accessing the device's camera), creation and execution of new processes, and communication with integral kernel services such as process scheduling. 
 - System calls provide an essential interface between a process and the operating system.
+```bash
+- File related - open, read, write, close, create file etc.
+- Device related - Read, Write, Reposition, ioctl, fcntl.
+- Information - getpid, attributes, get system time and data.
+- Process control - Load, execute, abort, fork, wait, signal, allocate etc.
+- Communcation (IPC) - pipe, create/delete connections, shmget (shared memory get)
+```
 
 An overview of Linux architecture, highlighting the system call interface.
 ![Image](https://github.com/user-attachments/assets/060d07b5-2c2c-4fd5-929c-b755eb911351)
