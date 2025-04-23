@@ -1,4 +1,8 @@
-### Operating systems
+## Operating systems
+
+### Overview of concepts in an image
+![Image](https://github.com/user-attachments/assets/dd425feb-52dd-40ff-9fbc-478961e97f6d)
+[source](https://en.wikipedia.org/wiki/User_space_and_kernel_space)
 
 #### **1. Basic Introduction**
 - **Definition of an Operating System**.
