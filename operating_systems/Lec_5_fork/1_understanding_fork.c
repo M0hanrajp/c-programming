@@ -6,12 +6,12 @@
 
 void childProcess(pid_t *pid) {
     pid_t cpid = getpid();
-    printf("I'm inside child process!!, pid:: %d & cpid:: %d\n", *pid, cpid);
+    printf("I'm inside child process!!, %d & cpid using getpid():: %d\n", *pid, cpid);
 }
 
 void parentProcess(pid_t *pid) {
     pid_t ppid = getpid();
-    printf("I'm inside parent process!!, pid:: %d & ppid:: %d\n", *pid, ppid);
+    printf("I'm inside parent process!!, fork returned:: %d & ppid using getpid():: %d\n", *pid, ppid);
 }
 
 int main(void) {
@@ -32,44 +32,17 @@ int main(void) {
 - fork returns 0 to child process.
 
 // output with ppid and cpid (refer the functions)
-$ gcc -g -Wall 1_understanding_fork.c
 $ ./a.out
-I'm inside parent process!!, pid:: 46528
-I'm inside child process!!, pid:: 46529
-...
-$ ./a.out
-I'm inside parent process!!, pid:: 46546
-I'm inside child process!!, pid:: 46547
-$ ./a.out
-I'm inside child process!!, pid:: 46549     << child process is printed first
-I'm inside parent process!!, pid:: 46548
-$ ./a.out
-I'm inside child process!!, pid:: 46551     << child process is printed first
-I'm inside parent process!!, pid:: 46550
-...
-$ ./a.out
-I'm inside parent process!!, pid:: 46552
-I'm inside child process!!, pid:: 46553
+I'm inside parent process!!, fork returned:: 56443 & ppid using getpid():: 56442
+I'm inside child process!!, 0 & cpid using getpid():: 56443
 
-// output with return value of fork()
 $ ./a.out
-I'm inside parent process!!, pid:: 46994
-I'm inside child process!!, pid:: 0
+I'm inside parent process!!, fork returned:: 56447 & ppid using getpid():: 56446
+I'm inside child process!!, 0 & cpid using getpid():: 56447
+
+// Here CPU decided to priortize child process execution first
 $ ./a.out
-I'm inside parent process!!, pid:: 46996
-I'm inside child process!!, pid:: 0
-$ ./a.out
-I'm inside parent process!!, pid:: 46998
-I'm inside child process!!, pid:: 0
-...
-$ ./a.out
-I'm inside parent process!!, pid:: 47008
-I'm inside child process!!, pid:: 0
-$ ./a.out
-I'm inside child process!!, pid:: 0
-I'm inside parent process!!, pid:: 47010
-$ ./a.out
-I'm inside parent process!!, pid:: 47012
-I'm inside child process!!, pid:: 0
+I'm inside child process!!, 0 & cpid using getpid():: 56483
+I'm inside parent process!!, fork returned:: 56483 & ppid using getpid():: 56482
 
 */

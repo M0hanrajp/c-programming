@@ -50,8 +50,42 @@ Other address spaces created by fork() calls will not be affected even though th
 
 (For better understanding check below, this is executed in [1]_understanding_fork.c)
 When the main program executes fork(), an identical copy of its address space, including the program and all data, is created. System call fork() returns the child process ID to the parent and returns 0 to the child process. The following figure shows that in both address spaces there is a variable pid. The one in the parent receives the child's process ID 3456 and the one in the child receives 0.
+
 ![Image](https://github.com/user-attachments/assets/e19dba1f-5f72-401d-a568-ab3266b3af52)
+
 Now both programs (i.e., the parent and child) will execute independent of each other starting at the next statement:
 In the parent, since pid is non-zero, it calls function ParentProcess(). On the other hand, the child has a zero pid and calls ChildProcess() as shown below:
+
 ![Image](https://github.com/user-attachments/assets/76eabdc7-4e9a-4ef4-a06f-78b0a48509c9)
+
 Due to the fact that the CPU scheduler will assign a time quantum to each process, the parent or the child process will run for some time before the control is switched to the other and the running process, if you want to see this then keep a loop and execute till some x time to see the switching.
+
+### Q: What are the cases in which child process becomes a zombie when fork() is called in parent process
+- Need to explore
+  - Zombie Process: A process which has finished the execution but still has entry in the process table to report to its parent process is known as a zombie process. 
+    - A child process always first becomes a zombie before being removed from the process table. The parent process reads the exit status of the child process which reaps off the child process entry from the process table.
+  - Orphan Process: A process whose parent process no more exists i.e. either finished or terminated without waiting for its child process to terminate is called an orphan process.
+- https://medium.com/@akshat.mistry/zombie-vs-orphan-process-21643ec75558
+
+### Q: What does identical address space mean when a child process is created by forking the parent process
+- from 2_understanding_indetical_address_space_between_child_parent.c
+- from https://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/fork/create.html
+>Modifications in a process does not affect it's forked process
+- Both processes start their execution right after the system call fork(). 
+- Since both processes have identical but separate address spaces, those variables initialized before the fork() 
+  call have the same values in both address spaces. 
+- Since every process has its own address space, any modifications will be independent of the others. 
+- In other words, if the parent changes the value of its variable, the modification will only affect the
+  variable in the parent process's address space. 
+- Other address spaces created by fork() calls will not be affected even though they have identical variable names.
+
+>Modifications in a process does not affect it's forked process (Need to understand why and how this happens)
+ * // consider reading below links to understand more on how the memory space is created/assigned by OS
+ * https://stackoverflow.com/questions/63831450/why-doesnt-address-change-in-forked-process?rq=3
+ * https://stackoverflow.com/questions/27486873/fork-system-call-and-memory-space-of-the-process?rq=3
+ * https://stackoverflow.com/questions/9724473/how-the-memory-is-mapped-when-fork-is-used?rq=3
+ * https://stackoverflow.com/questions/8353641/parent-and-child-address-space-confusion?rq=3
+ * // has diagram
+ * https://stackoverflow.com/questions/7253659/why-the-address-of-variable-of-child-process-and-parent-process-is-same?rq=3
+ * https://stackoverflow.com/questions/5365580/fork-same-memory-addresses?rq=3
+ * https://unix.stackexchange.com/questions/207918/what-does-it-mean-fork-will-copy-address-space-of-original-process
