@@ -98,9 +98,12 @@ Sure! Here are the notes based on the video content:
 **Additional Points:**
 - Processes use different memory and addresses.
 - Threads share memory and addresses, reducing overhead.
-- https://freedium.cfd/https://medium.com/javarevisited/most-people-in-tech-cant-answer-the-process-vs-thread-question-correctly-079635291e14
 - https://hanwenzhang123.medium.com/process-v-s-thread-and-background-processing-with-worker-25dd763fb88a
+- https://medium.com/javarevisited/most-people-in-tech-cant-answer-the-process-vs-thread-question-correctly-079635291e14
 - https://stackoverflow.com/questions/200469/what-is-the-difference-between-a-process-and-a-thread
 
 ---
+
+### Difference in process and threads
+https://stackoverflow.com/questions/200469/what-is-the-difference-between-a-process-and-a-thread#:~:text=3,2%2C%202021%20at%2021:03
 
