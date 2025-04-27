@@ -109,6 +109,37 @@ Using %eip before %ebp
 
 ![Image](https://github.com/user-attachments/assets/e2ec8b63-8e0c-490d-bc72-bd9961ea17c0)
 
-### References
-
-- https://youtu.be/2htbIR2QpaM?si=J_Qt6-pPwTRjHtYa
+What leads to process memory layout
+```bash
+           ┌────────────────────────┐
+   Source  │   your C/C++/Rust/...  │
+   Code    └────────────────────────┘
+              |
+              |  (1) Compiler
+              ↓
+           ┌────────────────────────┐
+   .text/  │  Generates machine     │
+   code    │  prologue/epilogue &   │
+           │  symbolic offsets      │
+           └────────────────────────┘
+              |
+              |  (2) Assembler & Linker
+              ↓
+           ┌────────────────────────┐
+   Executable
+           │  Lays out sections at  │
+           │  fixed virtual addrs   │
+           │  (.text, .data, .bss)  │
+           └────────────────────────┘
+              |
+              |  (3) OS Loader
+              ↓
+           ┌──────────────────────── ┐
+   Process   │  • Creates page table │
+   in VM     │  • Maps sections into │
+   “sandbox” │    its VA space       │
+           │  • Sets initial SP ←──┐ │
+           │    0x7FFF_FFFC (top of│ │
+           │    the user stack)    │ │
+           └──────────────────────── ┘
+```

@@ -107,3 +107,14 @@ Sure! Here are the notes based on the video content:
 ### Difference in process and threads
 https://stackoverflow.com/questions/200469/what-is-the-difference-between-a-process-and-a-thread#:~:text=3,2%2C%202021%20at%2021:03
 
+[todo]:
+- In order to understand the difference
+  - understand and capture how threads work ?
+    - What are they ? do they consist memory ? who assigns them ?
+    - who controls them ? who terminates them ?
+    - anatomy of a thread (stack, register diagram similar to process)
+    - how can they be invoked ? created ? terminated (if we can) ? assigning tasks on thread (based on current understanding) ?
+    - where do they exist ? what is the time when ? do they have any states ?
+
+  - For process, memory layout, their states (captued already), linux commands related to them
+  - same as above questions with linux commands.
