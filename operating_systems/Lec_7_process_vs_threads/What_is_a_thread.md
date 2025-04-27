@@ -20,4 +20,3 @@ https://softwareengineering.stackexchange.com/questions/225371/why-are-threads-c
 
 ### Difference in process and threads
 https://stackoverflow.com/questions/200469/what-is-the-difference-between-a-process-and-a-thread#:~:text=3,2%2C%202021%20at%2021:03
-
