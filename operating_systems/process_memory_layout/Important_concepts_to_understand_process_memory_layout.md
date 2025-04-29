@@ -92,6 +92,56 @@ Q: how process communicate if all of them have their own VA space ?
 The Page Table is like the hotel reception desk that tells you:
 "Your room (physical page) is on floor 3, room 42."
 
+### Shared libraries
+
+In modern operating systems, a **dynamic library** (also called a **shared library**, e.g. `.so` on Linux, `.dll` on Windows, or `.dylib` on macOS) is simply a collection of compiled code and data that can be loaded into a process at run‐time rather than being statically linked into the executable at build time.  
+
+---
+
+## 1. What exactly is a dynamic library?  
+- **Separately compiled module:** It contains functions, classes, and global data, packaged so that multiple programs can share one copy on disk (and—via the OS’s virtual memory—one copy in RAM).  
+- **Linking at runtime:** When your program starts (or when you explicitly call something like `dlopen()`), the dynamic linker/loader (e.g. `ld-linux.so` on Linux) maps the library into your process’s address space, resolves symbol addresses (functions and global variables), and applies any needed relocations.  
+- **Benefits:**  
+  - **Memory savings:** Several running programs can share the same in‐memory code pages.  
+  - **Updatability:** You can patch or upgrade a library without rebuilding all binaries that use it.  
+  - **Modularity/plugins:** You can load plugins or optional components only when needed.
+
+---
+
+## 2. How do dynamic libraries relate to a process’s memory layout?  
+A typical process address space (virtual memory map) looks like this:
+
+```
++ high addresses -------------------------+
+| [ shared libraries (mmap’d segments) ] |
+|                                         |
+| [   stack (per thread)             ]   |
+|-----------------------------------------|
+| [  heap (malloc()/new grows here) ]     |
+|                                         |
+| [ BSS: zero-inited globals       ]      |
+|-----------------------------------------|
+| [ Data: initialized globals       ]     |
+|-----------------------------------------|
+| [ Text: your executable’s code    ]     |
++ low addresses  -------------------------+
+```
+
+- **Text, Data, BSS:** come from your executable.  
+- **Heap:** where `malloc()`, `new`, and other dynamic allocations live.  
+- **Stack:** per‐thread call stacks.  
+- **Shared libraries:** each one gets its own set of `mmap()`-ed segments, usually above the heap and below the stack.  
+
+> **Important:** The memory occupied by a dynamic library is *not* the same as the heap. The loader uses `mmap()` (or the OS equivalent) to reserve virtual pages for each library’s code and data. Those pages are distinct segments in the process’s layout.
+
+---
+
+#### 3. Why might people associate dynamic libraries with the heap?  
+You’ll sometimes see people talking about “growing the heap to load shared objects” or similar phrasing—this stems from a couple of misunderstandings or historical behaviors:  
+1. **Old loaders and `brk()`:** Early Unix linkers sometimes used the same `brk()`/`sbrk()` mechanism that implements the heap to allocate space for data segments of shared objects. Modern systems almost universally switched to `mmap()`, but the terminology “heap growth” lingered in some docs.  
+2. **Dynamic allocations inside libraries:** A library often calls `malloc()` internally (for caches, buffers, etc.), and those allocations *do* live on the heap. So you’ll see its footprint increase the heap size at runtime.  
+3. **Position‐independent code (PIC):** To support ASLR (address space layout randomization), shared libraries are compiled as PIC and loaded at arbitrary addresses. That sometimes makes people think “it’s sitting in the heap,” but in reality it’s still in a separately mapped region.
+
 ### Memory Sandbox
 
 [Reference](https://gabrieletolomei.wordpress.com/miscellanea/operating-systems/in-memory-layout/)
