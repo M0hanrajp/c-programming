@@ -7,6 +7,7 @@ https://youtu.be/ksJ9bdSX5Yo?si=NObpF9RA53fnbfO4
 A compiler converts a C program into an executable. There are four phases for a C program to become an executable: 
 
 Here's a concise summary of the C compilation process:
+- more in depth please refer process-compilation.md
 
 - **Preprocessing**:
   - Removes comments.
@@ -207,3 +208,5 @@ Key Points to Remember:
    - Type safety
    - Resource management
 
+### References
+- https://cs.brown.edu/courses/csci1310/2020/assign/labs/lab2.html
