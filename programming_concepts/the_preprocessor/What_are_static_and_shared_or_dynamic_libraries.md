@@ -134,6 +134,7 @@ $ nm -D libc.so.6
 00000000000606f0 T _IO_printf@@GLIBC_2.2.5
 ```
 >What is the meaning of `00000000000606f0 T _IO_printf@@GLIBC_2.2.5`
+
 | Field              | Meaning                                                              |
 | ------------------ | -------------------------------------------------------------------- |
 | `00000000000606f0` | Virtual memory **address** of the symbol in the shared object        |
@@ -160,6 +161,7 @@ Symbol table '.dynsym' contains 3024 entries:
   2922: 00000000000606f0   204 FUNC    GLOBAL DEFAULT   15 printf@@GLIBC_2.2.5
 ```
 >What is the meaning of `2922: 00000000000606f0   204 FUNC    GLOBAL DEFAULT   15 printf@@GLIBC_2.2.5`
+
 | Field                 | Meaning                                                                                                                                                                                               |
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `2922`                | Symbol table **entry number**                                                                                                                                                                         |
