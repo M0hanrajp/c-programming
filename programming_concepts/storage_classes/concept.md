@@ -9,11 +9,10 @@ The properties are:
 
 There are 4 storage classes in C,
 
-**Automatic**
-- 
-* static
-* register
-* extern
+* **Automatic**
+* **static**
+* **register**
+* **extern**
 
 Here’s a consolidated overview of C’s storage classes in tabular form:
 
@@ -27,11 +26,44 @@ Here’s a consolidated overview of C’s storage classes in tabular form:
 | `_Thread_local`   | Thread (per-thread)       | Block or file | Internal or External | Zero (if uninitialized)     | C11 feature for thread-specific data.                                       |
 
 - **Indeterminate**: it’s undefined behavior to use it. Anything could happen: on one run it might look like zero, on another it might be “random” garbage
+- `static (block)`, Modifying the block‐scope static variable only changes that local instance; all other references resolve to the file‐scope static object, whose value remains unchanged. (look at `f()` in static_storage_class.c)
 
 | Position                  | Scope | Linkage          | Lifetime        | Typical Use                                   |
 | ------------------------- | ----- | ---------------- | --------------- | --------------------------------------------- |
 | `static` in function      | Block | None             | Static duration | Preserve state across function calls          |
 | `static` outside function | File  | Internal linkage | Static duration | Limit variable or function visibility to file |
+
+Here’s a compact table showing the key combinations of **scope**, **storage duration**, and **linkage** in C, with examples and where each name is visible:
+
+| Scope              | Storage Duration | Linkage  | Example                                  | Visibility                                      |
+| ------------------ | ---------------- | -------- | ---------------------------------------- | ----------------------------------------------- |
+| **File-scope**     | Static           | Internal | `static int counter = 0;`                | All functions in **this** .c file               |
+| **File-scope**     | Static           | External | `int global_var = 1;`                    | Every translation unit (via `extern`)           |
+| **Block-scope**    | Automatic        | None     | `void f(){ int x; /* … */ }`             | Only inside that `{ … }`                        |
+| **Block-scope**    | Static           | None     | `void f(){ static int y; /* … */ }`      | Only inside that `{ … }`, persists across calls |
+| **Function param** | Automatic        | None     | `void g(int p)`                          | Only inside `g`                                 |
+| **Allocated**      | Dynamic          | None     | `int *p = malloc(...);`                  | From malloc until free; name as a pointer var   |
+| **File-scope**     | Thread           | External | `_Thread_local int t;`                   | All TUs (one per thread)                        |
+| **File-scope**     | Thread           | Internal | `static _Thread_local int t;`            | This TU only (one per thread)                   |
+
+* **Scope** is *where* in the source code the name is visible.
+* **Storage duration** is *how long* the object lives in memory.
+* **Linkage** is *whether* and *how* the same name refers to the same object across scopes or translation units.
+
+Great question — **linkage** and **scope** are closely related but fundamentally different concepts in C. Let’s break them down clearly:
+
+---
+
+### 🔑 Key Differences Between Linkage and Scope
+
+| Concept             | **Scope**                                                                              | **Linkage**                                                                                                          |
+| ------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **Definition**      | The *region of the program* where an identifier (name) is **visible** and can be used. | Describes whether the **name refers to the same entity** across different parts (translation units) of a program.    |
+| **Concerns**        | *Where* you can **use** a name.                                                        | *Whether* a name refers to the **same object/function** across scopes/files.                                         |
+| **Types**           | - Block scope<br>- Function prototype scope<br>- File scope                            | - No linkage<br>- Internal linkage<br>- External linkage                                                             |
+| **Example**         | `int x = 5;` inside a function is **block scope** — can’t be used outside.             | `int x = 5;` at file scope has **external linkage** by default — can be accessed in other `.c` files using `extern`. |
+| **When it applies** | All identifiers (variables, functions, typedefs, structs, etc.).                       | Only to **variables and functions**, not types, typedefs, labels, or parameters.                                     |
+| **Controlled by**   | Where the name is declared.                                                            | Storage class specifiers like `static`, `extern`.                                                                    |
 
 ### Linkage
 
@@ -42,6 +74,8 @@ Linkage refers to the ability of an identifier (variable or function) to be refe
 **internal linkage**. The variable or function can be referred to from all scopes in the current translation unit. All file scope variables which are declared static or constexpr(since C23) have this linkage, and all file scope functions declared static (static function declarations are only allowed at file scope).
 
 **external linkage**. The variable or function can be referred to from any other translation units in the entire program. All file scope variables which are not declared static or constexpr(since C23) have this linkage, all file scope function declarations which are not declared static, all block scope function declarations, and, additionally, all variables or functions declared extern have this linkage unless a prior declaration with internal linkage is visible at that point.
+
+Understanding different translation units: https://stackoverflow.com/questions/79620220/understanding-different-translation-units-in-c-the-meaning
 
 ### Storage duration
 
@@ -54,6 +88,21 @@ Every object has a property called storage duration, which limits the object lif
 **thread storage duration.** The storage duration is the entire execution of the thread in which it was created, and the value stored in the object is initialized when the thread is started. Each thread has its own, distinct, object. If the thread that executes the expression that accesses this object is not the thread that executed its initialization, the behavior is implementation-defined. All objects declared _Thread_local(until C23)thread_local(since C23) have this storage duration.
 
 **allocated storage duration.** The storage is allocated and deallocated on request, using dynamic memory allocation functions.
+
+### Scope 
+
+C has four kinds of scopes:
+- block scope
+    - The scope of any identifier declared inside a {}, including function bodies, or in any expression, declaration, or statement 
+      appearing in if, switch, for, while, or do-while statement(since C99), or within the parameter list of a function definition 
+      begins at the point of declaration and ends at the end of the block or statement in which it was declared.
+- file scope
+    - The scope of any identifier declared outside of any block or parameter list begins at the point of declaration and ends at 
+      the end of the translation unit.
+- function scope
+- function prototype scope
+
+more details here: https://en.cppreference.com/w/c/language/scope
 
 ### C translation unit
 
@@ -69,3 +118,52 @@ the .i file you get is exactly the translation unit for foo.c. It contains:
 - All macros expanded
 - All conditional‐compilation directives resolved
 - Comments stripped
+
+### Questions:
+
+>Q: function parameters cannot be declared with most storage class specifiers such as: auto, static, extern, register
+
+Note: Only register was historically allowed (in C89/C90), but even that is deprecated and removed in modern C standards (C11 and onwards)compilers ignore `register`, and you should avoid using it in new code.
+
+#### 💡 Why are storage classes disallowed in parameters?
+
+Because **function parameters already have automatic storage duration** — they live on the stack during the function call — so there’s no need (or meaning) to declare them as `auto` or `static`. Here's why:
+
+* `auto`: Default for local variables and parameters — redundant.
+* `register`: Hint, but no longer meaningful.
+* `static`: Implies persistence across calls — not applicable to parameters.
+* `extern`: Meant for external linkage — parameters are not externally linked.
+
+>Q: Why you cannot specify storage class to the memeber of structs
+
+**you cannot** use storage-class specifiers on members inside a `struct` (or `union`) definition. Storage-class specifiers like `static`, `extern`, `auto`, and `register` apply to variable (or function) declarations, not to type members. 
+
+Here’s why:
+
+2. **Members aren’t objects yet**
+   When you write
+
+   ```c
+   struct S {
+       int a;
+       /* static int b; */  // ❌ invalid
+   };
+   ```
+
+   you’re only *describing* the layout of a type. No actual object of type `struct S` exists until you declare a variable of that type. At that point, you apply storage-class rules to the *variable*, not to the members.
+
+3. **How to control member storage**
+
+   * The *entire* struct object’s storage duration and linkage are determined by how you declare the variable:
+
+     ```c
+     static struct S s1;    // s1 has static storage duration, internal linkage
+     struct S s2;           // s2 has automatic storage duration, no linkage
+     extern struct S s3;    // s3 has static duration, external linkage
+     ```
+   * You cannot, for instance, make one member live longer than another inside the same object.
+
+**In summary:**
+
+* Storage-class specifiers belong on the *declaration* of a variable (or function), not on individual fields of a `struct`.
+* All members of a given struct instance share the same storage duration and linkage as the struct object itself.
