@@ -2,6 +2,11 @@
 #include <stdio.h>
 // auto - automatic duration and no linkage
 
+// register - automatic duration and no linkage; address of this variable cannot be taken (both have similar behavior)
+// additionally hints the optimizer to store the value of this variable in a CPU register if possible. 
+// Regardless of whether this optimization takes place or not, variables declared register cannot be used as arguments 
+// to the address-of operator, cannot use _Alignas(until C23)alignas(since C23)(since C11), and register arrays are not 
+// convertible to pointers.
 
 // we cannot use storage class specifiers for function paramerters check concept.md for the answer
 void foo(/*auto int*/ ) { // start of block-scope
@@ -22,6 +27,16 @@ void foo(/*auto int*/ ) { // start of block-scope
      * Meaning x is block-scope, no linkage to the function main
      * refering x in foo() is not possible 
      */
+
+    register int r;
+    printf("With register keyword and unintialized variables yeilds :: register int = %d\n", r);
+    // block-scope, no linkage, stored in CPU register if possible by the compiler
+    // works same as auto specifier
+    /* (gdb) info address r
+        Symbol "r" is a variable in $rbx.
+        (gdb) p &r
+        Address requested for identifier "r" which is in register $rbx
+    */
 
 } // end of block-scope
 

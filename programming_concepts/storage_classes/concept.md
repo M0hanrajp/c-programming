@@ -27,6 +27,10 @@ Here’s a consolidated overview of C’s storage classes in tabular form:
 
 - **Indeterminate**: it’s undefined behavior to use it. Anything could happen: on one run it might look like zero, on another it might be “random” garbage
 - `static (block)`, Modifying the block‐scope static variable only changes that local instance; all other references resolve to the file‐scope static object, whose value remains unchanged. (look at `f()` in static_storage_class.c)
+- If no storage-class specifier is provided, the defaults are:
+  - extern for all functions
+  - extern for objects at file scope
+  - auto for objects at block scope
 
 | Position                  | Scope | Linkage          | Lifetime        | Typical Use                                   |
 | ------------------------- | ----- | ---------------- | --------------- | --------------------------------------------- |
