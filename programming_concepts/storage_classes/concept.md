@@ -27,6 +27,7 @@ Here’s a consolidated overview of C’s storage classes in tabular form:
 
 - **Indeterminate**: it’s undefined behavior to use it. Anything could happen: on one run it might look like zero, on another it might be “random” garbage
 - `static (block)`, Modifying the block‐scope static variable only changes that local instance; all other references resolve to the file‐scope static object, whose value remains unchanged. (look at `f()` in static_storage_class.c)
+- `extern` here, for initialization, if it has the variable defined (int x = 1 in some.c then value of that variable will be 1), if int x; is left uninitialized then the value was observed to be 0 when compiled, check extern_definition.c for more clarification.
 - If no storage-class specifier is provided, the defaults are:
   - extern for all functions
   - extern for objects at file scope
@@ -171,3 +172,8 @@ Here’s why:
 
 * Storage-class specifiers belong on the *declaration* of a variable (or function), not on individual fields of a `struct`.
 * All members of a given struct instance share the same storage duration and linkage as the struct object itself.
+
+### Meaning of explicit vs implicit in programming 
+
+explicit" means the programmer directly specifies the data type of a variable or other entity. 
+"Implicit" means the compiler infers the data type based on the context or the value being assigned.
