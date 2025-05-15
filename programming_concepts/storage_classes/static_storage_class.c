@@ -7,7 +7,7 @@ static int x = 1; // file scope x, internal linkage (available only within this 
 static int a; // file scope x, internal linkage (available only within this TU)
 
 void f(void) {
-    static int x = 2;  // block-scope, no linkage
+    static int x = 1;  // block-scope, no linkage, new object, static storage duration
 
     /* This is a different object: it has static storage duration 
      * (it lives for the lifetime of the program) 
