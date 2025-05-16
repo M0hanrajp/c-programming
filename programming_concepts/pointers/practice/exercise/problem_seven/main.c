@@ -1,8 +1,7 @@
 /* A c program :
  * Requirements:
  * Funciton to calculate distance between two points.
- * Use the above function to calculate the area of triangle with vertices
- * use the above two functions to calculate if a point x,y lies inside the trianlge */
+ */
 
 #include <math.h>
 #include <stdio.h>
