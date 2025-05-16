@@ -23,11 +23,15 @@ void display(float *number)
         Value of number in main: 2.000000 %f\n", number
         Address of number in display from main: 0x7ffec547375c %p\n", (void *)number
         Address of number in display(local variable number in display): 0x7ffec5473728 %p\n", &number
+        // This variable number has auto storage duration, block scope, no linkage
+        // display(float *number) takes precedence over main() number due to block scope.
         Value at the address of local number in display: 0x7ffec547375c %p\n", *(&number) <<<<< Imp
+        // in the past below was my mistake
         - Because the float power(float *input_num, float p) expects first argument as a pointer to float 
-          If you pass &number then it would become *(&number) so at this the value is address of main() fucntion
-          number variable Hence it’s not expected.
-          behavior_main.c: In function ‘display’:
+          - If you pass &number then it is pointing to address 0x7ffec547375c
+          - Value at the address of local number in display: 0x7ffec547375c %p\n", *(&number) <<<<< Imp
+            Hence the following error is observed and compiler prints error saying it expects float ** not float *
+            behavior_main.c: In function ‘display’:
             behavior_main.c:19:30: warning: passing argument 1 of ‘power’ from incompatible pointer type [-Wincompatible-pointer-types]
            19 |     float expression = power(&number, 2);
               |                              ^~~~~~~

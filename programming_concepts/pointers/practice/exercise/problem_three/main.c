@@ -23,27 +23,27 @@ float taylor_series(float *number)
     float expression = 0.0;
     for(int term = 1; term < 11; term++)
     {
-        if(term % 2 == 0)
+        if(term % 2 == 0) // the series expects alternative - & + computation
+                          // if term is even we subtract else we add
         {
-            for(;factorial_power_number < 21.0;)
+            if(factorial_power_number < 21.0)
             {
                 printf("expression: - %.2f ^ %.2f / %.2f !\n", *number, factorial_power_number, factorial_power_number); 
-                expression -= (power(&number, factorial_power_number) / factorial(factorial_power_number));
-                break;
+                expression -= (power(number, factorial_power_number) / factorial(factorial_power_number));
             }
         }
         if(term % 2 != 0)
         {
-            for(;factorial_power_number < 21.0;)
+            if(factorial_power_number < 21.0)
             {
                 printf("expression: + %.2f ^ %.2f / %.2f !\n", *number, factorial_power_number, factorial_power_number); 
                 expression += (power(number, factorial_power_number) / factorial(factorial_power_number));
-                break;
             }
         }
+        // taylor series increments the numerator "power" and denominator "number" by + 2
         factorial_power_number = factorial_power_number + 2;
     }
-    return expression;
+    return expression; // complete value of expression
 }
 // Factorial funciton
 float factorial(float number)
@@ -88,4 +88,4 @@ float power(float *input_num, float p)
         }
         j = j + 2;
     }
-===============================================*/
+*/
