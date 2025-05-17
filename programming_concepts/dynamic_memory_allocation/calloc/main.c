@@ -1,4 +1,4 @@
-/* A c program to understand malloc */
+/* A c program to understand calloc */
 #include <stdio.h>
 #include <stdlib.h>
 // Function declaration - print array
@@ -7,12 +7,13 @@ void print_array(int *array, int array_size);
 int main(void)
 {   
     int *pointer_variable = NULL;
-    pointer_variable = (int*)malloc(5 * sizeof(int));
-    // void* malloc (size_t size/*bytes*/);
-    // https://cplusplus.com/reference/cstdlib/malloc/
-    // On success, a pointer to the memory block allocated by the function.
-    // The type of this pointer is always void*, which can be cast to the desired type of data pointer in order to be dereferenceable.
-    //
+    pointer_variable = (int*)calloc(5, sizeof(int)); /* number of elements * size of integer */
+    // void* calloc (size_t num, size_t size);
+    // Allocates a block of memory for an array of num elements, each of them size bytes long, and initializes all its bits to zero.
+    // The effective result is the allocation of a zero-initialized memory block of (num*size) bytes.
+    // If size is zero, the return value depends on the particular library implementation (it may or may not be a null pointer)
+    // the returned pointer shall not be dereferenced.
+    // If the function failed to allocate the requested block of memory, a null pointer is returned.
     if(pointer_variable == NULL) {
         printf("Memory allcoation failed!\n");
         exit(0);
