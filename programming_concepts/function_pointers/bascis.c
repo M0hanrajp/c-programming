@@ -10,11 +10,18 @@ int calculateDiv(int a, int b) {
 
 int main(void) {
     typedef void (*ptrf)();
-    ptrf pointerToFunction = &display;
-    typedef int (*fptr)(int, int);
-    fptr CalculateIntegerDivision = &calculateDiv;
-    pointerToFunction();
-    printf("Result of the integer division %d\n", CalculateIntegerDivision(2, 2));
+    /* return type - void
+     * function pointer (variable/identifier) - ptrf
+     * (*ptrf)(): -> ptrf is a pointer to a function
+     */
+    ptrf pointerToFunction = &display; // using only display will also work
+
+    int (*fptr)(int, int); // without typedef
+    fptr = calculateDiv;
+
+    (*pointerToFunction)(); // can simply be called pointerToFunction();
+
+    printf("Result of the integer division %d\n", fptr(2, 2));
     return 0;
 }
 
