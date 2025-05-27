@@ -14,6 +14,9 @@ There are 4 storage classes in C,
 * **register**
 * **extern**
 
+https://en.cppreference.com/w/c/language/storage_duration (reference from which the below document was prepared)
+https://medium.com/@ganga.jaiswal/scope-and-storage-of-variables-in-c-programming-f372f32dad78
+
 Here’s a consolidated overview of C’s storage classes in tabular form:
 
 | Keyword           | Storage Duration          | Scope         | Linkage              | Default Initialization      | Typical Use / Notes                                                         |
@@ -32,6 +35,9 @@ Here’s a consolidated overview of C’s storage classes in tabular form:
   - extern for all functions
   - extern for objects at file scope
   - auto for objects at block scope
+- For declarations of pointer type `int *p;`,
+  - `int *p;` is an invalid memory location, using %d to access it causes seg fault & using %p it prints out NIL.
+  - it is only valid if it's allocated memory through malloc, calloc or defined using a int value.
 
 | Position                  | Scope | Linkage          | Lifetime        | Typical Use                                   |
 | ------------------------- | ----- | ---------------- | --------------- | --------------------------------------------- |

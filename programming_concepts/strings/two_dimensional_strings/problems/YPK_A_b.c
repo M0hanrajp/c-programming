@@ -57,6 +57,7 @@ Value C :: at char * address :: 0x564923d9600c & element 2 :: at address 0x7fff2
 Value D :: at char * address :: 0x564923d9600e & element 3 :: at address 0x7fff2bfdfda8
 Value E :: at char * address :: 0x564923d96010 & element 4 :: at address 0x7fff2bfdfdb0
 ```
+- Learnings from the problems
 - In pa The actual strings (pa[i] values) are in the heap, and their addresses are non-contiguous due to calloc() allocations.
 - In pb The string literals themselves are stored in the read-only data segment (.rodata), and their addresses are sequential,
   reflecting how the compiler places them in memory.
