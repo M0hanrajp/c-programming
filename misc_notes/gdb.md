@@ -439,3 +439,16 @@ In GDB’s `info proc mappings` output, the **last character** in the permission
 - **"Private" (`p`)** means **modifications are only visible to the process**.
 - **"Shared" (`s`)** means **modifications are visible across multiple processes** (e.g., shared memory regions or shared libraries).
 - **Most process memory is private (`p`)**, except for explicitly shared memory.
+
+
+### Inspect realloc memory for a variable 
+```bash
+# sizeof device is 56 bytes
+(gdb) call malloc_usable_size(deviceDatabase)
+$2 = 56
+(gdb) n
+# count was 2, hence total 112, plus extra 8 bytes of padding
+38               databaseSizeHandler = (device *)realloc(deviceDatabase, *count * sizeof(device));
+(gdb) call malloc_usable_size(deviceDatabase)
+$3 = 120
+```

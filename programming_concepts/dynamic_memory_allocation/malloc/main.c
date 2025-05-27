@@ -30,7 +30,7 @@ int main(void)
     // Notice that this function does not change the value of ptr itself, hence it still points to the same (now invalid) location.
     printf("After freeing memroy of &pointer_variable = %p & *pointer_variable = %d\n", pointer_variable, *pointer_variable);
     // After freeing memroy of &pointer_variable = 0x55d42ae742a0 & *pointer_variable = 1564651124
-    // Will have an undefined value
+    // Will have an undefined value, but the memory is made avaiable to be used
     return 0;
 }
 // Function definition - print array

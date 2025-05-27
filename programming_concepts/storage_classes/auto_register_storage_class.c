@@ -76,8 +76,8 @@ int main(void) {
     auto int *q;
     printf("Value of uninitialzed pointer p (without auto keyword) :: %p & q (with auto keyword) ::%p\n", p, q);
     /* Note unitialized pointers when dereferenced cause segementation fault
-     * pointer when assigned a value (address, because pointer holds address of another variable).
-     * here it's used to check what is the value
+     * Meaning int *p when dereferenced using *p with %d, causes seg fault since we are accessing invalid memory location.
+     * pointer when assigned a value (address, because pointer holds address of another variable) is a valid memory location.
      */ 
 
 /*     typedef struct {

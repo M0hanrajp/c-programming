@@ -49,6 +49,20 @@
   ```bash
   gcc -S -fverbose-asm your_file.c
   ```
+10. **-O0**
+- To compile a C program using gcc without any optimization, you should explicitly specify the optimization level -O0.
+```bash
+gcc -O0 -o output_file source_file.c
+```
+
+|  Flag | Description                           | Trade-offs                                            |
+| :---: | :------------------------------------ | :---------------------------------------------------- |
+| `-O0` | No optimization                       | Fastest compile, no speed improvements                |
+| `-O1` | Basic optimizations                   | Moderate compile-time, moderate performance gains     |
+| `-O2` | “Standard” optimizations              | Good performance, reasonable compile time & size      |
+| `-O3` | Aggressive, speed-first optimizations | Highest performance, longer compile-time, larger code |
+| `-Os` | Optimize for code size                | Minimizes final binary size at some cost in speed     |
+
 ### Example Command
 Here’s an example command that combines some of the above flags:
 ```bash
