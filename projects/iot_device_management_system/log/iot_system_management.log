@@ -1,0 +1,25 @@
+----------------------
+[INFO]: Device Details
+----------------------
+[INFO]: ID: 0x3, Name: Humidity     , Status:  OFFLINE at 0x5557472fd2a0
+[INFO]: ID: 0x4, Name: Ultrasound   , Status:  OFFLINE at 0x5557472fd2d8
+[INFO]: ID: 0x2, Name: pressure     , Status:  OFFLINE at 0x5557472fd310
+[INFO]: ID: 0x5, Name: Accelerometer, Status:  OFFLINE at 0x5557472fd348
+[INFO]: ID: 0x6, Name: Motion       , Status:  OFFLINE at 0x5557472fd380
+[INFO]: ID: 0x1, Name: Temperature  , Status:   ONLINE at 0x5557472fd3b8
+[INFO]: ID: 0x7, Name: Touch        , Status:  OFFLINE at 0x5557472fd3f0
+[INFO]: Device ID: 0x6 has been updated as ONLINE
+[INFO]: Device ID: 0x7 has been updated as ONLINE
+[INFO]: Motion device found at 0x5557472fd380 and is assigned to 0x7fff5289db20
+[INFO]: Deleting Device ID: 0x7 ... 
+[INFO]: Device ID: 0x7 has been updated as OFFLINE
+[INFO]: Device ID: 0x7 has been deleted !, current devices =  6
+----------------------
+[INFO]: Device Details
+----------------------
+[INFO]: ID: 0x3, Name: Humidity     , Status:  OFFLINE at 0x5557472fe440
+[INFO]: ID: 0x4, Name: Ultrasound   , Status:  OFFLINE at 0x5557472fe478
+[INFO]: ID: 0x2, Name: pressure     , Status:  OFFLINE at 0x5557472fe4b0
+[INFO]: ID: 0x5, Name: Accelerometer, Status:  OFFLINE at 0x5557472fe4e8
+[INFO]: ID: 0x6, Name: Motion       , Status:   ONLINE at 0x5557472fe520
+[INFO]: ID: 0x1, Name: Temperature  , Status:   ONLINE at 0x5557472fe558
