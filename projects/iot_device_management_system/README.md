@@ -1,4 +1,4 @@
-<h1 align="center">Project Title: IoT Device Management System with Pointer-Based Data Handling</h1>
+<h1 align="center">Project Title: IoT Device Management System</h1>
 
 ## Project Description
 
