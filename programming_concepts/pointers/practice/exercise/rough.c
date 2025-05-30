@@ -67,5 +67,14 @@ int main(void) {
     // strlen gives the size of string with 0 index based, sizeof gives size of whole char array of 6 elements hence size is 6
     printf("strlen(hello) = %zu, sizeof(hello) = %zu\n", strlen("hello"), sizeof("hello"));
 
+    // TODO: Pointer arithmetic what is allowed and what is not
+    int r[10]; double s[4];
+    printf("Difference between &arr[8] & &arr[0] = %ld number of elements\n", &r[8] - &r[0]);
+    printf("Difference between &double[4] & &double[2] = %ld number of elements\n", &s[4] - &s[2]);
+    /* &s[4] - (double *)&r[2] doing this is an undefined behavior,
+     *  (raw address of s[4])−(raw address of r[2]) / sizeof(double)
+     * the division turned out to be invlaid and it posted -1,
+     */
+
     return 0;
 }
