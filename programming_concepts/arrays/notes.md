@@ -26,7 +26,7 @@ This approach works best for zero-initializing arrays of basic types (like `int`
   ```c
   int array[26];  // Global declaration, elements are all 0
 
-### Visual representation of int (*)[5]
+### Visual representation of int (*p)[5] read it (p is declared as a pointer to an array of 5 integer)
 
 ![Image](https://github.com/user-attachments/assets/4f960cc7-61b7-4aa7-b0a5-dce974dc6898)
 

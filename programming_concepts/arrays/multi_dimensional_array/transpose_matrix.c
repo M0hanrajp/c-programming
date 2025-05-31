@@ -34,4 +34,28 @@ Transpose of array ::
 Element[0][0] = 1 Element[0][1] = 2
 Element[1][0] = 3 Element[1][1] = 4
 Element[2][0] = 5 Element[2][1] = 6
+
+// works for square matrix
+#define COL 2
+#define ROW 3
+void transpose(int (*t)[COL]);
+int main(void)
+{
+    int arr[3][2] = {
+        {1, 2},
+        {3, 4},
+        {5, 6}
+    };
+    transpose(arr);
+    return 0;
+}
+void transpose(int (*t)[COL]) {
+    for(int i = 0; i < ROW; i++) {
+        for (int j = 0; j < COL; j++) {
+            printf("arr[%d][%d] = %d ", i, j, t[j][i]);
+        }
+        printf("\n");
+    }
+}
+
 */
