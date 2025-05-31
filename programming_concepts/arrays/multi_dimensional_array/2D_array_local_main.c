@@ -24,7 +24,9 @@ int main(void)
     {
         for(int element_column = 0; element_column < COLUMN; element_column++)
         {
-            printf("Matrix[%2d][%2d] = %d ", element_row, element_column, matrix[element_row][element_column]);
+            printf("Matrix[%2d][%2d] = %d at %p ", element_row, element_column, 
+                    matrix[element_row][element_column],
+                    (void *)&matrix[element_row][element_column]);
         }
         printf("\n");
     }

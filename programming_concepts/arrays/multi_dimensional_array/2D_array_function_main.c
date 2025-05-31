@@ -18,16 +18,54 @@ int main(void)
                                         {10, 20, 30, 40, 50}
     };
     int (*array_pointer)[COLUMNS] = NULL;
+    /* it's is read as, array_pointer is a pointer to array of COLUMNS integers
+     * it's a pointer to a whole array not an element
+     */
+    
     // the below function is written to check the address & elements for reference.
     printf("Array displayed from main function:\n");
     for(int RowIndex = 0; RowIndex < ROWS; RowIndex++)
     {
         array_pointer = TwoDimension + RowIndex;
+        /* TwoDimension is an variable that is declared as 2D array
+         * so this variable decays as a pointer to the whole 1D array (0th Row)
+         * so any pointer arithmetic on TwoDimesion will take us x step by sizeof(1D array)
+         * 
+         * here we are adding RowIndex to TwoDimension,
+         * for each outer for loop iteration, we are pointing to address of 1D array
+         * ex: 0 -> 0th Row, 1 -> 1st row
+         */
         for(int ColumnIndex = 0; ColumnIndex < COLUMNS; ColumnIndex++)
         {
             printf("M[%d][%d] = %d & A:%p ", 
                     // expanded form of writing array
                     RowIndex, ColumnIndex, *(*array_pointer + ColumnIndex), *array_pointer + ColumnIndex);
+                    /*
+                     * When we enter the inner for loop:
+                     *
+                     * Let's say RowIndex is 0. Then, array_pointer points to TwoDimension[0],
+                     * which is the address of the first row (a 1D array of integers).
+                     *
+                     * - Dereferencing it once:      *array_pointer → TwoDimension[0]
+                     *   This gives us the start of the first row — a pointer to the first element (TwoDimension[0][0]).
+                     *
+                     * - Dereferencing it twice:     *(*array_pointer) → TwoDimension[0][0]
+                     *   This gives us the actual integer value stored at the beginning of the first row (e.g., 10).
+                     *
+                     * So in the inner for loop, we use:
+                     *     *(*array_pointer + ColumnIndex)
+                     *
+                     * Here's how it works:
+                     * per operator precedence * has more priority
+                     * - `*array_pointer` gives us a pointer to the first element of the current row (type: int *).
+                     * - Adding ColumnIndex to this pointer moves us forward by ColumnIndex elements,
+                     *   because pointer arithmetic on `int *` moves by sizeof(int).
+                     * - Finally, the outer `*` dereferences that pointer to get the value at that column in the current row.
+                     *
+                     * Example:
+                     *     RowIndex = 0, ColumnIndex = 2
+                     *     → *(*array_pointer + 2) → TwoDimension[0][2]
+                     */
         }
         printf("\n");
     }
@@ -39,6 +77,13 @@ int main(void)
 }
 // Function definition of MyCustomDisplay
 void MyCustomDisplay(int *array_input, int row_size, int column_size)
+    /* When you pass a 2D array address that will always decay to (*)[COLUMN]
+     * But here inside this function we are casting the 2D address as int *
+     * By doing this any pointer arithemtic on the variable will move it by sizeof(int)
+     * This is not recommended, just type casting a pointer address.
+     *
+     * we can also cast it to char * and read 4 bytes at a time and then print integer value too
+     */
 {
     printf("Array displayed from MyCustomDisplay:\n");
     for(int RowIndex = 0; RowIndex < row_size; RowIndex++)

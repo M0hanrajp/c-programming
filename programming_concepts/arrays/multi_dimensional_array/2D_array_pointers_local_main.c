@@ -56,6 +56,13 @@ int main(void)
 // below way is not recommended for parsing a 2D array but also is one of the way to do it
 // best way is to use int (*array)[column_size]
 void ModifyTwoDimensionalArray(int *array, int row_size, int column_size)
+    /* When you pass a 2D array address that will always decay to (*)[COLUMN]
+     * But here inside this function we are casting the 2D address as int *
+     * By doing this any pointer arithemtic on the variable will move it by sizeof(int)
+     * This is not recommended, just type casting a pointer address.
+     *
+     * we can also cast it to char * and read 4 bytes at a time and then print integer value too
+     */
 {
     printf("2D array from custom function::\n");
     for(int rowIndex = 0; rowIndex < row_size; rowIndex++)

@@ -8,6 +8,11 @@ void DisplayTypeTwo(int array_input[SIZE]);
 int main(void)
 {
     int MainFuncitonArray[SIZE] = {};
+    /* C (C99 and C11): the standard grammar also permits an empty {} as an initializer. 
+     * In practice, most modern C compilers (GCC, Clang, MSVC) accept int A[10] = {}; and zero all ten elements.
+     * is same as int MainFunctionArray[SIZE] = { 0 };
+     */
+
     // Printing the array in main function with address & checking the elements.
     for (int element = 0; element < SIZE; element++)
     {
