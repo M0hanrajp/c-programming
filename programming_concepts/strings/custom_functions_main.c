@@ -1,6 +1,8 @@
 // This program uses custom functions to perform the same functionalities as built in string functions
 // Note check Behavior.md for the reason why address is being printed
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 // function declarations
 int customStrlen(char *inputString);
@@ -9,12 +11,18 @@ char *customStrcpy(char *sourceString, char *targetString);
 char *customStrcat(char *srcString, char *tarString);
 
 int main(void) {
-    char str[] = "Happy Coding, something else, playground.", copy[500];
+    char str[] = "Happy Coding, something else, playground.";
     // finding string length
-    printf("Size of string : %d & base address: %p\n", customStrlen(str), str);
+    printf("length of string (customStrlen): %d vs strlen function: %lu & base address: %p\n", 
+            customStrlen(str), // strlen is designed to give the number of characters without including the NULL character
+            strlen(str),
+            str);
 
     // Copying string
+    char *copy = (char *)calloc(customStrlen(str) + 1, sizeof(char));
     printf("Input string: %s & copied string: %s\n", str, customStrcpy(str, copy));
+    free(copy);
+    copy = NULL;
 
     // String concatenation
     char a[20] = "Silicon";
@@ -45,9 +53,13 @@ char *customStrcpy(char *sourceString, char *targetString) {
 
 char *customStrcat(char *srcString, char *tarString) {
     int srcStringEndIndex = customStrlen(srcString);
-    printf("Base address of *srcString = %p & base address of tarString = %p\n", srcString, tarString);
+    // get NULL element index of source string.
+
+    printf("Base address of srcString = %p & base address of tarString = %p\n", srcString, tarString);
+
     while (*tarString != '\0') {
         *(srcString + srcStringEndIndex) = *tarString;
+        // the size of source string should be large enough to hold both strings
         printf("[DEBUG]:: %s & %p\n", srcString, &(srcString[srcStringEndIndex]));
         srcStringEndIndex++;
         tarString++;

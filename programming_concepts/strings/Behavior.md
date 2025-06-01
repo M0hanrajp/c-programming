@@ -298,7 +298,11 @@ problem_c.c:18:19: error: lvalue required as increment operand
       |
 ```
 - The error you're encountering (lvalue required as increment operand) is due to attempting to increment the userOutput pointer, which points to a statically declared array. Since userOutput is statically allocated, modifying the pointer itself doesn't affect the static array correctly, and this causes undefined behavior.
-- Learn the difference of why you cannot incerment here ?
+- Here, userOutput is an array. In most expressions it “decays” to a char * pointing to userOutput[0], 
+  but it is not a variable you can reassign. You cannot do userOutput = some_other_address; or userOutput++, 
+  because userOutput is “fixed” by its declaration. (statically allocated array inside a funciton) address is immutable.
+- In the case of `char *p = userOutput;` Now p is a true pointer variable. You can do p++, p = p + 5, etc., because p itself is a 
+  variable that holds an address. Internally it might start out pointing into the array, but you’re free to move p around.
 
 ## Error 8: For segemenatation fault in string programs
 ```bash

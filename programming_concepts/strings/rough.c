@@ -28,13 +28,20 @@ void min_umbrellas (size_t length, const enumber WeatherType forecasts[length]) 
   printf("Umbrella :: %zu\n", umbrella_count);
 } */
 
+void modify(char a[7]) {
+  a[1] = 'a';
+}
+
 int main(void) {
-  char *temp[3];
+/*   char *temp[3];
   for(int i = 0; i < 3; i++) {
     temp[i] = (char *)calloc(10, sizeof(char));
     printf("Enter the name:");
     scanf("%s", temp[i]);
   }
-  printf("%s\n", temp[1]);
+  printf("%s\n", temp[1]); */
+  char *p = "string";
+  modify(p);
+  printf("%s\n", p);
   return 0;
 }

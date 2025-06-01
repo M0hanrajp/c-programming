@@ -6,7 +6,11 @@ void displayString(char *input);
 
 int main(void) {
     char string[] = {'0'};
-    printf("%s %c\n", string, string[0]); // 0 0 is printed, ascii value will be 48
+    char s[2] = {};
+    /* This declaratoion intializes elements of s to NULL
+     * so when printed they are ignored */
+    printf("%s %c at %p\n", string, string[0], (void *)string); // 0 0 is printed, ascii value will be 48
+    printf("%s %c at %p\n", s, s[0], (void *)s); // space at address is printed
 
     // expanded way of declaring strings
 /*     char words[] = {'A', 'B', 'C', 'D', 'E'};
@@ -17,8 +21,8 @@ int main(void) {
     printf("Address of sentence in main %p\n", sentence);
     printf("String in main :: %s\n", sentence);
     displayString(sentence);
-/*
-    char userInput[100];
+
+/*     char userInput[100];
     printf("Enter a string:: ");
     scanf("%s", userInput);
     // will only print the characters till the first space character is encountered.
@@ -31,7 +35,9 @@ int main(void) {
     // TODO: why does the printf take previous string as it's input ?
     scanf("%[^\n]s", userInputSecond);
     displayString(userInputSecond); // prints the same string
-    printf("%s\n", userInputSecond); // does not print anything */
+    printf("%s\n", userInputSecond); // does not print anything  */
+    //NOTE: read https://github.com/M0hanrajp/c-programming/blob/fcc8480f8824c16f18a21da4ff46b794acdd35e0/misc_notes/behavior.md#scanf-behavior-on-reading-data-from-terminal
+    // for using scanf to ingore whitespace characters
     return 0;
 }
 
