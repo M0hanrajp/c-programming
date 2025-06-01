@@ -5,9 +5,11 @@
 void display(char **input, unsigned size) { // this can be written as *input[]
   printf("Input is local to the function display hence it's address will be different\naddress of input :: %p\n", &input);
   for(unsigned i = 0; i < size; i++) {
-      printf("<< String[%u]  >> :: %8s at address :: %p stored in %p\n", i, input[i], input[i], input + i);
+      printf("<< String[%u]  >> :: %8s at address :: %p stored at base &str[%u] = %p\n", 
+              i, input[i], input[i], i, input + i);
       for(unsigned j = 0; input[i][j] != '\0'; j++) {
-          printf("Element[%u] :: %c at address :: %p stored in %p\n", j, input[i][j], (*(input + i) + j), input + i);
+          printf("Element[%u] :: %c at address :: %p stored at base &str[%u] = %p\n", 
+              j, input[i][j], (*(input + i) + j), i, input + i);
       }
   }
   // for(unsigned i = 0; input[i] != NULL; i++) 

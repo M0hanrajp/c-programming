@@ -6,6 +6,8 @@ int main(void) {
     char *words = "Code Code Code";
     char copy[20];
     char *newString = NULL;
+	/* there is a fundamental difference between char[] and char * declaraton
+	 * read it at char_array_vs_char_pointer.md */
 
     // assigning to a new char array using = operator
     copy = word;
