@@ -1,0 +1,15 @@
+Transmission Control Protocol, Src Port: 443, Dst Port: 44331, Seq: 0, Len: 2
+	Source Port: 443
+	Destination Port: 44331
+	[Conversation completeness: Complete, WITH_DATA (31)]
+		...0 .... = FIN: Absent
+		...0 .... = ACK: Absent
+		...0 .... = SYN: Absent
+	Sequence Number (raw): 156
+	Acknowledgment Number: 0
+	Acknowledgment number (raw): 0
+	BIN_REP .... = Header Length: 4 bytes (2)
+	Flags: 0 (SYN)
+	.... ....0 .... = Acknowledgment: Not set
+	.... .... ..0. = Syn: Set
+	.... .... ...0 = fyn: Set
