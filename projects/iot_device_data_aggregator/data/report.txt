@@ -1,0 +1,16 @@
+--- Sensor Data Summary ---
+Data Source: sensor_log.csv
+
+Readings Processed: 11
+Valid Readings: 9
+Error Lines: 2
+
+--- Temperature (°C) ---
+Min: 20.500
+Max: 21.700
+Average: 21.200
+
+--- Humidity (%) ---
+Min: 45.100
+Max: 47.000
+Average: 46.022
