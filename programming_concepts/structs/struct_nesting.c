@@ -1,5 +1,6 @@
 /* A c program to understand structure nesting */
 
+#include <stddef.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -14,7 +15,14 @@ struct home {
     struct kitchen records;// struct inside another struct
 };
 /* 
-    // Memory layout
+        A struct’s size is always rounded up to a multiple of its 
+        alignment requirement, and in an array each element is placed on that same boundary.
+        // from the output of the program.
+        sizeof(struct home) = 40, _Alignof(struct home) = 4
+        sizeof(struct kitchen) = 36, _Alignof(struct kitchen) = 4
+        offsetof(struct home, rooms) = 0, offsetof(struct home, records) = 4
+
+    // Memory layout of struct kitchen
     (gdb) x/36bx &database.records
     0x7fffffffdf84: 0x04    0x00    0x00    0x00    0x6b    0x6e    0x69    0x66
     0x7fffffffdf8c: 0x65    0x00    0x00    0x00    0x00    0x00    0x00    0x00
@@ -22,8 +30,9 @@ struct home {
     0x7fffffffdf9c: 0x73    0x68    0x65    0x6c    0x66    0x00    0x00    0x00
     0x7fffffffdfa4: 0x00    0x00    0x00    0x00
 
-    // From the main struct home,
-    // we can see that struct kitchen base address (0x7fffffffdf84) is after 4 offset of database.
+    // Memory layout of struct home database,
+    // we can see that struct kitchen base address (0x7fffffffdf84) is after 4 bytes of database's base address.
+    // offset of struct kitchen records is 4.
     (gdb) x/40bx &database
     0x7fffffffdf80: 0x01    0x00    0x00    0x00    0x04    0x00    0x00    0x00
     0x7fffffffdf88: 0x6b    0x6e    0x69    0x66    0x65    0x00    0x00    0x00
@@ -54,6 +63,17 @@ struct home {
 int main(void)
 {
     struct home database;
+
+    printf("sizeof(struct home) = %zu, _Alignof(struct home) = %zu\n", 
+            sizeof(database), 
+            _Alignof(struct home));
+    printf("sizeof(struct kitchen) = %zu, _Alignof(struct kitchen) = %zu\n", 
+            sizeof(database.records), 
+            _Alignof(struct home));
+    printf("offsetof(struct home, rooms) = %ld, offsetof(struct home, records) = %ld\n", 
+            offsetof(struct home, rooms),
+            offsetof(struct home, records));
+
     // following way we can assign the varaibles
     database.rooms = 1;
     // "." operator used 2 times for refering nested struct's fields

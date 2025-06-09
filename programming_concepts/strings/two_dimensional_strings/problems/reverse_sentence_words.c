@@ -62,7 +62,6 @@ void reversetempWords(char *str) {
     *words = NULL;
 }
 
-
 int main(void) {
     char *s = "It's Summer Time Magic!!!";
     printf("!Reversed :: %s\n", s);
