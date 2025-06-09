@@ -357,10 +357,19 @@ int main()
     printf("sizeof(structd_t) = %lu\n", sizeof(structD));
     printf("sizeof(structe_t) = %lu\n", sizeof(structE));
     printf("sizeof(structf_t) = %lu\n", sizeof(structf_t));
-    /* for struct E
+    /* for struct F
      * when compiled with 64 bit flag, size of pointer is 8 bytes
      * when compiled with 32 bit flag, size of pointer is 4 bytes
      */
+
+    /* Output
+       sizeof(structa_t) = 4
+        sizeof(structb_t) = 8
+        sizeof(structc_t) = 24
+        sizeof(structd_t) = 16
+        sizeof(structe_t) = 20
+        sizeof(structf_t) = 32
+    */
     return 0;
 }
 

@@ -7,6 +7,11 @@
  * 6.7.2.1 C spec for struct bit field
  * Fig 3.2 SYSV-ABI-AMD64 spec, regarding bit field rules.
  * Understand bit alignment rules : https://stackoverflow.com/questions/79472611/clarification-struct-bitfield-memory-layout
+ *  - based on the type of the data the bits cannot cross  the boundary
+ *  for example - short int a : 2 (here short 2 bytes - 16 bits is available) we are occupying 2 bits.
+ *  these 2 bits don't cross 16 byte boundary hence we can include these 2 bits.
+ *  padding is done based on if a bit field crosses a boundary or not
+ *  if it crosses the boundary then we move to next address that will be aligned to the type of data
  * Understand struct size with Bitfield POV: https://stackoverflow.com/questions/4129961/how-is-the-size-of-a-struct-with-bit-fields-determined-measured
  */
 
@@ -23,6 +28,8 @@ int main(void) {
     HEX:       34       12       BC       9A       78       56       DE
     BINARY:    00110100 00010010 10111100 10011010 01111000 01010110 11011110
                low address ------------------------------------> High address
+    - if your decimal is 31, in hex it's 0x1F, so in memory it's stored as 00011111
+    why ? Endianness only matters when the value spans more than 1 byte
 */
 
     typedef struct football_game {
@@ -35,7 +42,7 @@ int main(void) {
     } statistics;
 
     /* Q: How the bits are filled
-     * Ans: Bits are filled from right to left (lsb to msb)
+     * Ans: Bits are filled from right to left in a byte
      *
      * Q: How the GDB displays struct memory layout when examining the struct
      * Ans: GDB displays the struct based on system endianess, if system is little endian
@@ -66,14 +73,15 @@ int main(void) {
 
 /*  GDB memory layout 0x7fffffffdf88: 0xff    0xff    0xff    0x01    0x0f    0x00    0x00    0x00
  *
- *  0x7fffffffdf88 0xff = num_cameras(3 bits) + num_managers(1 bit) + num_players(4 bits)
+    num_players -> 4 bits they can be stored in a byte, so lsb is will filled with 4 bits (right to left manner)
+    0x7fffffffdf88 0xff = num_cameras(3 bits) + num_managers(1 bit) + num_players(4 bits)
     0x7fffffffdf89 0xff = num_vip(3 bits) + num_cameras(5 bits)
     0x7fffffffdf8a 0xff = num_vip(8 bits)
-    0x7fffffffdf8b 0x01 = (4 bits are 0) + num_vip(5 bits (of which 4 are 0))
-    0x7fffffffdf8c 0x0f = (4 bits are 0) + num_screens(4 bits)
+    0x7fffffffdf8b 0xe1 = num_screens(3 bits) + num_vip(5 bits (of which 4 will be 0))
+    0x7fffffffdf8c 0x01 = (7 bits are 0) + num_screens(1 bit)
     0x7fffffffdf8d 0x00 = 8 bits padding
     0x7fffffffdf8e 0x00 = 8 bits padding
-    0x7fffffffdf8f 0x00 = 8 bits padding 
+    0x7fffffffdf8f 0x00 = 8 bits padding
  
     > unsigned short num_players : 4 can occupy bits 0 through 3. This does not cross any multiple 
       of 16 so that's fine.
@@ -127,7 +135,8 @@ int main(void) {
  *  # How the output looks without packing (padding is performed)
     (gdb) x/8bx &a
     0x7fffffffdf88: 0xbf    0xe1    0x01    0x00    0x00    0x00    0x00    0xf0
-    
+
+    ### bf_struct1
     // size of struct is 8 byte
     0x7fffffffdf88 0xbf = bf3(1 bit: 1) + bf2(6 bits: 0b011111 [bit6:0, bit5:1, bit4:1, bit3:1, bit2:1, bit1:1]) + bf1(1 bit: 1)
     0x7fffffffdf89 0xe1 = bf4(7 bits: 0b1110000 [bit7:1, bit6:1, bit5:1, bit4:0, bit3:0, bit2:0, bit1:0]) + bf3(1 bit: 1)
@@ -139,15 +148,15 @@ int main(void) {
     0x7fffffffdf8f 0xf0 = bf4(8 bits: 0b11110000) 
     note last 8 bytes of bf4 are 0x78 i.e. 0111(7 in Dec) 1000 (8 in Dec) but since bits are assigned from right to left.
     due to alignment all the high bits came together in this situation becoming F, and got stored in little endian format.
-    
 
+    ### bf_struct2
     (gdb) x/16bx &b
     0x7fffffffdf90: 0x3f    0x03    0x00    0x00    0x00    0x00    0x00    0x00
     0x7fffffffdf98: 0xf0    0x00    0x00    0x00    0x00    0x00    0x78    0x00
 
     // size of struct is 16 byte
     0x7fffffffdf90: 0x3F = bf2(6 bits: 0b011111 [bits1–6]) + bf1(1 bit: 1)  [bit7 unused]
-    0x7fffffffdf91: 0x03 = bf3(2 bits: 0b11) + (6 bits unused: 0)
+    0x7fffffffdf91: 0x03 = (6bits are 0) & bf3(2 bits: 0b11)
     0x7fffffffdf92: 0x00 = padding (8 bits)
     0x7fffffffdf93: 0x00 = padding (8 bits)
     0x7fffffffdf94: 0x00 = padding (8 bits)
@@ -167,6 +176,7 @@ int main(void) {
     there is 8 byte boundary alingment as largest member would be 8 byte.
     Hence bf4 is alinged from 0x7fffffffdf98
 
+    ### bf_struct3 Unpacked
     // the below example int is used instead of long so struct is 4 byte aligned
     (gdb) x/8bx &c
     0x7fffffffdf98: 0x3f    0x03    0x00    0x00    0xf0    0x00    0x00    0x78
@@ -183,6 +193,7 @@ int main(void) {
     Note bf4 if it starts aligning at df99 address it would cross the 32 bit boundary hence it
     is aligned from df9C an extra 4 byte.
 
+    ### bf_struct3 packed
     # How the output looks with packing i.e. __attribute__((packed))
     // when struct is packed, it sees 1 byte alignment and there is no padding
     // Hence we see a & b output the same struct with 8 byte size
@@ -201,7 +212,42 @@ int main(void) {
     0x7fffffffdf84: 0x01 = bf4  (next 8 bits: bits 8–15)
     0x7fffffffdf85: 0x00 = bf4 (next 8 bits: bits 16–23)
     0x7fffffffdf86: 0xF0 = bf4 (next 8 bits: bits 24–31)
-    0x7fffffffdf87: 0x00 = bf4 (remaining bits, upper bits unused)
+    0x7fffffffdf87: 0x00 = bf4 (remaining bits, upper bits unused) a bit with value 0 is the extra bit
  */
+    struct Mixed {
+        unsigned a : 4;
+        unsigned b : 12;
+        unsigned c : 16;
+    };
+    struct Mixed mx;
+    unsigned int *ui_ptr = (unsigned int *)&mx;
+
+    /* If you set mx.a = 0x5; mx.b = 0xABC; mx.c = 0x1234;, what 32-bit hexadecimal value would *ui_ptr 
+       likely read on a little-endian system? Explain how the bitfields map into that 32-bit word.
+
+           memory layout and it's hex value, explains how they are mapped too
+
+           address 			Bits 			 Hex			Mapping
+                        7 6 5 4 3 2 1 0
+           0x1000       1 1 0 0 0 1 0 1      0xC5           4 bits of a (from right), higher 4 bits of b
+           0x1001       1 0 1 0 1 0 1 1      0xAB			remianing bits of b	
+           0x1002       0 0 1 1 0 1 0 0      0x34			start of 16 bits of C
+           0x1003 		0 0 0 1 0 0 1 0      0x12
+
+           C5 is lsb lowest address 0x1000, and MSB is 0x12 highest address 0x1003
+           From gdb: x/4b &mx
+           0x7fffffffdebc: 0xc5    0xab    0x34    0x12
+
+           // 1234abc5 is printed for *ui_ptr
+
+           if struct Mixed *p = mx, then how p->b works ? how is the offset calculated in bit fields ?
+           is resolved by compile-time bit‐offsets and masks inside that 32-bit word; there is no “per-bit” 
+           byte addressing at runtime.
+
+           "Memory is byte addressed in C, not bit addressed"
+           load the 32-bit word at address fp into a register (e.g. eax),
+           mask out bits 0–2 and replace them with the 3-bit value 5 (binary 101),
+           store that 32-bit word back to memory.
+    */
     return 0;
 }
