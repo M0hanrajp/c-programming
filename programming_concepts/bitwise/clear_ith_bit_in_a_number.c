@@ -6,8 +6,14 @@
 #include <stdio.h>
 
 int main(void) {
-    printf("Clear 2nd bit of 47 i.e. 101111 is %d [should be equal to 45]\n", (47 & ~(1 << 1)));
-    printf("Clear 6th bit of 47 i.e. 101111 is %d [should be equal to 15]\n", (47 & ~(1 << 5)));
+    unsigned long n = 0;
+    unsigned long bit = 0;
+    printf("Enter the number : ");
+    scanf("%lu", &n);
+    printf("Enter the bit position to clear: ");
+    scanf("%lu", &bit);
+    n = n & ~(1ul << bit);
+    printf("Entered number after bit is cleared: %lu\n", n);
     return 0;
 }
 
