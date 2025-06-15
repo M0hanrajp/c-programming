@@ -1,0 +1,3 @@
+[Array]: 9 11 12 15 
+Max element is : 15
+Average of all the elements is : 11.750000
