@@ -1,0 +1,9 @@
+[INFO]: CLIENT initialized
+[INFO]: SERVER has started listening
+[INFO]: CLIENT sent SYN [CLIENT]: SEQ: 0 & ACK: 0, packet is sent
+[INFO]: SERVER received SYN
+[INFO]: SERVER sent SYN-ACK [SERVER]: SEQ: 0 & ACK: 1, packet is sent
+[INFO]: CLIENT received SYN-ACK
+[INFO]: CLIENT sent ACK [CLIENT]: SEQ: 1 & ACK: 1, packet is sent
+[INFO]: SERVER received ACK
+[INFO]: CLIENT-SERVER connection established
