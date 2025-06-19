@@ -1,0 +1,145 @@
+--- Adding Devices ---
+Added device: Dell XPS 15 (ID: 101)
+Added device: iPhone 15 Pro (ID: 102)
+Added device: iPad Air (ID: 103)
+Added device: Sony WH-1000XM5 (ID: 104)
+Added device: Gaming Mouse (ID: 105)
+Inventory is full. Cannot add more devices.
+
+--- Current Inventory ---
+------------------------------------
+ID: 101
+Name: Dell XPS 15
+Type: Laptop
+Price: 1899.99 EUR
+Status: Available
+------------------------------------
+------------------------------------
+ID: 102
+Name: iPhone 15 Pro
+Type: Smartphone
+Price: 1099.00 EUR
+Status: Available
+------------------------------------
+------------------------------------
+ID: 103
+Name: iPad Air
+Type: Tablet
+Price: 799.00 EUR
+Status: Available
+------------------------------------
+------------------------------------
+ID: 104
+Name: Sony WH-1000XM5
+Type: Headphones
+Price: 349.50 EUR
+Status: Available
+------------------------------------
+------------------------------------
+ID: 105
+Name: Gaming Mouse
+Type: Other
+Price: 75.00 EUR
+Status: In Repair
+------------------------------------
+--- End of Inventory ---
+
+--- Finding and Updating Device ---
+Updating status for device ID 102 (iPhone 15 Pro) from Available to Sold.
+------------------------------------
+ID: 102
+Name: iPhone 15 Pro
+Type: Smartphone
+Price: 1099.00 EUR
+Status: Sold
+------------------------------------
+
+--- Attempting to find non-existent device ---
+Device with ID 999 was not found, as expected.
+
+--- Deleting a Device ---
+Deleting device: iPad Air (ID: 103)
+
+--- Current Inventory ---
+------------------------------------
+ID: 101
+Name: Dell XPS 15
+Type: Laptop
+Price: 1899.99 EUR
+Status: Available
+------------------------------------
+------------------------------------
+ID: 102
+Name: iPhone 15 Pro
+Type: Smartphone
+Price: 1099.00 EUR
+Status: Sold
+------------------------------------
+------------------------------------
+ID: 104
+Name: Sony WH-1000XM5
+Type: Headphones
+Price: 349.50 EUR
+Status: Available
+------------------------------------
+------------------------------------
+ID: 105
+Name: Gaming Mouse
+Type: Other
+Price: 75.00 EUR
+Status: In Repair
+------------------------------------
+--- End of Inventory ---
+
+--- Attempting to delete non-existent device ---
+Device with ID 998 not found for deletion.
+
+--- Testing Inventory Capacity ---
+Added device: Extra Laptop 1 (ID: 107)
+Inventory is full. Cannot add more devices.
+Inventory is full. Cannot add more devices.
+Inventory is full. Cannot add more devices.
+
+--- Current Inventory ---
+------------------------------------
+ID: 101
+Name: Dell XPS 15
+Type: Laptop
+Price: 1899.99 EUR
+Status: Available
+------------------------------------
+------------------------------------
+ID: 102
+Name: iPhone 15 Pro
+Type: Smartphone
+Price: 1099.00 EUR
+Status: Sold
+------------------------------------
+------------------------------------
+ID: 104
+Name: Sony WH-1000XM5
+Type: Headphones
+Price: 349.50 EUR
+Status: Available
+------------------------------------
+------------------------------------
+ID: 105
+Name: Gaming Mouse
+Type: Other
+Price: 75.00 EUR
+Status: In Repair
+------------------------------------
+------------------------------------
+ID: 107
+Name: Extra Laptop 1
+Type: Laptop
+Price: 1200.00 EUR
+Status: Available
+------------------------------------
+--- End of Inventory ---
+
+Clearing inventory...
+Inventory cleared.
+
+--- Current Inventory ---
+Inventory is empty.
