@@ -1,0 +1,8 @@
+[INFO]: g_main_loop_run is invoked
+[INFO]: Bus acquired successfully
+[INFO]: XML read complete @ openFile
+[INFO]: XML data parse complete @ createInterfaceInfo
+[INFO]: XML parsed, GDBusInterfaceInfo is created
+[INFO]: (VTable) - Add method registration complete
+[INFO]: (gdbus-codegen) - Sub method registration complete
+[INFO]: Bus name acquired, daemon active..
