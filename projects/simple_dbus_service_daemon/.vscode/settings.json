@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "gio.h": "c",
-        "gdbusutils.h": "c",
-        "giotypes.h": "c",
-        "ginputstream.h": "c"
-    }
-}
