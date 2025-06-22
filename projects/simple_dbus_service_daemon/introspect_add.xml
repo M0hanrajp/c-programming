@@ -1,0 +1,19 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-Bus Object Introspection 1.0//EN"
+                      "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="com.mpunixDaemon.Add">
+    <method name="Add">
+      <arg type="i" name="a" direction="in"/>
+      <arg type="i" name="b" direction="in"/>
+      <arg type="i" name="result" direction="out"/>
+    </method>
+  </interface>
+
+  <interface name="com.mpunixDaemon.Sub">
+    <method name="Sub">
+      <arg type="i" name="c" direction="in"/>
+      <arg type="i" name="d" direction="in"/>
+      <arg type="i" name="result" direction="out"/>
+    </method>
+  </interface>
+</node>
