@@ -1,6 +1,5 @@
 #include "daemon.h"
 #include <stdio.h>
-#include "glib.h"
 #include "xml_to_string.h"
 #include "mpunix-daemon-Sub.h"
 
