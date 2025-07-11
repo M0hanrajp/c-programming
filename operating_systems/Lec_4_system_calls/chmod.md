@@ -3,6 +3,8 @@ https://man7.org/linux/man-pages/man1/chmod.1p.html
 
 https://man7.org/linux/man-pages/man2/fchmod.2.html
 
+https://unix.stackexchange.com/questions/183994/understanding-unix-permissions-and-file-types
+
 ![Image](https://github.com/user-attachments/assets/127bcacc-620d-45bc-856f-98d9f9fa3b50)
 
 ![Image](https://github.com/user-attachments/assets/d6206bd1-0ca7-49b0-8699-13507a2301a4)
