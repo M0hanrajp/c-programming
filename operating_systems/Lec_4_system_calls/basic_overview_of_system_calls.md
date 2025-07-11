@@ -12,6 +12,11 @@
 - Process control - Load, execute, abort, fork, wait, signal, allocate etc.
 - Communcation (IPC) - pipe, create/delete connections, shmget (shared memory get)
 ```
+- more on `ioctl` https://manned.org/ioctl.2
+  - https://icandothese.com/docs/tech/development/linux/kernel-basics/09_ioctl/
+  - https://medium.com/@WaterBucket/understanding-ioctls-for-windows-vulnerability-research-exploit-development-c49229b38d8d
+- IPC: https://en.wikipedia.org/wiki/Inter-process_communication
+  - practical: https://medium.com/@the_daft_introvert/inter-process-communication-in-operating-systems-a-comprehensive-guide-with-real-life-examples-and-c508cf3bfb1a
 
 An overview of Linux architecture, highlighting the system call interface.
 ![Image](https://github.com/user-attachments/assets/060d07b5-2c2c-4fd5-929c-b755eb911351)

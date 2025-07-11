@@ -10,10 +10,17 @@
  * https://stackoverflow.com/questions/7253659/why-the-address-of-variable-of-child-process-and-parent-process-is-same?rq=3
  * https://stackoverflow.com/questions/5365580/fork-same-memory-addresses?rq=3
  * https://unix.stackexchange.com/questions/207918/what-does-it-mean-fork-will-copy-address-space-of-original-process
+ * https://stackoverflow.com/questions/1653340/differences-between-fork-and-exec/1653415#1653415
+ * https://devconnected.com/understanding-processes-on-linux/
  */
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
+
+/* Note both address space are indentical
+ * address of the variables will be the same, because they are virtual addess not physical
+ * https://stackoverflow.com/a/7253711/22135402
+ */
 
 // Note [c] - child process, [p] - parent process
 void childProcess(int *var) {
@@ -51,18 +58,18 @@ int main(void) {
 // output
 /*
  * Conclusion modification made in respective processes are not reflected in their parent/child process
- * 
+ *
 << Case 1, value of a is changed to 8 in parent process >>
 ----------------------------------------------------------
 $ ./a.out
 pid of parent process : 58756
 [p] Address of the variable local to main() = 0x7ffdfc91c180
 [p] Address of the variable local to parentProcess = 0x7ffdfc91c168
-[p] Value of the variable in parent process = 1 
+[p] Value of the variable in parent process = 1  // after this statement, a is modified to 8
 [c & p will execute this statement] Value of a = 8 [pid = 58756] <------ parent
 pid of child process : 58757
 [c] Address of the variable local to main() = 0x7ffdfc91c180
-[c] Address of the variable local to childProcess = 0x7ffdfc91c168
+[c] Address of the variable local to childProcess = 0x7ffdfc91c168 // both have same address 
 [c] Value of the variable in child process = 1
 [c & p will execute this statement] Value of a = 1 [pid = 58757] <------ child
 

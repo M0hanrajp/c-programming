@@ -1,7 +1,3 @@
-Here are the **properly aligned ASCII diagrams** for **RTOS, Distributed OS, Cluster OS, and Embedded OS**. The diagrams now have **better spacing, proper alignment, and improved clarity**.  
-
----
-
 ## **1. Real-Time Operating System (RTOS)**  
 **(Ensures strict deadlines, preemptive scheduling, and real-time response)**  
 
