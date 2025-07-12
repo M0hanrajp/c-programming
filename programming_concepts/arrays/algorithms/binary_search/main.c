@@ -31,7 +31,7 @@ int main(void) {
     // bubble_sort(array, 10);
     // printf("Initialized array is sorted into ascending order\n");display_array(array, 10);
     // result = binary_search(array, 0, arrSize - 1, &search_element);
-    // Case 2: if array is sorted but you dont know in which order the array is sorted
+    // Case 2: NOTE:if array is sorted but you dont know in which order the array is sorted
     result = orderAgnosticBinarySearch(array, 0, arrSize - 1, &search_element);
     result == -1 ? printf("Element was not found in the provided array!\n")
                  : printf("Element was found in the array at index %d\n", result);
@@ -75,7 +75,9 @@ int binary_search(int *array, int low, int high, int *find_element)
 {
     while(low <= high) {
         int mid = low + (high - low)/2; // if the integer is very large
-                                        //
+                                        // Also when element is at last index
+                                        // this particular operation, based on precedence, the (high - low)/2 becomes 0.
+                                        // then we move to assigning low as mid + 1 giving us the last index.
         // Return that the element was found
         if(*find_element == array[mid])
             return mid;
