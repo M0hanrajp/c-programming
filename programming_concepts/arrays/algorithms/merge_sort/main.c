@@ -75,7 +75,7 @@ void mergeSort(int arr[], int leftIndex, int rightIndex)
 // Driver code 
 int main() 
 { 
-	int arr[] = {5, 4, 7, 6}; 
+	int arr[] = {5, 4}; 
 	int arr_size = sizeof(arr) / sizeof(arr[0]); 
 	printf("Given array is \n"); 
 	printArray(arr, arr_size); 

@@ -1,5 +1,6 @@
 // This program uses built in string functions to check their behavior
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 int main(void) {
@@ -27,5 +28,17 @@ int main(void) {
 
     // String compare
     printf("Comapre strings:: %d\n", strcmp(str, " "));
+
+    // usage of strtok
+    char ipAddress[] = "192.168.256.12";
+    char *octets;
+
+    octets = strtok(ipAddress, ".");
+    while (octets != NULL) {
+        printf("%s ", octets);
+        atoi(octets) > 255 ? printf("Not valid ip\n") : printf("valid ip\n");
+        octets = strtok(NULL, ".");
+    }
+
     return 0;
 }
