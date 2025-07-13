@@ -63,6 +63,13 @@ gcc -O0 -o output_file source_file.c
 | `-O3` | Aggressive, speed-first optimizations | Highest performance, longer compile-time, larger code |
 | `-Os` | Optimize for code size                | Minimizes final binary size at some cost in speed     |
 
+11. **-c**
+- The -c flag in gcc tells the compiler to compile the source file into an object file (.o) but do not link it into an executable yet.
+```bash
+gcc -c main.c -o main.o   # compile main.c to main.o
+gcc -c utils.c -o utils.o # compile utils.c to utils.o
+gcc main.o utils.o -o my_program  # link .o files into executable
+```
 ### Example Command
 Here’s an example command that combines some of the above flags:
 ```bash
@@ -82,4 +89,4 @@ gcc -g -Wl,--trace -L./libs -lmylibrary main.c -o my_program
 Each of the above PDFs is the latest official GNU manual for that tool. They provide in-depth reference material for C programmers: the glibc manual teaches use of the C standard library; the GCC manual covers compiling and language standards; the GDB manual covers debugging C code; and the Make manual covers automating builds of C projects.
 
 **Sources:** Official GNU documentation for glibc, GCC, GDB, and Make (each linked as the provided PDF).
-
+- https://stackoverflow.com/questions/3375697/what-are-the-useful-gcc-flags-for-c
