@@ -4,6 +4,8 @@
 
 Following most information was taken from [here](https://stackoverflow.com/questions/77108297/breaking-down-the-c-compilation-process-into-preprocessing-compilation-assembl)
 
+Also helpful [from a medium article](https://medium.com/@ganga.jaiswal/understanding-the-compilation-process-from-source-code-to-executable-ce9385b240f9)
+
 ### Preprocessor
 ```bash
 # Who does it ?

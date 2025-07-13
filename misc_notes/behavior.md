@@ -104,3 +104,36 @@ The primary difference is how the bit values are interpreted:
 - `scanf("%[^\n]s", args);` this format helps scanf read all the characters till it encounters a newline.
 - `scanf(" %s", args);` this format reads characters from standard input until it encounters a whitespace character (such as a space, tab, or newline). This means that if your input contains spaces, only the first word (up to the first space) will be stored.
 - the leading space tells scanf to ignore any whitespace characters (including newlines left in the input buffer) until it finds a non-whitespace character. Only then does it read that character.
+
+### 'printf' behavior on number of arguments
+
+```bash
+int main()
+{
+    printf("%d ", 1, 2);
+    return 0;
+}
+// The following warning is observed, it does print 1, ignores 2 as 
+// printf accepts variable number of arguments
+main.c: In function ‘main’:
+main.c:13:12: warning: too many arguments for format [-Wformat-extra-args]
+   13 |     printf("%d ", 1, 2);
+      |            ^~~~~
+1
+```
+Also
+```bash
+int main()
+{
+    printf("%d %d %d", 1, 2);
+    return 0;
+}
+// if there are more than required number of arguments
+main.c: In function ‘main’:
+main.c:13:20: warning: format ‘%d’ expects a matching ‘int’ argument [-Wformat=]
+   13 |     printf("%d %d %d", 1, 2);
+      |                   ~^
+      |                    |
+      |                    int
+1 2 -828031552
+```
