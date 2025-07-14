@@ -31,5 +31,5 @@ void incrementExternVariable(void);
 void printExternVariable(void);
 void multiplyExternByTwo(void);
 void checkValueofB(void);
-
+void foo(void);
 #endif

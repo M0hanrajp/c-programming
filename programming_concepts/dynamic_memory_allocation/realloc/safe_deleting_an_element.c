@@ -25,7 +25,8 @@ int main(void) {
             sizeof(int)); // total size of element from 2nd slot till end.
     /* before: a[0] = 1, a[1] = 2, a[2] = 3
      * after : a[0] = 1, a[1] = 3, a[2] = 3
-     * explained in better detail below the page */
+     * explained in better detail below the page 
+     * doc: https://cplusplus.com/reference/cstring/memmove/ */
     int new_size = 3 - 1;
     int *a_temp = realloc(a, new_size * sizeof(int));
     if(a_temp) a = a_temp;
