@@ -4,7 +4,7 @@
 ```c
 #define PI 3.14
    ^-------------------- Preprocessor directive
-        ^--------------- macro template
+        ^--------------- macro template or Preprocessor token
             ^----------- macro expansion
 ```
 - replace the occurrance of `PI` in a program with 3.14.

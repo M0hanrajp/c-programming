@@ -183,3 +183,34 @@ Here’s why:
 
 explicit" means the programmer directly specifies the data type of a variable or other entity. 
 "Implicit" means the compiler infers the data type based on the context or the value being assigned.
+
+### Scalar (return type) from a function.
+
+```c
+foo(int c) {
+  return c + 1;
+}
+/* c is created locally on stack,
+ * if it's return value is used to compute in a expression
+
+what is the return value ? is it lost becuase the program counter 
+returns to main ? (since variable was created on stack)
+*/
+```
+- **“If a function returns a scalar type** like int or float, the value is typically returned 
+via a CPU register (like eax or rax). 
+- So even if it's computed from a local variable stored on the stack, the value itself is passed 
+  through a register — not the stack. 
+- That’s why returning a scalar value is safe, and it doesn’t matter that its origin was on the stack.
+- The returned value won’t be affected after the function exits."
+
+| Return Value Type                                              | Mechanism                                                   | Remains Valid After Return? | Notes                                                                                                       |
+| -------------------------------------------------------------- | ----------------------------------------------------------- | --------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| **Scalar types**<br/>(e.g. `int`, `float`, `double`, pointers) | Copied into a CPU register (e.g. `EAX`/`RAX`, `XMM0`, etc.) | ✔ Yes                       | Always safe. The value lives in a register, independent of the callee’s stack frame.                        |
+| **Struct/union (by value)**                                    | Returned in registers or via caller-allocated space         | ✔ Yes                       | The ABI handles copying all bytes back. Even large structs may use a hidden pointer to space in the caller. |
+| **Pointer to local (stack) variable**                          | Pointer to memory in the callee’s stack                     | ✘ No                        | The stack frame is destroyed on return → pointer becomes dangling.                                          |
+| **Pointer to static variable**                                 | Pointer to data in static storage                           | ✔ Yes                       | Static data persists for the program’s lifetime.                                                            |
+| **Pointer to heap (malloc’d) memory**                          | Pointer to dynamically allocated memory                     | ✔ Yes                       | The memory remains allocated until explicitly freed.                                                        |
+| **Pointer to function-local array**                            | Array decays to pointer                                     | ✘ No                        | Same as “pointer to local”: array is on the stack, so pointer dangles.                                      |
+| **Array by value**<br/>(e.g. `int foo()[N]`)                   | **Not allowed** in C                                        | —                           | C does not support returning arrays by value.                                                               |
+| **Pointer to global variable**                                 | Pointer to data in global storage                           | ✔ Yes                       | Global data persists for the program’s lifetime.                                                            |

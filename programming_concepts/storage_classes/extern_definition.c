@@ -8,7 +8,6 @@
  * Otherwise (if the prior declaration was external, no-linkage, or is not in scope), the linkage is external.
  */
 
-
 int a = 1; 
 /* This filescope definition of a variable 
  * compiler during linkage, will be able to reference this as the definition
