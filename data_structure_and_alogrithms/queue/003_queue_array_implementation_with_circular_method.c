@@ -67,10 +67,10 @@ int pushToQueue(queue *queue, char c) {
         printf("Queue is full, PUSH denied\n");
         exit(-1);
     }
-    printf("%c pushed to queue\n",
-            (queue->s[queue->back++] = c));
     if(queue->back > queue->defaultSize - 1)
         queue->back = 0;
+    printf("%c pushed to queue\n",
+            (queue->s[queue->back++] = c));
     queue->Size++;
     return 0;
 }
@@ -81,12 +81,12 @@ char popFromQueue(queue *queue) {
         printf("Queue is Empty, POP denied\n");
         exit(-1);
     }
+    if(queue->front > queue->defaultSize - 1)
+        queue->front = 0;
     char pop = queue->s[queue->front];
     queue->s[queue->front] = 0;
     // update the Queue
     queue->front++;
-    if(queue->front > queue->defaultSize - 1)
-        queue->front = 0;
     queue->Size--;
     return pop;
 }

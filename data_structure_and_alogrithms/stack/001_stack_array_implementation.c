@@ -41,7 +41,7 @@ stack *createStack(int stackSize) {
 
 // check if stack is full
 bool isStackFull(stack *stack) {
-	return stack->top > stack->stackSize - 1;
+	return stack->top >= stack->stackSize - 1;
 }
 
 // check if stack is empty
