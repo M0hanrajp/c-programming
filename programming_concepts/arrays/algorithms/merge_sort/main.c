@@ -2,7 +2,12 @@
 // C program for Merge Sort 
 /* what: use recursion to split the array in to smallest size possible
  * when in smallest size merge the arrays in such a way that they are in the right order
- *
+ *		inside the merge function, calculate:
+ *		Left array size by mid - leftindex + 1 (mid is 0 at lowest)
+ *		Right array size by rightIndex - mid (rightIndex is always larger)
+ *		Copy the elements from the original array into the newly created copies
+ *		then compare and assing the new values to original array.
+ *		
  * Why: each subarray is sorted, follows divide and conquer method
  */
 #include <stdio.h> 

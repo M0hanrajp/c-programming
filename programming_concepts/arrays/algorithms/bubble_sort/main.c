@@ -3,8 +3,10 @@
  * What: Compare adjacent element and check if smaller/greater then swap the element.
  * why: the largest element is at the end of array if > is used for comparison after 1st iteration
  *      the smallest element is at the end of array if < is used for comparing elements.
- * for the inner loop, you don't parse the entire loop as the array from last is being sorted.
- * i.e. largest will not swap with any other element.
+ * [optimization] for the inner loop, you don't parse the entire loop as the array from last is 
+ * being sorted i.e. largest will not swap with any other element.
+ * [optimization] when the array is already sorted, keep a swap check so that if there are no swaps
+ * the loop breaks.
  * When > is used for comparing elements you are sorting in ascending (smaller)
  * When < is used for comparing elements you are sorting in descending (smaller)
  * for more theory https://www.geeksforgeeks.org/bubble-sort-algorithm/
