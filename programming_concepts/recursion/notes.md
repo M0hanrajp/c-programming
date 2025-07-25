@@ -6,9 +6,17 @@
 4. **Add Memoization**: revisit basic problems (e.g. Fibonacci) and optimize.
 5. **Mix in Challenges**: on days you feel confident, pick 1–2 advanced problems.
 
-- Base Case: When to stop recursing.
-- Recursive Case: How the problem reduces to a smaller subproblem.
-- Call Stack Understanding: What happens under the hood when functions call themselves.
+- Understand how to use argument variables, body variables, return types.
+- Understand at what point function calls return a value.
+- Visualize recurssion using trees on pen and paper.
+- Approach:
+    - Break problems to small problems.
+    - Write the recurrance relation (forumula) for solving the problem.
+    - Draw the recursion tree and understand function calls.
+        - Check the flow of functions inside the recursive calls.
+        - Check at what point what function is called and how they are returning the value.
+        - Check how the tree is getting executed in left to right manner.
+- Write a Base condition to stop the recursive calls.
 
 ---
 
