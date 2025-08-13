@@ -1,0 +1,25 @@
+--- Safe Array Test Program ---
+Asserts are currently: ENABLED
+
+Test 1: Initialize and Print
+S_ARRAY[0] = 0 stored at 0x5bd7fbfd9020
+S_ARRAY[1] = 0 stored at 0x5bd7fbfd9024
+S_ARRAY[2] = 0 stored at 0x5bd7fbfd9028
+S_ARRAY[3] = 0 stored at 0x5bd7fbfd902c
+S_ARRAY[4] = 0 stored at 0x5bd7fbfd9030
+Max array size: 5
+
+Test 2: Set and Get valid elements
+Set element at index 0 to 8
+Set element at index 4 to 88
+get_value at index (4): 88
+get_value at index 4: 88
+S_ARRAY[0] = 8 stored at 0x5bd7fbfd9020
+S_ARRAY[1] = 0 stored at 0x5bd7fbfd9024
+S_ARRAY[2] = 0 stored at 0x5bd7fbfd9028
+S_ARRAY[3] = 0 stored at 0x5bd7fbfd902c
+S_ARRAY[4] = 88 stored at 0x5bd7fbfd9030
+
+Test 3: Potentially Triggering Assertions (if enabled)
+
+--- End of Safe Array Test Program ---
