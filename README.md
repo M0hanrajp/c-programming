@@ -70,3 +70,6 @@ Above references are taken from https://github.com/jwasham/c-note
 - [GeeksForGeeks](https://www.geeksforgeeks.org/c-programming-language/)
 - [Code wars](https://www.codewars.com/)
 - [Exercism](https://exercism.org/tracks/c/)
+- [Code Chef course on learning and practice C](https://www.codechef.com/learn/course/c)
+- [Dive into system (C & assembly)](https://diveintosystems.org/book/C1-C_intro/index.html)
+- [One of the best way to learn operating system](https://github.com/ossu/computer-science/tree/master/coursepages/ostep)
